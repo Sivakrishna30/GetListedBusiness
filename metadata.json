@@ -1,0 +1,8 @@
+{
+  "name": "GetListed",
+  "description": "Business-focused local discovery and business management platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
