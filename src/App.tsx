@@ -7,6 +7,8 @@ import { BusinessDetailPage } from './pages/BusinessDetailPage.tsx';
 import { BookingFlowPage } from './pages/BookingFlowPage.tsx';
 import { DashboardPage } from './pages/dashboard/DashboardPage.tsx';
 import { CustomerBookingsPage } from './pages/CustomerBookingsPage.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
+import { AuthModal } from './components/AuthModal.tsx';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -101,10 +103,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 font-sans text-stone-900">
-      <Navbar currentPath={currentPath} onNavigate={navigate} />
-      <main className="flex-1">{renderRoute()}</main>
-      <Footer onNavigate={navigate} />
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen flex flex-col bg-stone-50 font-sans text-stone-900">
+        <Navbar currentPath={currentPath} onNavigate={navigate} />
+        <main className="flex-1">{renderRoute()}</main>
+        <Footer onNavigate={navigate} />
+        <AuthModal />
+      </div>
+    </AuthProvider>
   );
 }

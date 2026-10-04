@@ -22,6 +22,48 @@ class DatabaseEngine {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         this.state = JSON.parse(raw);
+        // Migrate / backfill newly added Phase 1 foundational collections
+        const seed = createInitialSeed();
+        let needsSync = false;
+        if (!this.state!.users || !this.state!.users.length) {
+          this.state!.users = seed.users;
+          needsSync = true;
+        }
+        if (!this.state!.businessMembers || !this.state!.businessMembers.length) {
+          this.state!.businessMembers = seed.businessMembers;
+          needsSync = true;
+        }
+        if (!this.state!.transactions) {
+          this.state!.transactions = seed.transactions || [];
+          needsSync = true;
+        }
+        if (!this.state!.expenses) {
+          this.state!.expenses = seed.expenses || [];
+          needsSync = true;
+        }
+        // Ensure businesses have ownerId, businessType, enabledOperations, and operationConfig
+        this.state!.businesses.forEach(b => {
+          const seedMatch = seed.businesses.find(sb => sb.id === b.id);
+          if (!b.ownerId) {
+            b.ownerId = seedMatch?.ownerId || 'user_siva_owner';
+            needsSync = true;
+          }
+          if (!b.businessType) {
+            b.businessType = seedMatch?.businessType || 'GENERAL';
+            needsSync = true;
+          }
+          if (!b.enabledOperations || !b.enabledOperations.length) {
+            b.enabledOperations = seedMatch?.enabledOperations || ['BOOKINGS', 'SERVICES', 'TRANSACTIONS', 'EXPENSES'];
+            needsSync = true;
+          }
+          if (!b.operationConfig && seedMatch?.operationConfig) {
+            b.operationConfig = seedMatch.operationConfig;
+            needsSync = true;
+          }
+        });
+        if (needsSync) {
+          this.persistSync();
+        }
       } else {
         this.state = createInitialSeed();
         this.persistSync();

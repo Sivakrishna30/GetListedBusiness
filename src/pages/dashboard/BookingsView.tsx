@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/apiClient.ts';
-import { Booking, BookingStatus, Service } from '../../../shared/types.ts';
+import { Booking, BookingStatus, Service, Transaction, PaymentMethod } from '../../../shared/types.ts';
 import { calculatePlatformFee } from '../../../shared/feeCalculator.ts';
 import { BookingStatusBadge } from '../../components/Badge.tsx';
 import { Modal } from '../../components/Modal.tsx';
@@ -16,6 +16,8 @@ import {
   Plus,
   ArrowRight,
   AlertCircle,
+  CreditCard,
+  Receipt,
 } from 'lucide-react';
 
 interface BookingsViewProps {
@@ -25,6 +27,7 @@ interface BookingsViewProps {
 export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
   const [loading, setLoading] = useState(true);
@@ -47,18 +50,29 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
   const [rescheduleEndTime, setRescheduleEndTime] = useState('10:00');
   const [savingReschedule, setSavingReschedule] = useState(false);
 
+  // Record Payment Modal (ADR-006)
+  const [payingBooking, setPayingBooking] = useState<Booking | null>(null);
+  const [payAmount, setPayAmount] = useState<string>('');
+  const [payMethod, setPayMethod] = useState<PaymentMethod>('UPI');
+  const [payRef, setPayRef] = useState<string>('');
+  const [payDate, setPayDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [recordingPayment, setRecordingPayment] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const [list, srvs] = await Promise.all([
+      const [list, srvs, txs] = await Promise.all([
         api.listBookings(businessId, {
           date: selectedDate || undefined,
           status: selectedStatus !== 'ALL' ? (selectedStatus as BookingStatus) : undefined,
         }),
         api.listServices(businessId),
+        api.listTransactions(businessId),
       ]);
       setBookings(list);
       setServices(srvs);
+      setTransactions(txs);
       if (srvs.length > 0 && !manualServiceId) {
         setManualServiceId(srvs[0].id);
       }
@@ -131,6 +145,48 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
       alert(err.message || 'Failed to reschedule');
     } finally {
       setSavingReschedule(false);
+    }
+  };
+
+  const openRecordPaymentModal = (bk: Booking, remaining: number) => {
+    setPayingBooking(bk);
+    setPayAmount(remaining > 0 ? remaining.toString() : bk.grossAmount.toString());
+    setPayMethod('UPI');
+    setPayRef('');
+    setPayDate(new Date().toISOString().split('T')[0]);
+    setPaymentError(null);
+  };
+
+  const handleRecordPaymentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!payingBooking) return;
+    const numAmount = parseFloat(payAmount);
+    if (isNaN(numAmount) || numAmount <= 0) {
+      setPaymentError('Please enter a valid positive payment amount.');
+      return;
+    }
+
+    try {
+      setRecordingPayment(true);
+      setPaymentError(null);
+      await api.recordIncome({
+        businessId,
+        category: 'BOOKING_PAYMENT',
+        amount: numAmount,
+        paymentMethod: payMethod,
+        date: payDate,
+        bookingId: payingBooking.id,
+        customerId: payingBooking.customerId,
+        customerName: payingBooking.customerName,
+        description: `Payment for booking: ${payingBooking.serviceName} (${payingBooking.date} ${payingBooking.startTime})`,
+        referenceNumber: payRef.trim() || undefined,
+      });
+      setPayingBooking(null);
+      await fetchBookings();
+    } catch (err: any) {
+      setPaymentError(err.message || 'Failed to record payment transaction.');
+    } finally {
+      setRecordingPayment(false);
     }
   };
 
@@ -219,90 +275,122 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
         </div>
       ) : (
         <div className="space-y-3">
-          {bookings.map(bk => (
-            <div
-              key={bk.id}
-              className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4"
-            >
-              <div>
-                <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-                  <span className="font-bold text-stone-900 text-sm">{bk.customerName}</span>
-                  <span className="font-mono text-2xs text-stone-400">#{bk.id}</span>
-                  <BookingStatusBadge status={bk.status} />
+          {bookings.map(bk => {
+            const bkTxs = transactions.filter(t => t.bookingId === bk.id && t.status === 'SUCCESS');
+            const paidTotal = bkTxs.reduce((sum, t) => sum + t.amount, 0);
+            const remaining = Math.max(0, bk.grossAmount - paidTotal);
+            const isFullyPaid = paidTotal >= bk.grossAmount;
+
+            return (
+              <div
+                key={bk.id}
+                className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4"
+              >
+                <div>
+                  <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
+                    <span className="font-bold text-stone-900 text-sm">{bk.customerName}</span>
+                    <span className="font-mono text-2xs text-stone-400">#{bk.id}</span>
+                    <BookingStatusBadge status={bk.status} />
+                    {isFullyPaid ? (
+                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <span>Paid ₹{paidTotal} ({bkTxs[0]?.paymentMethod || 'Ledger'})</span>
+                      </span>
+                    ) : paidTotal > 0 ? (
+                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                        <span>Partially Paid ₹{paidTotal} (Due: ₹{remaining})</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded font-medium bg-stone-100 text-stone-600 border border-stone-200">
+                        <span>Payment Pending</span>
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-xs text-stone-600 flex flex-wrap items-center gap-3">
+                    <span className="font-semibold text-teal-800">{bk.serviceName}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                      {bk.date}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-stone-400" />
+                      {bk.startTime} - {bk.endTime}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <Phone className="w-3.5 h-3.5 text-stone-400" />
+                      {bk.customerPhone}
+                    </span>
+                  </div>
+
+                  {bk.notes && (
+                    <p className="text-2xs text-stone-500 mt-2 bg-stone-50 p-1.5 rounded max-w-lg">
+                      <span className="font-semibold">Note:</span> {bk.notes}
+                    </p>
+                  )}
                 </div>
 
-                <div className="text-xs text-stone-600 flex flex-wrap items-center gap-3">
-                  <span className="font-semibold text-teal-800">{bk.serviceName}</span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <Calendar className="w-3.5 h-3.5 text-stone-400" />
-                    {bk.date}
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <Clock className="w-3.5 h-3.5 text-stone-400" />
-                    {bk.startTime} - {bk.endTime}
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-stone-400" />
-                    {bk.customerPhone}
-                  </span>
-                </div>
+                {/* Fee & Action Bar */}
+                <div className="flex items-center justify-between md:justify-end gap-6 pt-3 md:pt-0 border-t md:border-t-0 border-stone-100 flex-wrap">
+                  <div className="text-right">
+                    <div className="text-base font-extrabold text-stone-900">₹{bk.grossAmount}</div>
+                    <div className="text-2xs text-stone-500">
+                      Net: ₹{bk.netAmount} <span className="text-teal-700">(Fee: ₹{bk.platformFee})</span>
+                    </div>
+                  </div>
 
-                {bk.notes && (
-                  <p className="text-2xs text-stone-500 mt-2 bg-stone-50 p-1.5 rounded max-w-lg">
-                    <span className="font-semibold">Note:</span> {bk.notes}
-                  </p>
-                )}
-              </div>
+                  {/* Status & Financial Update Actions */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {!isFullyPaid && bk.status !== 'CANCELLED' && (
+                      <button
+                        onClick={() => openRecordPaymentModal(bk, remaining)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors"
+                        title="Record actual money movement into financial ledger (ADR-006)"
+                      >
+                        <CreditCard className="w-3.5 h-3.5 text-teal-700" />
+                        <span>{paidTotal > 0 ? 'Collect Balance' : 'Collect Payment'}</span>
+                      </button>
+                    )}
 
-              {/* Fee & Action Bar */}
-              <div className="flex items-center justify-between md:justify-end gap-6 pt-3 md:pt-0 border-t md:border-t-0 border-stone-100">
-                <div className="text-right">
-                  <div className="text-base font-extrabold text-stone-900">₹{bk.grossAmount}</div>
-                  <div className="text-2xs text-stone-500">
-                    Net: ₹{bk.netAmount} <span className="text-teal-700">(Fee: ₹{bk.platformFee})</span>
+                    {bk.status !== 'COMPLETED' && bk.status !== 'CANCELLED' && (
+                      <button
+                        onClick={() => handleStatusChange(bk.id, 'COMPLETED')}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        title="Mark as Completed"
+                      >
+                        Complete
+                      </button>
+                    )}
+
+                    {bk.status !== 'CANCELLED' && bk.status !== 'COMPLETED' && (
+                      <button
+                        onClick={() => handleStatusChange(bk.id, 'CANCELLED')}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors"
+                        title="Cancel Booking"
+                      >
+                        Cancel
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        setReschedulingBooking(bk);
+                        setRescheduleDate(bk.date);
+                        setRescheduleStartTime(bk.startTime);
+                        setRescheduleEndTime(bk.endTime);
+                      }}
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition-colors"
+                    >
+                      Reschedule
+                    </button>
                   </div>
                 </div>
-
-                {/* Status Update Actions */}
-                <div className="flex items-center gap-1.5">
-                  {bk.status !== 'COMPLETED' && bk.status !== 'CANCELLED' && (
-                    <button
-                      onClick={() => handleStatusChange(bk.id, 'COMPLETED')}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
-                      title="Mark as Completed"
-                    >
-                      Complete
-                    </button>
-                  )}
-
-                  {bk.status !== 'CANCELLED' && bk.status !== 'COMPLETED' && (
-                    <button
-                      onClick={() => handleStatusChange(bk.id, 'CANCELLED')}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors"
-                      title="Cancel Booking"
-                    >
-                      Cancel
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      setReschedulingBooking(bk);
-                      setRescheduleDate(bk.date);
-                      setRescheduleStartTime(bk.startTime);
-                      setRescheduleEndTime(bk.endTime);
-                    }}
-                    className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition-colors"
-                  >
-                    Reschedule
-                  </button>
-                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -488,6 +576,114 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
             >
               {savingReschedule ? 'Saving...' : 'Update Schedule'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Record Payment Modal (ADR-006: Operational vs Financial Event Separation) */}
+      <Modal
+        isOpen={Boolean(payingBooking)}
+        onClose={() => setPayingBooking(null)}
+        title={payingBooking ? `Record Payment: ${payingBooking.serviceName}` : 'Record Booking Payment'}
+      >
+        <form onSubmit={handleRecordPaymentSubmit} className="space-y-4 text-sm">
+          {paymentError && (
+            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <span>{paymentError}</span>
+            </div>
+          )}
+
+          {payingBooking && (
+            <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs space-y-1">
+              <div className="flex justify-between">
+                <span className="text-stone-500">Customer:</span>
+                <span className="font-bold text-stone-900">{payingBooking.customerName} ({payingBooking.customerPhone})</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-stone-500">Slot Reserved:</span>
+                <span className="font-medium text-stone-700">{payingBooking.date} @ {payingBooking.startTime}</span>
+              </div>
+              <div className="flex justify-between border-t border-stone-200 pt-1 font-bold">
+                <span className="text-stone-700">Gross Booking Value:</span>
+                <span className="text-teal-800">₹{payingBooking.grossAmount}</span>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Amount Paid (₹) *</label>
+              <input
+                type="number"
+                min="1"
+                step="any"
+                required
+                value={payAmount}
+                onChange={e => setPayAmount(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-bold text-stone-900 focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Payment Method *</label>
+              <select
+                value={payMethod}
+                onChange={e => setPayMethod(e.target.value as PaymentMethod)}
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-semibold focus:ring-2 focus:ring-teal-700 focus:outline-none bg-white"
+              >
+                <option value="UPI">UPI (GPay / PhonePe / Paytm)</option>
+                <option value="CASH">Cash at Desk</option>
+                <option value="CARD">Credit / Debit Card</option>
+                <option value="NET_BANKING">Net Banking / Transfer</option>
+                <option value="OTHER">Other Method</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Payment Date *</label>
+              <input
+                type="date"
+                required
+                value={payDate}
+                onChange={e => setPayDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Reference / UTR No (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. UPI/260324/99120"
+                value={payRef}
+                onChange={e => setPayRef(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="p-2.5 bg-emerald-50 rounded-lg border border-emerald-200 text-2xs text-emerald-800">
+            <span className="font-bold">Ledger Assurance:</span> Recording this transaction writes a verified money-movement entry to your business ledger and updates your real revenue reports.
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setPayingBooking(null)}
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={recordingPayment}
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
+            >
+              {recordingPayment ? 'Recording...' : 'Record Payment to Ledger'}
             </button>
           </div>
         </form>

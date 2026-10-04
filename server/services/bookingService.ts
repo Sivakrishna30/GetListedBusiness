@@ -189,10 +189,19 @@ export class BookingService {
     return updated;
   }
 
-  public static reschedule(id: string, date: string, startTime: string, endTime: string): Booking {
+  public static reschedule(
+    id: string,
+    dateOrData: string | { date: string; startTime: string; endTime: string },
+    maybeStartTime?: string,
+    maybeEndTime?: string
+  ): Booking {
     const state = db.getState();
     const idx = state.bookings.findIndex(b => b.id === id);
     if (idx === -1) throw new Error(`Booking ${id} not found.`);
+
+    const date = typeof dateOrData === 'object' ? dateOrData.date : dateOrData;
+    const startTime = typeof dateOrData === 'object' ? dateOrData.startTime : maybeStartTime || '';
+    const endTime = typeof dateOrData === 'object' ? dateOrData.endTime : maybeEndTime || '';
 
     const booking = state.bookings[idx];
     const updated: Booking = {

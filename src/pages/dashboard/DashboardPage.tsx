@@ -12,6 +12,8 @@ import { CustomersView } from './CustomersView.tsx';
 import { TeamView } from './TeamView.tsx';
 import { ReportsView } from './ReportsView.tsx';
 import { SettingsView } from './SettingsView.tsx';
+import { TransactionsView } from './TransactionsView.tsx';
+import { ExpensesView } from './ExpensesView.tsx';
 
 interface DashboardPageProps {
   onNavigate: (path: string) => void;
@@ -43,6 +45,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {currentTab === 'products' && <ProductsView businessId={selectedBusinessId} />}
       {currentTab === 'packages' && <PackagesView businessId={selectedBusinessId} />}
       {currentTab === 'bookings' && <BookingsView businessId={selectedBusinessId} />}
+      {currentTab === 'transactions' && <TransactionsView businessId={selectedBusinessId} />}
+      {currentTab === 'expenses' && <ExpensesView businessId={selectedBusinessId} />}
       {currentTab === 'memberships' && <MembershipsView businessId={selectedBusinessId} />}
       {currentTab === 'events' && <EventsView businessId={selectedBusinessId} />}
       {currentTab === 'customers' && <CustomersView businessId={selectedBusinessId} />}

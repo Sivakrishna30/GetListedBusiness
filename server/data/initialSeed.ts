@@ -1,14 +1,36 @@
-import { Business, Service, Product, Package, Booking, Membership, MembershipEnrollment, BusinessEvent, Customer, TeamMember, Review, NotificationRecord, CategoryInfo } from '../../shared/types.ts';
+import { 
+  Business, 
+  Service, 
+  Product, 
+  Package, 
+  Booking, 
+  Membership, 
+  MembershipEnrollment, 
+  BusinessEvent, 
+  Customer, 
+  TeamMember, 
+  Review, 
+  NotificationRecord, 
+  CategoryInfo,
+  User,
+  BusinessMember,
+  Transaction,
+  Expense
+} from '../../shared/types.ts';
 import { INITIAL_CATEGORIES } from '../../shared/constants.ts';
 import { calculatePlatformFee } from '../../shared/feeCalculator.ts';
 
 export interface DatabaseState {
+  users: User[];
+  businessMembers: BusinessMember[];
   categories: CategoryInfo[];
   businesses: Business[];
   services: Service[];
   products: Product[];
   packages: Package[];
   bookings: Booking[];
+  transactions: Transaction[];
+  expenses: Expense[];
   memberships: Membership[];
   membershipEnrollments: MembershipEnrollment[];
   events: BusinessEvent[];
@@ -19,10 +41,72 @@ export interface DatabaseState {
 }
 
 export function createInitialSeed(): DatabaseState {
+  const users: User[] = [
+    {
+      id: 'user_siva_owner',
+      name: 'Sivakrishna',
+      email: 'sivakrishna.era@gmail.com',
+      passwordHash: 'password123',
+      status: 'ACTIVE',
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    },
+    {
+      id: 'user_demo_staff',
+      name: 'Rajesh Sharma',
+      email: 'staff@greenparksports.example.com',
+      passwordHash: 'password123',
+      status: 'ACTIVE',
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    },
+  ];
+
+  const businessMembers: BusinessMember[] = [
+    {
+      id: 'bm_01',
+      userId: 'user_siva_owner',
+      businessId: 'biz_greenpark_turf',
+      role: 'OWNER',
+      createdAt: '2026-01-01T00:00:00.000Z',
+    },
+    {
+      id: 'bm_02',
+      userId: 'user_siva_owner',
+      businessId: 'biz_apex_fitness',
+      role: 'OWNER',
+      createdAt: '2026-01-01T00:00:00.000Z',
+    },
+    {
+      id: 'bm_03',
+      userId: 'user_siva_owner',
+      businessId: 'biz_prana_yoga',
+      role: 'OWNER',
+      createdAt: '2026-01-01T00:00:00.000Z',
+    },
+    {
+      id: 'bm_04',
+      userId: 'user_demo_staff',
+      businessId: 'biz_greenpark_turf',
+      role: 'STAFF',
+      createdAt: '2026-01-01T00:00:00.000Z',
+    },
+  ];
+
   const businesses: Business[] = [
     {
       id: 'biz_greenpark_turf',
+      ownerId: 'user_siva_owner',
       name: 'GreenPark Sports Arena',
+      businessType: 'TURF',
+      enabledOperations: ['BOOKINGS', 'SERVICES', 'MEMBERSHIPS', 'EVENTS', 'TRANSACTIONS', 'EXPENSES'],
+      operationConfig: {
+        slotDurationMinutes: 60,
+        capacityPerSlot: 10,
+        advanceBookingDays: 14,
+        cancellationWindowHours: 12,
+        notes: 'Floodlight charges included after 06:30 PM.',
+      },
       logo: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=200&h=200&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1200&h=600&fit=crop&q=80',
       description: 'Premier multi-sport destination featuring FIFA-certified artificial turf for 5-a-side and 7-a-side football, alongside 4 synthetic BWF-approved badminton courts with professional LED lighting.',
@@ -49,7 +133,10 @@ export function createInitialSeed(): DatabaseState {
     },
     {
       id: 'biz_apex_fitness',
+      ownerId: 'user_siva_owner',
       name: 'Apex Elite Gym & Fitness',
+      businessType: 'GENERAL',
+      enabledOperations: ['SERVICES', 'PRODUCTS', 'MEMBERSHIPS', 'TRANSACTIONS', 'EXPENSES'],
       logo: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=1200&h=600&fit=crop&q=80',
       description: 'Modern 8,000 sq.ft strength and conditioning facility equipped with Hammer Strength equipment, dedicated functional CrossFit zone, and certified nutritionists.',
@@ -75,7 +162,10 @@ export function createInitialSeed(): DatabaseState {
     },
     {
       id: 'biz_prana_yoga',
+      ownerId: 'user_siva_owner',
       name: 'Prana Yoga & Wellness Sanctuary',
+      businessType: 'STUDIO',
+      enabledOperations: ['SERVICES', 'PACKAGES', 'BOOKINGS', 'EVENTS', 'TRANSACTIONS', 'EXPENSES'],
       logo: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200&h=200&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1200&h=600&fit=crop&q=80',
       description: 'Serene bamboo-floored studio offering traditional Hatha yoga, dynamic Vinyasa flow, prenatal wellness, and restorative sound meditation guided by certified practitioners.',
@@ -100,7 +190,10 @@ export function createInitialSeed(): DatabaseState {
     },
     {
       id: 'biz_bluewave_aquatics',
+      ownerId: 'user_siva_owner',
       name: 'BlueWave Aquatic Centre',
+      businessType: 'TURF',
+      enabledOperations: ['BOOKINGS', 'SERVICES', 'MEMBERSHIPS', 'TRANSACTIONS', 'EXPENSES'],
       logo: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=200&h=200&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1200&h=600&fit=crop&q=80',
       description: 'Temperature-controlled 8-lane 50m Olympic competition pool with UV ozonated filtration system and professional swim coaches for all age brackets.',
@@ -125,7 +218,10 @@ export function createInitialSeed(): DatabaseState {
     },
     {
       id: 'biz_lifecare_clinic',
+      ownerId: 'user_siva_owner',
       name: 'LifeCare Family Clinic & Diagnostics',
+      businessType: 'CLINIC',
+      enabledOperations: ['BOOKINGS', 'SERVICES', 'TRANSACTIONS', 'EXPENSES'],
       logo: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=200&h=200&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&h=600&fit=crop&q=80',
       description: 'Compassionate primary healthcare clinic featuring experienced general physicians, pediatricians, on-site pathology sample collection, and preventive health screenings.',
@@ -150,7 +246,10 @@ export function createInitialSeed(): DatabaseState {
     },
     {
       id: 'biz_saket_hospital',
+      ownerId: 'user_siva_owner',
       name: 'City Care Multi-Speciality Hospital',
+      businessType: 'CLINIC',
+      enabledOperations: ['BOOKINGS', 'SERVICES', 'TRANSACTIONS', 'EXPENSES'],
       logo: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=200&h=200&fit=crop&q=80',
       coverImage: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1200&h=600&fit=crop&q=80',
       description: 'Advanced 120-bed hospital offering 24/7 emergency response, cardiology, orthopaedics, modular operating theatres, and digital diagnostic imaging.',
@@ -819,13 +918,120 @@ export function createInitialSeed(): DatabaseState {
     },
   ];
 
+  const transactions: Transaction[] = [
+    {
+      id: 'tx_01',
+      businessId: 'biz_greenpark_turf',
+      type: 'INCOME',
+      category: 'BOOKING_PAYMENT',
+      amount: 2400,
+      paymentMethod: 'UPI',
+      status: 'SUCCESS',
+      date: '2026-03-16',
+      bookingId: 'bk_gp_101',
+      customerId: 'cust_gp_01',
+      customerName: 'Rohit Verma',
+      description: 'Online booking deposit - FIFA 5-a-Side Turf',
+      referenceNumber: 'UPI/260316/88921',
+      createdAt: '2026-03-16T18:05:00.000Z',
+      updatedAt: '2026-03-16T18:05:00.000Z',
+    },
+    {
+      id: 'tx_02',
+      businessId: 'biz_greenpark_turf',
+      type: 'INCOME',
+      category: 'DIRECT_SALE',
+      amount: 1200,
+      paymentMethod: 'CASH',
+      status: 'SUCCESS',
+      date: '2026-03-18',
+      customerName: 'Karthik Nair (Walk-in)',
+      description: 'Counter Payment - Badminton Court 1 Slot',
+      referenceNumber: 'REC-2026-042',
+      createdAt: '2026-03-18T10:15:00.000Z',
+      updatedAt: '2026-03-18T10:15:00.000Z',
+    },
+    {
+      id: 'tx_03',
+      businessId: 'biz_greenpark_turf',
+      type: 'INCOME',
+      category: 'DIRECT_SALE',
+      amount: 450,
+      paymentMethod: 'UPI',
+      status: 'SUCCESS',
+      date: '2026-03-20',
+      description: 'Racket rentals & energy drink sales at counter',
+      referenceNumber: 'UPI/260320/11029',
+      createdAt: '2026-03-20T19:30:00.000Z',
+      updatedAt: '2026-03-20T19:30:00.000Z',
+    },
+  ];
+
+  const expenses: Expense[] = [
+    {
+      id: 'exp_01',
+      businessId: 'biz_greenpark_turf',
+      category: 'RENT',
+      amount: 45000,
+      date: '2026-03-01',
+      description: 'Monthly Arena Ground Lease',
+      paymentMethod: 'NET_BANKING',
+      paidTo: 'Indiranagar Sports Complex Trust',
+      receiptRef: 'LEASE-MAR-2026',
+      createdAt: '2026-03-01T09:00:00.000Z',
+      updatedAt: '2026-03-01T09:00:00.000Z',
+    },
+    {
+      id: 'exp_02',
+      businessId: 'biz_greenpark_turf',
+      category: 'UTILITIES',
+      amount: 12400,
+      date: '2026-03-05',
+      description: 'Commercial Electricity & Floodlights (BESCOM)',
+      paymentMethod: 'UPI',
+      paidTo: 'BESCOM Karnataka',
+      receiptRef: 'EB-BES-88192',
+      createdAt: '2026-03-05T11:20:00.000Z',
+      updatedAt: '2026-03-05T11:20:00.000Z',
+    },
+    {
+      id: 'exp_03',
+      businessId: 'biz_greenpark_turf',
+      category: 'SALARY',
+      amount: 15000,
+      date: '2026-03-10',
+      description: 'Groundkeeper & Referee Staff Stipend',
+      paymentMethod: 'NET_BANKING',
+      paidTo: 'Staff Accounts',
+      createdAt: '2026-03-10T14:00:00.000Z',
+      updatedAt: '2026-03-10T14:00:00.000Z',
+    },
+    {
+      id: 'exp_04',
+      businessId: 'biz_greenpark_turf',
+      category: 'MAINTENANCE',
+      amount: 6500,
+      date: '2026-03-15',
+      description: 'Turf rubber granule top-up and net repair kit',
+      paymentMethod: 'CASH',
+      paidTo: 'Apex Sports Equipment Depot',
+      receiptRef: 'BILL-4410',
+      createdAt: '2026-03-15T16:30:00.000Z',
+      updatedAt: '2026-03-15T16:30:00.000Z',
+    },
+  ];
+
   return {
+    users,
+    businessMembers,
     categories: INITIAL_CATEGORIES,
     businesses,
     services,
     products,
     packages,
     bookings,
+    transactions,
+    expenses,
     memberships,
     membershipEnrollments,
     events,

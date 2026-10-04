@@ -86,6 +86,12 @@ export class BusinessService {
       verificationStatus: input.verificationStatus || 'UNVERIFIED',
       plan: input.plan || 'FREE',
       sponsoredListingEnabled: Boolean(input.sponsoredListingEnabled),
+      ownerId: input.ownerId || 'user_siva_owner',
+      businessType: input.businessType || 'GENERAL',
+      enabledOperations: input.enabledOperations && input.enabledOperations.length > 0
+        ? input.enabledOperations
+        : ['BOOKINGS', 'SERVICES', 'TRANSACTIONS', 'EXPENSES'],
+      operationConfig: input.operationConfig,
       createdAt: now,
       updatedAt: now,
     };
@@ -147,5 +153,37 @@ export class BusinessService {
 
   public static updateSponsored(id: string, sponsoredListingEnabled: boolean): Business {
     return this.update(id, { sponsoredListingEnabled });
+  }
+
+  public static updateOperations(
+    id: string,
+    data: {
+      businessType?: any;
+      enabledOperations?: any[];
+      operationConfig?: any;
+    }
+  ): Business {
+    const state = db.getState();
+    const idx = state.businesses.findIndex(b => b.id === id);
+    if (idx === -1) {
+      throw new Error(`Business with ID ${id} not found.`);
+    }
+
+    const current = state.businesses[idx];
+    const updated: Business = {
+      ...current,
+      businessType: data.businessType || current.businessType || 'GENERAL',
+      enabledOperations: Array.isArray(data.enabledOperations) ? data.enabledOperations : current.enabledOperations,
+      operationConfig: data.operationConfig
+        ? { ...current.operationConfig, ...data.operationConfig }
+        : current.operationConfig,
+      updatedAt: new Date().toISOString(),
+    };
+
+    db.update(s => {
+      s.businesses[idx] = updated;
+    });
+
+    return updated;
   }
 }

@@ -8,6 +8,14 @@ import {
   Sparkles,
   RefreshCw,
   Award,
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Download,
+  Printer,
+  FileText,
+  Calendar,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface ReportsViewProps {
@@ -45,7 +53,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
 
   if (!reports) return null;
 
-  const { overview, revenue, performance, customers } = reports;
+  const { overview, revenue, financials, narrativeSummary, performance, customers } = reports;
   const popularServices = performance.popularServices || [];
   const peakSlots = performance.peakPeriods || [];
   const avgBookingValue =
@@ -57,93 +65,169 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
       ? Math.round((customers.returningCustomersCount / customers.totalCustomers) * 100)
       : 0;
 
+  const totalIncome = financials?.totalIncome ?? revenue.totalRevenue;
+  const totalExpenses = financials?.totalExpenses ?? 0;
+  const netProfit = financials?.netProfit ?? (totalIncome - totalExpenses);
+
+  const handleExportCSV = () => {
+    const lines = [
+      ['REPORT', 'GetListed Phase 1 Business Audit Report'],
+      ['GENERATED_AT', new Date().toISOString()],
+      ['BUSINESS_ID', businessId],
+      [],
+      ['METRIC', 'AMOUNT_INR'],
+      ['Total Income', totalIncome],
+      ['Total Operating Expenses', totalExpenses],
+      ['Net Business Profit', netProfit],
+      ['Total Bookings', performance.totalBookings],
+      ['Completed Bookings', performance.completedBookings],
+      ['Cancelled Bookings', performance.cancelledBookings],
+      ['Total Customers', customers.totalCustomers],
+      ['Returning Customers', customers.returningCustomersCount],
+      [],
+      ['POPULAR_SERVICES', 'BOOKINGS_COUNT', 'REVENUE_INR'],
+      ...popularServices.map(s => [s.name, s.count, s.revenue]),
+    ];
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + lines.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `Business_Report_${businessId}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-stone-900">Reports & Revenue Analytics</h2>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-bold bg-teal-800 text-white uppercase tracking-wider">
-              <Sparkles className="w-3 h-3 text-teal-200" />
-              Pro Feature
+            <h2 className="text-base font-bold text-stone-900">Business Reports & Performance Intelligence</h2>
+            <span className="text-2xs font-semibold uppercase px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200">
+              Layer 4 & 5 Core OS
             </span>
           </div>
           <p className="text-xs text-stone-500 mt-1">
-            Track revenue, booking performance, and customer retention.
+            Plain-language weekly and monthly reports, financial tracking, and accountant-ready summaries.
           </p>
         </div>
 
-        <button
-          onClick={fetchReports}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition-colors self-start sm:self-auto"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span>Refresh Data</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 bg-stone-50 hover:bg-stone-100 transition-colors"
+          >
+            <Download className="w-3.5 h-3.5 text-stone-500" />
+            <span>Export Report (CSV)</span>
+          </button>
+
+          <button
+            onClick={handlePrint}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 bg-stone-50 hover:bg-stone-100 transition-colors"
+          >
+            <Printer className="w-3.5 h-3.5 text-stone-500" />
+            <span>Print / PDF</span>
+          </button>
+        </div>
       </div>
 
-      {/* Revenue Breakdown Card */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs">
-        <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider mb-4">
-          Financial & Revenue Summary
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-            <span className="text-xs font-semibold text-stone-500 block mb-1">Gross Booking Revenue</span>
-            <div className="text-2xl font-extrabold text-stone-900">₹{revenue.totalRevenue}</div>
-            <span className="text-2xs text-stone-500 mt-1 block">Total customer value processed</span>
+      {/* Layer 5: Plain-Language Narrative Reports */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gradient-to-br from-teal-900 to-teal-800 text-white p-5 rounded-xl shadow-xs">
+          <div className="flex items-center gap-2 text-teal-200 text-xs font-bold uppercase tracking-wider mb-2">
+            <FileText className="w-4 h-4" />
+            <span>Weekly Business Narrative (Discovery Layer 5)</span>
           </div>
-
-          <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200">
-            <span className="text-xs font-semibold text-amber-900 block mb-1">
-              Platform Handling Fee (5%)
-            </span>
-            <div className="text-2xl font-extrabold text-amber-900">₹{revenue.platformFeesPaid}</div>
-            <span className="text-2xs text-amber-700 mt-1 block">5% per eligible booking</span>
+          <p className="text-sm font-medium leading-relaxed text-teal-50">
+            {narrativeSummary?.weeklySummaryText || 'Generating weekly operational performance...'}
+          </p>
+          <div className="mt-4 pt-3 border-t border-teal-700/60 flex items-center justify-between text-2xs text-teal-300">
+            <span>Peak Activity: {narrativeSummary?.topDay || 'Saturday'}</span>
+            <span>Focus: Activity & Money Flow</span>
           </div>
+        </div>
 
-          <div className="p-4 rounded-xl bg-teal-50 border border-teal-200">
-            <span className="text-xs font-semibold text-teal-900 block mb-1">Net Business Payout</span>
-            <div className="text-2xl font-extrabold text-teal-900">₹{revenue.netBusinessRevenue}</div>
-            <span className="text-2xs text-teal-700 mt-1 block">Payable directly to merchant</span>
+        <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
+          <div className="flex items-center gap-2 text-stone-700 text-xs font-bold uppercase tracking-wider mb-2">
+            <Calendar className="w-4 h-4 text-teal-700" />
+            <span>Monthly Business Report Summary</span>
           </div>
-
-          <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-            <span className="text-xs font-semibold text-stone-500 block mb-1">Average Booking Value</span>
-            <div className="text-2xl font-extrabold text-stone-900">₹{avgBookingValue}</div>
-            <span className="text-2xs text-stone-500 mt-1 block">Across {performance.totalBookings} bookings</span>
+          <p className="text-sm text-stone-700 leading-relaxed font-medium">
+            {narrativeSummary?.monthlySummaryText || 'Generating monthly consolidated performance...'}
+          </p>
+          <div className="mt-4 pt-3 border-t border-stone-100 text-2xs text-emerald-700 font-semibold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>{narrativeSummary?.growthInsight || 'All operations running cleanly.'}</span>
           </div>
         </div>
       </div>
 
-      {/* Two-Column Analytics: Popular Services & Peak Slots */}
+      {/* Financial Health Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
+          <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>Total Realized Income</span>
+            <TrendingUp className="w-4 h-4 text-emerald-600" />
+          </div>
+          <div className="text-2xl font-black text-stone-900">
+            ₹{totalIncome.toLocaleString('en-IN')}
+          </div>
+          <p className="text-2xs text-stone-400 mt-1">From bookings & direct sales</p>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
+          <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>Total Operating Expenses</span>
+            <TrendingDown className="w-4 h-4 text-red-500" />
+          </div>
+          <div className="text-2xl font-black text-stone-900">
+            ₹{totalExpenses.toLocaleString('en-IN')}
+          </div>
+          <p className="text-2xs text-stone-400 mt-1">Rent, salaries, electricity, maintenance</p>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
+          <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>Net Business Profit (Income - Expenses)</span>
+            <DollarSign className={`w-4 h-4 ${netProfit >= 0 ? 'text-teal-700' : 'text-red-500'}`} />
+          </div>
+          <div className={`text-2xl font-black ${netProfit >= 0 ? 'text-teal-700' : 'text-red-600'}`}>
+            ₹{netProfit.toLocaleString('en-IN')}
+          </div>
+          <p className="text-2xs text-stone-400 mt-1">True net operational profit</p>
+        </div>
+      </div>
+
+      {/* Operational Performance & Customer Retention */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Popular Services */}
-        <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider">
-              Most Popular Services
-            </h3>
+        <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-2xs">
+          <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider mb-4 flex items-center gap-2">
             <Award className="w-4 h-4 text-teal-700" />
-          </div>
-
+            Top Performing Services
+          </h3>
           {popularServices.length === 0 ? (
-            <p className="text-xs text-stone-500 text-center py-6">No service activity yet.</p>
+            <p className="text-xs text-stone-400 italic">No service booking activity recorded yet.</p>
           ) : (
             <div className="space-y-3">
-              {popularServices.map((ps: { name: string; count: number; revenue: number }, i: number) => (
-                <div key={ps.name} className="flex items-center justify-between text-xs p-2.5 rounded-lg bg-stone-50 border border-stone-100">
+              {popularServices.map((service, index) => (
+                <div key={index} className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-teal-700 text-white font-bold text-2xs flex items-center justify-center shrink-0">
-                      {i + 1}
+                    <span className="w-5 h-5 rounded-full bg-stone-100 text-stone-600 font-bold flex items-center justify-center text-2xs">
+                      {index + 1}
                     </span>
-                    <span className="font-semibold text-stone-800">{ps.name}</span>
+                    <span className="font-semibold text-stone-900">{service.name}</span>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-stone-900">{ps.count} bookings</div>
-                    <div className="text-2xs text-stone-500">₹{ps.revenue} gross</div>
+                    <span className="font-bold text-stone-900">₹{service.revenue.toLocaleString('en-IN')}</span>
+                    <span className="text-2xs text-stone-400 block">{service.count} bookings</span>
                   </div>
                 </div>
               ))}
@@ -151,52 +235,33 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
           )}
         </div>
 
-        {/* Peak Slots */}
-        <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider">
-              Peak Slot Utilization
-            </h3>
+        {/* Peak Periods & Customer Retention */}
+        <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-2xs">
+          <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider mb-4 flex items-center gap-2">
             <Clock className="w-4 h-4 text-teal-700" />
-          </div>
+            Peak Operational Slots & Retention
+          </h3>
 
-          {peakSlots.length === 0 ? (
-            <p className="text-xs text-stone-500 text-center py-6">No slot data available yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {peakSlots.map((slot: { timeSlot: string; count: number }, i: number) => (
-                <div key={i} className="flex items-center justify-between text-xs p-2.5 rounded-lg bg-stone-50 border border-stone-100">
-                  <span className="font-mono font-medium text-stone-800">{slot.timeSlot}</span>
-                  <span className="font-bold text-teal-800 px-2.5 py-0.5 rounded bg-teal-50 border border-teal-200">
-                    {slot.count} reservations
-                  </span>
-                </div>
-              ))}
+          <div className="grid grid-cols-2 gap-3 mb-4 p-3 bg-stone-50 rounded-lg text-xs">
+            <div>
+              <span className="text-2xs text-stone-400 block">Repeat Customer Rate</span>
+              <span className="text-base font-bold text-stone-900">{repeatRate}%</span>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Customer Retention Metrics */}
-      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
-        <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider mb-4">
-          Customer Retention & Loyalty
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-lg bg-stone-50 border border-stone-200 text-center">
-            <span className="text-xs text-stone-500 block mb-1">Total Unique Customers</span>
-            <span className="text-2xl font-extrabold text-stone-900">{customers.totalCustomers}</span>
+            <div>
+              <span className="text-2xs text-stone-400 block">Avg Booking Value</span>
+              <span className="text-base font-bold text-stone-900">₹{avgBookingValue.toLocaleString('en-IN')}</span>
+            </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-stone-50 border border-stone-200 text-center">
-            <span className="text-xs text-stone-500 block mb-1">Returning Clients (2+ bookings)</span>
-            <span className="text-2xl font-extrabold text-teal-800">{customers.returningCustomersCount}</span>
-          </div>
-
-          <div className="p-4 rounded-lg bg-teal-50 border border-teal-200 text-center">
-            <span className="text-xs text-teal-900 font-semibold block mb-1">Repeat Customer Rate</span>
-            <span className="text-2xl font-extrabold text-teal-900">{repeatRate}%</span>
+          <div className="space-y-2">
+            {peakSlots.slice(0, 4).map((slot, index) => (
+              <div key={index} className="flex items-center justify-between text-xs py-1 border-b border-stone-100 last:border-0">
+                <span className="text-stone-700 font-mono text-2xs">{slot.timeSlot}</span>
+                <span className="font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded text-2xs border border-teal-200">
+                  {slot.count} bookings
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

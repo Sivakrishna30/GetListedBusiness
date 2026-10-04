@@ -2,7 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../services/apiClient.ts';
 import { Customer } from '../../../shared/types.ts';
 import { Modal } from '../../components/Modal.tsx';
-import { Users, Phone, Mail, Calendar, DollarSign, Edit3, Sparkles, RefreshCw } from 'lucide-react';
+import {
+  Users,
+  Phone,
+  Mail,
+  Calendar,
+  DollarSign,
+  Edit3,
+  Sparkles,
+  RefreshCw,
+  Plus,
+  Search,
+  Download,
+  AlertCircle,
+} from 'lucide-react';
 
 interface CustomersViewProps {
   businessId: string;
@@ -11,16 +24,26 @@ interface CustomersViewProps {
 export const CustomersView: React.FC<CustomersViewProps> = ({ businessId }) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Notes Modal
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [notes, setNotes] = useState('');
   const [savingNotes, setSavingNotes] = useState(false);
 
+  // Add Customer Modal
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [newPhone, setNewPhone] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newNotes, setNewNotes] = useState('');
+  const [addingCustomer, setAddingCustomer] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const list = await api.listCustomers(businessId);
+      const list = await api.listCustomers(businessId, searchQuery);
       setCustomers(list);
     } catch (err) {
       console.error('Failed to load customers:', err);
@@ -31,7 +54,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({ businessId }) => {
 
   useEffect(() => {
     fetchCustomers();
-  }, [businessId]);
+  }, [businessId, searchQuery]);
 
   const handleSaveNotes = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,138 +72,319 @@ export const CustomersView: React.FC<CustomersViewProps> = ({ businessId }) => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
-        <p className="text-xs text-stone-500 font-medium">Loading customer database...</p>
-      </div>
-    );
-  }
+  const handleCreateCustomer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newName.trim() || !newPhone.trim()) {
+      setErrorMsg('Name and phone number are required.');
+      return;
+    }
+
+    try {
+      setAddingCustomer(true);
+      setErrorMsg(null);
+      await api.createCustomer(businessId, {
+        name: newName.trim(),
+        phone: newPhone.trim(),
+        email: newEmail.trim() || undefined,
+        notes: newNotes.trim() || undefined,
+      });
+
+      setIsAddModalOpen(false);
+      setNewName('');
+      setNewPhone('');
+      setNewEmail('');
+      setNewNotes('');
+      await fetchCustomers();
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to add customer.');
+    } finally {
+      setAddingCustomer(false);
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (!customers.length) {
+      alert('No customers to export.');
+      return;
+    }
+
+    const headers = ['Customer Name', 'Phone', 'Email', 'Total Bookings', 'Total Spent (INR)', 'Last Interaction', 'Notes'];
+    const rows = customers.map(c => [
+      `"${c.name.replace(/"/g, '""')}"`,
+      `"${c.phone}"`,
+      `"${(c.email || '').replace(/"/g, '""')}"`,
+      c.bookingCount,
+      c.totalSpent,
+      `"${c.lastInteraction ? c.lastInteraction.split('T')[0] : ''}"`,
+      `"${(c.notes || '').replace(/"/g, '""')}"`,
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `Customers_${businessId}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* Header */}
+      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-stone-900">Customer Relationship Management</h2>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-bold bg-teal-800 text-white uppercase tracking-wider">
-              <Sparkles className="w-3 h-3 text-teal-200" />
-              Pro Feature
+            <h2 className="text-base font-bold text-stone-900">Customer Directory & CRM</h2>
+            <span className="text-2xs font-semibold uppercase px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200">
+              Walk-in & Online
             </span>
           </div>
-          <p className="text-xs text-stone-500 mt-1">
-            Customer directory automatically compiled from actual booking reservations and member enrollments.
+          <p className="text-xs text-stone-500 mt-0.5">
+            Manage your customer profiles, track total bookings and spend, and keep internal operational notes.
           </p>
         </div>
 
-        <div className="text-xs font-bold text-stone-700 bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200 self-start sm:self-auto">
-          {customers.length} Registered Customers
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 bg-stone-50 hover:bg-stone-100 transition-colors"
+          >
+            <Download className="w-3.5 h-3.5 text-stone-500" />
+            <span>Export CSV</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setErrorMsg(null);
+              setIsAddModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-xs"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Customer</span>
+          </button>
         </div>
       </div>
 
-      {customers.length === 0 ? (
-        <div className="bg-white p-12 rounded-xl border border-stone-200 text-center max-w-md mx-auto">
-          <Users className="w-10 h-10 text-stone-400 mx-auto mb-3" />
-          <h3 className="text-sm font-bold text-stone-900 mb-1">No customer records yet</h3>
-          <p className="text-xs text-stone-500">
-            Customers will automatically be recorded here as they book services or enroll in memberships.
+      {/* Search & Stats */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search by name, phone, or email..."
+            className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-300 text-xs text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+          />
+        </div>
+
+        <div className="text-xs text-stone-500">
+          Total Customers: <span className="font-bold text-stone-900">{customers.length}</span>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
+          <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+          <p className="text-xs text-stone-500 font-medium">Loading customer database...</p>
+        </div>
+      ) : customers.length === 0 ? (
+        <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
+          <Users className="w-10 h-10 text-stone-300 mx-auto mb-2" />
+          <h4 className="text-sm font-semibold text-stone-700">No customers found</h4>
+          <p className="text-xs text-stone-500 mt-1">
+            {searchQuery ? 'No customers matched your search query.' : 'Add walk-in clients manually or they will be added automatically upon booking.'}
           </p>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Walk-in Customer</span>
+          </button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-stone-200 shadow-2xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="bg-stone-50 border-b border-stone-200 text-2xs font-bold uppercase tracking-wider text-stone-600">
-                  <th className="py-3 px-4">Customer</th>
-                  <th className="py-3 px-4">Contact</th>
-                  <th className="py-3 px-4">Bookings</th>
-                  <th className="py-3 px-4">Total Spent</th>
-                  <th className="py-3 px-4">Last Interaction</th>
-                  <th className="py-3 px-4">Notes</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-100">
-                {customers.map(c => (
-                  <tr key={c.id} className="hover:bg-stone-50/70 transition-colors">
-                    <td className="py-3 px-4 font-bold text-stone-900 whitespace-nowrap">
-                      {c.name}
-                    </td>
-                    <td className="py-3 px-4 text-stone-600 whitespace-nowrap">
-                      <div className="flex items-center gap-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {customers.map(c => (
+            <div key={c.id} className="bg-white rounded-xl border border-stone-200 p-4 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="text-sm font-bold text-stone-900">{c.name}</h3>
+                    <div className="flex items-center gap-2 text-2xs text-stone-500 mt-0.5">
+                      <span className="flex items-center gap-1">
                         <Phone className="w-3 h-3 text-stone-400" />
-                        <span>{c.phone}</span>
-                      </div>
-                      {c.email && <div className="text-2xs text-stone-400">{c.email}</div>}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-stone-800">
-                      {c.bookingCount} {c.bookingCount === 1 ? 'booking' : 'bookings'}
-                    </td>
-                    <td className="py-3 px-4 font-bold text-stone-900 whitespace-nowrap">
-                      ₹{c.totalSpent}
-                    </td>
-                    <td className="py-3 px-4 text-stone-500 whitespace-nowrap">
-                      {new Date(c.lastInteraction).toLocaleDateString()}
-                    </td>
-                    <td className="py-3 px-4 text-stone-600 max-w-xs truncate">
-                      {c.notes || '—'}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <button
-                        onClick={() => {
-                          setEditingCustomer(c);
-                          setNotes(c.notes || '');
-                        }}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-2xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition-colors"
-                      >
-                        <Edit3 className="w-3 h-3" />
-                        <span>Edit Notes</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        {c.phone}
+                      </span>
+                      {c.email && (
+                        <span className="flex items-center gap-1 truncate max-w-[120px]">
+                          <Mail className="w-3 h-3 text-stone-400" />
+                          {c.email}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <span className={`text-2xs font-semibold px-2 py-0.5 rounded ${
+                    c.bookingCount > 1 ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-stone-100 text-stone-700'
+                  }`}>
+                    {c.bookingCount > 1 ? 'Returning' : 'New Client'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-stone-100 text-2xs">
+                  <div>
+                    <span className="text-stone-400 block">Total Bookings</span>
+                    <span className="font-bold text-stone-900 text-xs">{c.bookingCount}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 block">Total Spent</span>
+                    <span className="font-bold text-stone-900 text-xs">₹{(c.totalSpent || 0).toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+
+                {c.notes && (
+                  <div className="mt-3 p-2 rounded-lg bg-stone-50 border border-stone-200 text-2xs text-stone-600">
+                    <span className="font-bold text-stone-700 block mb-0.5">Private Notes:</span>
+                    <p className="line-clamp-2">{c.notes}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-2xs text-stone-400">
+                <span>Last active: {c.lastInteraction ? c.lastInteraction.split('T')[0] : 'Recently'}</span>
+                <button
+                  onClick={() => {
+                    setEditingCustomer(c);
+                    setNotes(c.notes || '');
+                  }}
+                  className="inline-flex items-center gap-1 text-teal-700 hover:text-teal-900 font-semibold"
+                >
+                  <Edit3 className="w-3 h-3" />
+                  <span>Edit Notes</span>
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
       {/* Edit Notes Modal */}
-      <Modal
-        isOpen={Boolean(editingCustomer)}
-        onClose={() => setEditingCustomer(null)}
-        title={editingCustomer ? `Customer Notes: ${editingCustomer.name}` : 'Customer Notes'}
-      >
-        <form onSubmit={handleSaveNotes} className="space-y-4 text-sm">
+      <Modal isOpen={!!editingCustomer} onClose={() => setEditingCustomer(null)} title={`Customer Notes: ${editingCustomer?.name}`}>
+        <form onSubmit={handleSaveNotes} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1">
-              Internal Relationship & Preference Notes
+              Private Internal Notes
             </label>
             <textarea
               rows={4}
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="e.g. Prefers court 1 in the evenings, regular weekend tournament captain..."
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              placeholder="e.g. VIP client, prefers weekend slots, requested specific court trainer..."
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
             />
           </div>
 
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setEditingCustomer(null)}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100"
+              className="px-4 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={savingNotes}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
             >
               {savingNotes ? 'Saving...' : 'Save Notes'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Add Walk-in Customer Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Register Walk-in / Offline Customer">
+        <form onSubmit={handleCreateCustomer} className="space-y-4">
+          {errorMsg && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-xs font-semibold text-stone-700 mb-1">
+              Customer Full Name *
+            </label>
+            <input
+              type="text"
+              required
+              value={newName}
+              onChange={e => setNewName(e.target.value)}
+              placeholder="e.g. Ravi Kumar"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                required
+                value={newPhone}
+                onChange={e => setNewPhone(e.target.value)}
+                placeholder="e.g. +91 98765 43210"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Email Address (Optional)
+              </label>
+              <input
+                type="email"
+                value={newEmail}
+                onChange={e => setNewEmail(e.target.value)}
+                placeholder="e.g. ravi@example.com"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-stone-700 mb-1">
+              Initial Notes (Optional)
+            </label>
+            <textarea
+              rows={2}
+              value={newNotes}
+              onChange={e => setNewNotes(e.target.value)}
+              placeholder="e.g. Walk-in badminton player, referred by IND-SPORTS."
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-3 border-t border-stone-200">
+            <button
+              type="button"
+              onClick={() => setIsAddModalOpen(false)}
+              className="px-4 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={addingCustomer}
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+            >
+              {addingCustomer ? 'Adding...' : 'Add Customer'}
             </button>
           </div>
         </form>

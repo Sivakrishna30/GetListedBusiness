@@ -9,14 +9,60 @@ export type EnrollmentStatus = 'ACTIVE' | 'EXPIRED' | 'CANCELLED';
 export type NotificationChannel = 'WHATSAPP' | 'SMS';
 export type NotificationStatus = 'PENDING_CONFIGURATION' | 'SENT' | 'FAILED';
 
+// --- ADR-007: Identity & Multi-Business Membership ---
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  status: 'ACTIVE' | 'SUSPENDED';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type BusinessMemberRole = 'OWNER' | 'MANAGER' | 'STAFF';
+
+export interface BusinessMember {
+  id: string;
+  userId: string;
+  businessId: string;
+  role: BusinessMemberRole;
+  createdAt: string;
+}
+
+// --- ADR-008: Business Type & Modular Operations ---
+export type BusinessType = 'TURF' | 'STUDIO' | 'RETAIL' | 'CLINIC' | 'GENERAL';
+
+export type Operation = 
+  | 'BOOKINGS'
+  | 'SERVICES'
+  | 'PRODUCTS'
+  | 'PACKAGES'
+  | 'MEMBERSHIPS'
+  | 'EVENTS'
+  | 'EXPENSES'
+  | 'TRANSACTIONS';
+
+export interface BusinessOperationConfig {
+  slotDurationMinutes?: number;
+  capacityPerSlot?: number;
+  advanceBookingDays?: number;
+  cancellationWindowHours?: number;
+  notes?: string;
+}
+
 export interface Business {
   id: string;
+  ownerId?: string; // ADR-007
   name: string;
   logo: string;
   coverImage: string;
   description: string;
   category: string;
   subCategory: string;
+  businessType?: BusinessType; // ADR-008
+  enabledOperations?: Operation[]; // ADR-008
+  operationConfig?: BusinessOperationConfig;
   contactNumber: string;
   whatsappNumber: string;
   website: string;
@@ -30,6 +76,45 @@ export interface Business {
   verificationStatus: VerificationStatus;
   plan: BusinessPlan;
   sponsoredListingEnabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// --- ADR-006: Financial Ledger & Money Movement ---
+export type TransactionType = 'INCOME' | 'EXPENSE' | 'REFUND';
+export type TransactionStatus = 'SUCCESS' | 'PENDING' | 'FAILED';
+export type PaymentMethod = 'CASH' | 'UPI' | 'CARD' | 'NET_BANKING' | 'OTHER';
+
+export interface Transaction {
+  id: string;
+  businessId: string;
+  type: TransactionType;
+  category: string; // e.g., 'BOOKING_PAYMENT', 'DIRECT_SALE', 'MEMBERSHIP_FEE', 'OTHER_INCOME'
+  amount: number;
+  paymentMethod: PaymentMethod;
+  status: TransactionStatus;
+  date: string; // YYYY-MM-DD
+  bookingId?: string;
+  customerId?: string;
+  customerName?: string;
+  description?: string;
+  referenceNumber?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ExpenseCategory = 'RENT' | 'SALARY' | 'UTILITIES' | 'MARKETING' | 'MAINTENANCE' | 'INVENTORY' | 'OTHER';
+
+export interface Expense {
+  id: string;
+  businessId: string;
+  category: ExpenseCategory;
+  amount: number;
+  date: string; // YYYY-MM-DD
+  description: string;
+  paymentMethod: PaymentMethod;
+  paidTo?: string;
+  receiptRef?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -210,6 +295,19 @@ export interface BusinessReportData {
     revenueByPeriod: { period: string; gross: number; count: number }[];
     bookingRevenue: number;
     orderRevenue: number;
+  };
+  financials: {
+    totalIncome: number;
+    totalExpenses: number;
+    netProfit: number; // Total Income - Total Expenses
+    incomeByCategory: { category: string; amount: number }[];
+    expenseByCategory: { category: string; amount: number }[];
+  };
+  narrativeSummary: {
+    weeklySummaryText: string;
+    monthlySummaryText: string;
+    growthInsight: string;
+    topDay: string;
   };
   performance: {
     totalBookings: number;

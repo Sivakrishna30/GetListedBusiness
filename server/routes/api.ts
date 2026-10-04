@@ -6,8 +6,43 @@ import { BookingService } from '../services/bookingService.ts';
 import { CustomerService } from '../services/customerService.ts';
 import { TeamService } from '../services/teamService.ts';
 import { ReportService } from '../services/reportService.ts';
+import { AuthService } from '../services/authService.ts';
+import { TransactionService } from '../services/transactionService.ts';
+import { ExpenseService } from '../services/expenseService.ts';
 
 export const apiRouter = Router();
+
+// --- Authentication (Phase 1 Prototype: Email + Password) ---
+apiRouter.post('/auth/login', (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const result = AuthService.login(email, password);
+    res.json({ success: true, data: result });
+  } catch (err: any) {
+    res.status(401).json({ success: false, error: err.message || 'Login failed' });
+  }
+});
+
+apiRouter.post('/auth/register', (req: Request, res: Response) => {
+  try {
+    const { name, email, password } = req.body;
+    const result = AuthService.register({ name, email, password });
+    res.status(201).json({ success: true, data: result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message || 'Registration failed' });
+  }
+});
+
+apiRouter.get('/auth/me', (req: Request, res: Response) => {
+  const userId = (req.query.userId as string) || 'user_siva_owner';
+  const session = AuthService.getMe(userId);
+  if (!session) return res.status(404).json({ success: false, error: 'User not found' });
+  res.json({ success: true, data: session });
+});
+
+apiRouter.get('/users/:userId/businesses', (req: Request, res: Response) => {
+  res.json({ success: true, data: AuthService.getUserBusinesses(req.params.userId) });
+});
 
 // --- Categories ---
 apiRouter.get('/categories', (_req: Request, res: Response) => {
@@ -342,9 +377,40 @@ apiRouter.patch('/bookings/:id/reschedule', (req: Request, res: Response) => {
   }
 });
 
+// --- Business Operations Configuration (ADR-008) ---
+apiRouter.patch('/businesses/:id/operations', (req: Request, res: Response) => {
+  try {
+    const { enabledOperations, operationConfig, businessType } = req.body;
+    const updated = BusinessService.updateOperations(req.params.id, {
+      enabledOperations,
+      operationConfig,
+      businessType,
+    });
+    res.json({ success: true, data: updated });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
 // --- Customers & Reviews ---
 apiRouter.get('/businesses/:id/customers', (req: Request, res: Response) => {
-  res.json({ success: true, data: CustomerService.listCustomers(req.params.id) });
+  const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+  res.json({ success: true, data: CustomerService.listCustomers(req.params.id, search) });
+});
+
+apiRouter.post('/businesses/:id/customers', (req: Request, res: Response) => {
+  try {
+    const customer = CustomerService.createCustomer({
+      businessId: req.params.id,
+      name: req.body.name,
+      phone: req.body.phone,
+      email: req.body.email,
+      notes: req.body.notes,
+    });
+    res.status(201).json({ success: true, data: customer });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
 });
 
 apiRouter.patch('/customers/:id/notes', (req: Request, res: Response) => {
@@ -354,6 +420,93 @@ apiRouter.patch('/customers/:id/notes', (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
+});
+
+// --- Transactions (ADR-006: Money Movement Ledger) ---
+apiRouter.get('/businesses/:id/transactions', (req: Request, res: Response) => {
+  const { type, date, status } = req.query;
+  const list = TransactionService.list(req.params.id, {
+    type: typeof type === 'string' ? (type as any) : undefined,
+    date: typeof date === 'string' ? date : undefined,
+    status: typeof status === 'string' ? (status as any) : undefined,
+  });
+  res.json({ success: true, data: list });
+});
+
+apiRouter.post('/businesses/:id/transactions', (req: Request, res: Response) => {
+  try {
+    const tx = TransactionService.recordIncome({
+      businessId: req.params.id,
+      category: req.body.category,
+      amount: Number(req.body.amount),
+      paymentMethod: req.body.paymentMethod,
+      date: req.body.date,
+      bookingId: req.body.bookingId,
+      customerId: req.body.customerId,
+      customerName: req.body.customerName,
+      description: req.body.description,
+      referenceNumber: req.body.referenceNumber,
+    });
+    res.status(201).json({ success: true, data: tx });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.get('/businesses/:id/transactions/summary', (req: Request, res: Response) => {
+  res.json({ success: true, data: TransactionService.getSummary(req.params.id) });
+});
+
+// --- Expenses (Phase 1 Manual Expense Management) ---
+apiRouter.get('/businesses/:id/expenses', (req: Request, res: Response) => {
+  const { category, date, startDate, endDate } = req.query;
+  const list = ExpenseService.list(req.params.id, {
+    category: typeof category === 'string' ? (category as any) : undefined,
+    date: typeof date === 'string' ? date : undefined,
+    startDate: typeof startDate === 'string' ? startDate : undefined,
+    endDate: typeof endDate === 'string' ? endDate : undefined,
+  });
+  res.json({ success: true, data: list });
+});
+
+apiRouter.post('/businesses/:id/expenses', (req: Request, res: Response) => {
+  try {
+    const expense = ExpenseService.create({
+      businessId: req.params.id,
+      category: req.body.category,
+      amount: Number(req.body.amount),
+      date: req.body.date,
+      description: req.body.description,
+      paymentMethod: req.body.paymentMethod,
+      paidTo: req.body.paidTo,
+      receiptRef: req.body.receiptRef,
+    });
+    res.status(201).json({ success: true, data: expense });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.put('/expenses/:id', (req: Request, res: Response) => {
+  try {
+    const updated = ExpenseService.update(req.params.id, req.body);
+    res.json({ success: true, data: updated });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.delete('/expenses/:id', (req: Request, res: Response) => {
+  try {
+    ExpenseService.delete(req.params.id);
+    res.json({ success: true, message: 'Expense deleted successfully' });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.get('/businesses/:id/expenses/summary', (req: Request, res: Response) => {
+  res.json({ success: true, data: ExpenseService.getSummary(req.params.id) });
 });
 
 apiRouter.get('/businesses/:id/reviews', (req: Request, res: Response) => {

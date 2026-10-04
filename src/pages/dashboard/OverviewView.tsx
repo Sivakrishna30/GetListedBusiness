@@ -9,9 +9,14 @@ import {
   Layers,
   ArrowRight,
   TrendingUp,
+  TrendingDown,
   Clock,
   Sparkles,
   RefreshCw,
+  DollarSign,
+  Receipt,
+  Plus,
+  FileText,
 } from 'lucide-react';
 
 interface OverviewViewProps {
@@ -54,10 +59,39 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
   }
 
   const overview = reports?.overview;
-  const revenue = reports?.revenue;
+  const financials = reports?.financials;
+  const totalIncome = financials?.totalIncome ?? (reports?.revenue.totalRevenue || 0);
+  const totalExpenses = financials?.totalExpenses ?? 0;
+  const netProfit = financials?.netProfit ?? (totalIncome - totalExpenses);
 
   return (
     <div className="space-y-6">
+      {/* Narrative Summary Highlight (Discovery Layer 5) */}
+      {reports?.narrativeSummary && (
+        <div className="bg-teal-900 text-white p-4 rounded-xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-teal-800 rounded-lg shrink-0 mt-0.5">
+              <FileText className="w-4 h-4 text-teal-200" />
+            </div>
+            <div>
+              <div className="text-2xs font-bold uppercase tracking-wider text-teal-300">
+                Weekly Executive Insight
+              </div>
+              <p className="text-xs text-teal-50 font-medium mt-0.5 leading-relaxed">
+                {reports.narrativeSummary.weeklySummaryText}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => onSelectTab('reports')}
+            className="self-start sm:self-auto shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-800 hover:bg-teal-700 text-white transition-colors"
+          >
+            <span>Full Reports</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Today's Bookings */}
@@ -70,136 +104,143 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
             {overview?.todaysBookingsCount || 0}
           </div>
           <div className="text-2xs text-stone-500 mt-1">
-            {overview?.upcomingBookingsCount || 0} upcoming ahead
+            {overview?.upcomingBookingsCount || 0} upcoming reservations
           </div>
         </div>
 
-        {/* Card 2: Net Revenue */}
+        {/* Card 2: Total Realized Income */}
         <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-stone-500 text-xs mb-2">
-            <span>Net Business Revenue</span>
-            <CreditCard className="w-4 h-4 text-teal-700" />
+            <span>Total Income</span>
+            <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-extrabold text-stone-900">
-            ₹{revenue?.netBusinessRevenue || 0}
+            ₹{totalIncome.toLocaleString('en-IN')}
           </div>
           <div className="text-2xs text-stone-500 mt-1">
-            Gross: ₹{revenue?.totalRevenue || 0} (5% fee deducted)
+            Bookings & direct counter sales
           </div>
         </div>
 
-        {/* Card 3: Total Customers */}
+        {/* Card 3: Operating Expenses */}
         <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-stone-500 text-xs mb-2">
-            <span>Total Customers</span>
-            <Users className="w-4 h-4 text-teal-700" />
+            <span>Operating Expenses</span>
+            <TrendingDown className="w-4 h-4 text-red-500" />
           </div>
           <div className="text-2xl font-extrabold text-stone-900">
-            {reports?.customers.totalCustomers || 0}
+            ₹{totalExpenses.toLocaleString('en-IN')}
           </div>
           <div className="text-2xs text-stone-500 mt-1">
-            {reports?.customers.returningCustomersCount || 0} returning clients
+            Rent, salary, utilities, maintenance
           </div>
         </div>
 
-        {/* Card 4: Active Memberships & Events */}
+        {/* Card 4: Net Business Profit */}
         <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-stone-500 text-xs mb-2">
-            <span>Active Enrollments</span>
-            <TrendingUp className="w-4 h-4 text-teal-700" />
+            <span>Net Business Profit</span>
+            <DollarSign className={`w-4 h-4 ${netProfit >= 0 ? 'text-teal-700' : 'text-red-500'}`} />
           </div>
-          <div className="text-2xl font-extrabold text-stone-900">
-            {overview?.activeMembershipsCount || 0}
+          <div className={`text-2xl font-extrabold ${netProfit >= 0 ? 'text-teal-700' : 'text-red-600'}`}>
+            ₹{netProfit.toLocaleString('en-IN')}
           </div>
           <div className="text-2xs text-stone-500 mt-1">
-            {overview?.upcomingEventsCount || 0} upcoming events active
+            Income minus operating expenses
           </div>
         </div>
       </div>
 
-      {/* Quick Configuration Actions */}
+      {/* Quick Operations Actions */}
       <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
         <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider mb-3">
-          Quick Management Actions
+          Daily Operational Actions
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <button
-            onClick={() => onSelectTab('services')}
-            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800"
-          >
-            + Add / Edit Service
-          </button>
-          <button
             onClick={() => onSelectTab('bookings')}
-            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800"
+            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800 flex items-center justify-between"
           >
-            Manage Bookings & Slots
+            <span>Bookings & Slots</span>
+            <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
           </button>
           <button
-            onClick={() => onSelectTab('packages')}
-            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800"
+            onClick={() => onSelectTab('transactions')}
+            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800 flex items-center justify-between"
           >
-            Create Combo Package
+            <span>+ Record Income</span>
+            <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
           </button>
           <button
-            onClick={() => onSelectTab('reports')}
-            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800"
+            onClick={() => onSelectTab('expenses')}
+            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800 flex items-center justify-between"
           >
-            View Revenue Breakdown
+            <span>+ Record Expense</span>
+            <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
+          </button>
+          <button
+            onClick={() => onSelectTab('customers')}
+            className="p-3 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/40 text-left transition-colors font-medium text-stone-800 flex items-center justify-between"
+          >
+            <span>+ Add Walk-in Client</span>
+            <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
           </button>
         </div>
       </div>
 
       {/* Recent Bookings Feed */}
       <div className="bg-white rounded-xl border border-stone-200 shadow-2xs overflow-hidden">
-        <div className="px-5 py-4 border-b border-stone-200 flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-bold text-stone-900">Recent Customer Bookings</h3>
-            <p className="text-2xs text-stone-500">Live feed with slot availability and 5% fee tracking</p>
-          </div>
+        <div className="px-5 py-3.5 border-b border-stone-200 flex items-center justify-between">
+          <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
+            Recent Operational Activity
+          </h3>
           <button
             onClick={() => onSelectTab('bookings')}
-            className="text-xs font-semibold text-teal-800 hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-teal-700 hover:text-teal-900 transition-colors"
           >
-            <span>View All</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            View all bookings &rarr;
           </button>
         </div>
 
         {recentBookings.length === 0 ? (
           <div className="p-8 text-center text-xs text-stone-500">
-            No bookings recorded yet. When customers book your services, they will appear here.
+            No booking activity recorded yet.
           </div>
         ) : (
-          <div className="divide-y divide-stone-100">
-            {recentBookings.map(bk => (
-              <div key={bk.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-stone-900 text-sm">{bk.customerName}</span>
-                    <span className="text-stone-400 font-mono text-2xs">#{bk.id}</span>
-                    <BookingStatusBadge status={bk.status} />
-                  </div>
-                  <div className="text-stone-600 flex items-center gap-3 text-2xs">
-                    <span className="font-medium text-teal-800">{bk.serviceName}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-stone-400" />
-                      {bk.date} ({bk.startTime} - {bk.endTime})
-                    </span>
-                    <span>•</span>
-                    <span>{bk.customerPhone}</span>
-                  </div>
-                </div>
-
-                <div className="text-right shrink-0">
-                  <div className="font-extrabold text-stone-900 text-sm">₹{bk.grossAmount}</div>
-                  <div className="text-2xs text-stone-500">
-                    Net: ₹{bk.netAmount} <span className="text-teal-700">(5% fee: ₹{bk.platformFee})</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-stone-50 border-b border-stone-200 text-2xs font-bold text-stone-500 uppercase tracking-wider">
+                  <th className="py-2.5 px-4">Date & Time</th>
+                  <th className="py-2.5 px-4">Customer</th>
+                  <th className="py-2.5 px-4">Offering</th>
+                  <th className="py-2.5 px-4">Status</th>
+                  <th className="py-2.5 px-4 text-right">Gross Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-100 text-xs">
+                {recentBookings.map(b => (
+                  <tr key={b.id} className="hover:bg-stone-50/80 transition-colors">
+                    <td className="py-3 px-4 font-mono text-stone-600 whitespace-nowrap">
+                      {b.date} • {b.startTime}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-stone-900">
+                      {b.customerName}
+                      <span className="block text-2xs font-normal text-stone-400 font-mono">
+                        {b.customerPhone}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-stone-800">{b.serviceName}</td>
+                    <td className="py-3 px-4">
+                      <BookingStatusBadge status={b.status} />
+                    </td>
+                    <td className="py-3 px-4 text-right font-bold text-stone-900 whitespace-nowrap">
+                      ₹{b.grossAmount}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

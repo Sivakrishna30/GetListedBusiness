@@ -3,6 +3,7 @@ import { api } from '../../services/apiClient.ts';
 import { Business } from '../../../shared/types.ts';
 import { VerificationBadge, PlanBadge } from '../../components/Badge.tsx';
 import { Modal } from '../../components/Modal.tsx';
+import { useAuth } from '../../context/AuthContext.tsx';
 import {
   LayoutDashboard,
   Building2,
@@ -21,6 +22,9 @@ import {
   ExternalLink,
   Bell,
   RefreshCw,
+  CreditCard,
+  Receipt,
+  UserCheck,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -40,6 +44,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onNavigate,
   children,
 }) => {
+  const { user, openAuthModal, roleForBusiness } = useAuth();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -104,27 +109,62 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     }
   };
 
-  const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'profile', label: 'Business Profile', icon: Building2 },
-    { id: 'services', label: 'Services', icon: Layers },
-    { id: 'products', label: 'Products', icon: ShoppingBag },
-    { id: 'packages', label: 'Packages', icon: Package },
-    { id: 'bookings', label: 'Bookings & Slots', icon: Calendar },
-    { id: 'memberships', label: 'Memberships', icon: Users },
-    { id: 'events', label: 'Events & Programs', icon: Calendar },
-    { id: 'customers', label: 'Customers', icon: Users, badge: 'Pro' },
-    { id: 'team', label: 'Team', icon: ShieldCheck, badge: 'Pro' },
-    { id: 'reports', label: 'Reports & Revenue', icon: BarChart3, badge: 'Pro' },
-    { id: 'settings', label: 'Settings & Plan', icon: Settings },
+  const enabledOps = currentBusiness?.enabledOperations || [
+    'BOOKINGS',
+    'SERVICES',
+    'TRANSACTIONS',
+    'EXPENSES',
   ];
+
+  interface NavItem {
+    id: string;
+    label: string;
+    icon: any;
+    requiredOp: string | null;
+    badge?: string;
+  }
+
+  const allPossibleItems: NavItem[] = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard, requiredOp: null },
+    { id: 'profile', label: 'Business Profile', icon: Building2, requiredOp: null },
+    { id: 'services', label: 'Services', icon: Layers, requiredOp: 'SERVICES' },
+    { id: 'products', label: 'Products', icon: ShoppingBag, requiredOp: 'PRODUCTS' },
+    { id: 'packages', label: 'Packages', icon: Package, requiredOp: 'PACKAGES' },
+    { id: 'bookings', label: 'Bookings & Slots', icon: Calendar, requiredOp: 'BOOKINGS' },
+    { id: 'transactions', label: 'Financial Ledger', icon: CreditCard, requiredOp: 'TRANSACTIONS' },
+    { id: 'expenses', label: 'Expenses', icon: Receipt, requiredOp: 'EXPENSES' },
+    { id: 'memberships', label: 'Memberships', icon: Users, requiredOp: 'MEMBERSHIPS' },
+    { id: 'events', label: 'Events & Programs', icon: Calendar, requiredOp: 'EVENTS' },
+    { id: 'customers', label: 'Customers', icon: Users, requiredOp: null },
+    { id: 'team', label: 'Team', icon: ShieldCheck, requiredOp: null },
+    { id: 'reports', label: 'Reports & Revenue', icon: BarChart3, requiredOp: null },
+    { id: 'settings', label: 'Settings & Plan', icon: Settings, requiredOp: null },
+  ];
+
+  const navItems = allPossibleItems.filter(
+    item => !item.requiredOp || enabledOps.includes(item.requiredOp as any)
+  );
 
   return (
     <div className="min-h-screen bg-stone-100 flex flex-col">
       {/* Top Business Context Bar */}
       <div className="bg-white border-b border-stone-200 px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-4">
-        {/* Business Selector */}
-        <div className="flex items-center gap-3">
+        {/* Business Selector & User Context */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={openAuthModal}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 border border-stone-200 text-xs text-stone-700 transition-colors cursor-pointer"
+            title="Click to Switch Account / Sign Out / Manage Identity"
+          >
+            <UserCheck className="w-3.5 h-3.5 text-teal-700" />
+            <span className="font-semibold">{user?.name || 'Guest'}</span>
+            <span className="text-2xs text-stone-500 font-mono">
+              ({roleForBusiness(selectedBusinessId)})
+            </span>
+          </button>
+
+          <span className="text-xs font-semibold text-stone-400">|</span>
+
           <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Business:</span>
           <div className="relative">
             <select
@@ -135,7 +175,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             >
               {businesses.map(b => (
                 <option key={b.id} value={b.id}>
-                  {b.name} ({b.category})
+                  {b.name} ({b.businessType || b.category})
                 </option>
               ))}
             </select>
@@ -154,6 +194,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {/* Current Business Status Badges */}
         {currentBusiness && (
           <div className="flex items-center gap-2 flex-wrap">
+            {currentBusiness.businessType && (
+              <span className="px-2 py-0.5 rounded text-2xs font-bold uppercase bg-stone-100 text-stone-700 border border-stone-200">
+                {currentBusiness.businessType}
+              </span>
+            )}
             <VerificationBadge status={currentBusiness.verificationStatus} />
             <PlanBadge plan={currentBusiness.plan} />
             {currentBusiness.sponsoredListingEnabled && (

@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/apiClient.ts';
-import { Business, BusinessPlan, VerificationStatus, Notification } from '../../../shared/types.ts';
+import {
+  Business,
+  BusinessPlan,
+  VerificationStatus,
+  Notification,
+  BusinessType,
+  Operation,
+} from '../../../shared/types.ts';
 import { PlanBadge, VerificationBadge } from '../../components/Badge.tsx';
 import {
   Settings,
@@ -11,6 +18,8 @@ import {
   AlertCircle,
   RefreshCw,
   Zap,
+  Sliders,
+  Layers,
 } from 'lucide-react';
 
 interface SettingsViewProps {
@@ -24,6 +33,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
   const [updating, setUpdating] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  // ADR-008: Operations Configuration State
+  const [bizType, setBizType] = useState<BusinessType>('GENERAL');
+  const [enabledOps, setEnabledOps] = useState<Operation[]>([]);
+  const [savingOps, setSavingOps] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -32,6 +46,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
         api.listNotifications(businessId),
       ]);
       setBusiness(biz);
+      setBizType(biz.businessType || 'GENERAL');
+      setEnabledOps(biz.enabledOperations || ['BOOKINGS', 'SERVICES', 'TRANSACTIONS', 'EXPENSES']);
       setNotifications(notifs);
     } catch (err) {
       console.error('Failed to load settings:', err);
@@ -43,6 +59,30 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
   useEffect(() => {
     fetchData();
   }, [businessId]);
+
+  const handleToggleOperation = (op: Operation) => {
+    setEnabledOps(prev =>
+      prev.includes(op) ? prev.filter(o => o !== op) : [...prev, op]
+    );
+  };
+
+  const handleSaveOperations = async () => {
+    if (!business) return;
+    try {
+      setSavingOps(true);
+      const updated = await api.updateOperations(business.id, {
+        businessType: bizType,
+        enabledOperations: enabledOps,
+      });
+      setBusiness(updated);
+      setFeedback('Operational modules and business type updated successfully!');
+      setTimeout(() => setFeedback(null), 3000);
+    } catch (err: any) {
+      alert(err.message || 'Failed to update operational configuration');
+    } finally {
+      setSavingOps(false);
+    }
+  };
 
   const handlePlanToggle = async (newPlan: BusinessPlan) => {
     if (!business) return;

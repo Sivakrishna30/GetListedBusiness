@@ -1,6 +1,7 @@
 import React from 'react';
 import { Logo } from './Logo.tsx';
-import { LayoutDashboard, Compass, Sparkles, Building2, Calendar, Search } from 'lucide-react';
+import { LayoutDashboard, Compass, Sparkles, Building2, Calendar, Search, UserCircle2, LogIn } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.tsx';
 
 interface NavbarProps {
   currentPath: string;
@@ -16,6 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   businessName,
 }) => {
   const isDashboard = currentPath.startsWith('/dashboard');
+  const { user, openAuthModal } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200">
@@ -121,6 +123,28 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </>
           )}
+
+          {/* User Account / Login Button */}
+          <button
+            id="nav-user-auth-btn"
+            onClick={openAuthModal}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 border border-stone-200 transition-colors"
+            title={user ? `Signed in as ${user.email}` : 'Sign In with Email & Password'}
+          >
+            {user ? (
+              <>
+                <div className="w-4 h-4 rounded-full bg-teal-700 text-white flex items-center justify-center text-3xs font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="hidden sm:inline font-semibold">{user.name.split(' ')[0]}</span>
+              </>
+            ) : (
+              <>
+                <LogIn className="w-3.5 h-3.5 text-stone-500" />
+                <span>Sign In</span>
+              </>
+            )}
+          </button>
 
           {selectedBusinessId && isDashboard && (
             <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-stone-200">

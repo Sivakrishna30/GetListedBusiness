@@ -16,6 +16,15 @@ import {
   VerificationStatus,
   BusinessPlan,
   BookingStatus,
+  User,
+  BusinessMember,
+  Transaction,
+  Expense,
+  ExpenseCategory,
+  PaymentMethod,
+  Operation,
+  BusinessType,
+  BusinessOperationConfig,
 } from '../../shared/types.ts';
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
@@ -222,8 +231,37 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
+  // --- Auth (Phase 1 Prototype: Email + Password) ---
+  login: (data: { email: string; password: string }) =>
+    request<{ user: Omit<User, 'passwordHash'>; memberships: BusinessMember[]; businesses: Business[] }>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  register: (data: { name: string; email: string; password: string }) =>
+    request<{ user: Omit<User, 'passwordHash'>; memberships: BusinessMember[]; businesses: Business[] }>('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  getMe: (userId?: string) =>
+    request<{ user: Omit<User, 'passwordHash'>; memberships: BusinessMember[]; businesses: Business[] }>(`/api/auth/me?userId=${userId || ''}`),
+  getUserBusinesses: (userId: string) =>
+    request<Business[]>(`/api/users/${userId}/businesses`),
+
+  // --- Operations Config (ADR-008) ---
+  updateOperations: (businessId: string, data: { enabledOperations?: Operation[]; operationConfig?: BusinessOperationConfig; businessType?: BusinessType }) =>
+    request<Business>(`/api/businesses/${businessId}/operations`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
   // Customers & Reviews
-  listCustomers: (businessId: string) => request<Customer[]>(`/api/businesses/${businessId}/customers`),
+  listCustomers: (businessId: string, search?: string) =>
+    request<Customer[]>(`/api/businesses/${businessId}/customers${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+  createCustomer: (businessId: string, data: { name: string; phone: string; email?: string; notes?: string }) =>
+    request<Customer>(`/api/businesses/${businessId}/customers`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
   updateCustomerNotes: (customerId: string, notes: string) =>
     request<Customer>(`/api/customers/${customerId}/notes`, {
       method: 'PATCH',
@@ -235,6 +273,77 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  // --- Transactions & Money Movement (ADR-006) ---
+  listTransactions: (businessId: string, filters?: { type?: string; date?: string; status?: string }) => {
+    const q = new URLSearchParams();
+    if (filters?.type) q.set('type', filters.type);
+    if (filters?.date) q.set('date', filters.date);
+    if (filters?.status) q.set('status', filters.status);
+    return request<Transaction[]>(`/api/businesses/${businessId}/transactions?${q.toString()}`);
+  },
+  recordIncome: (data: {
+    businessId: string;
+    category: string;
+    amount: number;
+    paymentMethod: PaymentMethod;
+    date?: string;
+    bookingId?: string;
+    customerId?: string;
+    customerName?: string;
+    description?: string;
+    referenceNumber?: string;
+  }) =>
+    request<Transaction>(`/api/businesses/${data.businessId}/transactions`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  getTransactionSummary: (businessId: string) =>
+    request<{
+      totalIncome: number;
+      totalTransactionsCount: number;
+      byPaymentMethod: { method: PaymentMethod; amount: number; count: number }[];
+      recentTransactions: Transaction[];
+    }>(`/api/businesses/${businessId}/transactions/summary`),
+
+  // --- Expenses (Phase 1 Manual Expense Management) ---
+  listExpenses: (businessId: string, filters?: { category?: string; date?: string; startDate?: string; endDate?: string }) => {
+    const q = new URLSearchParams();
+    if (filters?.category) q.set('category', filters.category);
+    if (filters?.date) q.set('date', filters.date);
+    if (filters?.startDate) q.set('startDate', filters.startDate);
+    if (filters?.endDate) q.set('endDate', filters.endDate);
+    return request<Expense[]>(`/api/businesses/${businessId}/expenses?${q.toString()}`);
+  },
+  createExpense: (data: {
+    businessId: string;
+    category: ExpenseCategory;
+    amount: number;
+    date: string;
+    description: string;
+    paymentMethod: PaymentMethod;
+    paidTo?: string;
+    receiptRef?: string;
+  }) =>
+    request<Expense>(`/api/businesses/${data.businessId}/expenses`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateExpense: (id: string, data: Partial<Expense>) =>
+    request<Expense>(`/api/expenses/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  deleteExpense: (id: string) =>
+    request<{ message: string }>(`/api/expenses/${id}`, {
+      method: 'DELETE',
+    }),
+  getExpenseSummary: (businessId: string) =>
+    request<{
+      totalExpenses: number;
+      byCategory: { category: ExpenseCategory; amount: number; count: number }[];
+      recentExpenses: Expense[];
+    }>(`/api/businesses/${businessId}/expenses/summary`),
 
   // Team
   listTeam: (businessId: string) => request<TeamMember[]>(`/api/businesses/${businessId}/team`),
