@@ -115,7 +115,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading profile...</p>
       </div>
     );
@@ -124,21 +124,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
   return (
     <form onSubmit={handleSave} className="space-y-6">
       {/* Header card with status badges */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-stone-900">Business Profile Management</h2>
-          <p className="text-xs text-stone-500">
+          <h2 className="text-base sm:text-lg font-bold text-stone-900">Business Profile Management</h2>
+          <p className="text-xs text-stone-500 mt-0.5">
             Configure how your business is presented in public search and customer booking.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 flex-wrap self-start sm:self-auto shrink-0">
           {business && <VerificationBadge status={business.verificationStatus} />}
           {business && <PlanBadge plan={business.plan} />}
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
           >
             {saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>{saving ? 'Saving...' : 'Save Profile'}</span>
@@ -150,26 +150,26 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
         <div
           className={`p-4 rounded-xl border text-xs flex items-center gap-2 ${
             message.type === 'success'
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-              : 'bg-rose-50 border-rose-200 text-rose-800'
+              ? 'bg-[#F0FDF4] border-[#16A34A]/30 text-[#16A34A]'
+              : 'bg-[#FEF2F2] border-[#DC2626]/30 text-[#DC2626]'
           }`}
         >
           {message.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
           ) : (
-            <AlertCircle className="w-4 h-4 shrink-0" />
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
           )}
           <span>{message.text}</span>
         </div>
       )}
 
       {/* Basic Identity */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
+      <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
         <h3 className="text-xs font-bold text-stone-700 uppercase tracking-wider">
           Identity & Category
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
           <div className="md:col-span-2">
             <label className="block text-xs font-semibold text-stone-700 mb-1">Business Name *</label>
             <input
@@ -177,7 +177,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               required
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -186,18 +186,19 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
             <select
               value={category}
               onChange={e => setCategory(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
             >
               <option value="Sports">Sports</option>
               <option value="Fitness">Fitness</option>
               <option value="Healthcare">Healthcare</option>
               <option value="Wellness">Wellness</option>
+              <option value="Salon">Salon</option>
               <option value="Leisure">Leisure</option>
             </select>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1">Sub-Category</label>
             <input
@@ -205,7 +206,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={subCategory}
               onChange={e => setSubCategory(e.target.value)}
               placeholder="e.g. Football Turf / Crossfit / Dental Clinic"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -216,7 +217,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={workingHours}
               onChange={e => setWorkingHours(e.target.value)}
               placeholder="e.g. 06:00 AM - 11:00 PM (All Days)"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
         </div>
@@ -227,25 +228,25 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
             rows={3}
             value={description}
             onChange={e => setDescription(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+            className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
           />
         </div>
       </div>
 
       {/* Contact & Location */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
+      <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
         <h3 className="text-xs font-bold text-stone-700 uppercase tracking-wider">
           Contact & Location Details
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1">Phone Number</label>
             <input
               type="tel"
               value={contactNumber}
               onChange={e => setContactNumber(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -256,7 +257,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={whatsappNumber}
               onChange={e => setWhatsappNumber(e.target.value)}
               placeholder="+91..."
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -266,7 +267,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -277,19 +278,19 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={website}
               onChange={e => setWebsite(e.target.value)}
               placeholder="https://..."
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1">City / Region</label>
             <input
               type="text"
               value={location}
               onChange={e => setLocation(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -299,26 +300,26 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="text"
               value={address}
               onChange={e => setAddress(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
         </div>
       </div>
 
       {/* Visual Assets (Images) */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
+      <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
         <h3 className="text-xs font-bold text-stone-700 uppercase tracking-wider">
           Visual Assets (Logo & Cover)
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1">Logo Image URL</label>
             <input
               type="url"
               value={logo}
               onChange={e => setLogo(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
             {logo && (
               <div className="mt-2 flex items-center gap-3">
@@ -334,7 +335,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="url"
               value={coverImage}
               onChange={e => setCoverImage(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
             {coverImage && (
               <div className="mt-2">
@@ -346,7 +347,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
       </div>
 
       {/* Amenities & Facilities */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
+      <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
         <h3 className="text-xs font-bold text-stone-700 uppercase tracking-wider">
           Amenities & Facilities
         </h3>
@@ -361,7 +362,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
                 onClick={() => handleToggleAmenity(am)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
                   isSelected
-                    ? 'bg-teal-700 text-white border-teal-700'
+                    ? 'bg-[#0F766E] text-white border-[#0F766E]'
                     : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                 }`}
               >
@@ -378,7 +379,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
             placeholder="Add custom facility / amenity..."
             value={customAmenity}
             onChange={e => setCustomAmenity(e.target.value)}
-            className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs flex-1 focus:ring-2 focus:ring-teal-700 focus:outline-none"
+            className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs flex-1 focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
           />
           <button
             type="button"

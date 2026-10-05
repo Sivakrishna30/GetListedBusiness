@@ -160,9 +160,10 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
   const handleRecordPaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!payingBooking) return;
+
     const numAmount = parseFloat(payAmount);
     if (isNaN(numAmount) || numAmount <= 0) {
-      setPaymentError('Please enter a valid positive payment amount.');
+      setPaymentError('Please enter a valid payment amount.');
       return;
     }
 
@@ -171,20 +172,20 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
       setPaymentError(null);
       await api.recordIncome({
         businessId,
+        bookingId: payingBooking.id,
         category: 'BOOKING_PAYMENT',
         amount: numAmount,
         paymentMethod: payMethod,
         date: payDate,
-        bookingId: payingBooking.id,
-        customerId: payingBooking.customerId,
         customerName: payingBooking.customerName,
-        description: `Payment for booking: ${payingBooking.serviceName} (${payingBooking.date} ${payingBooking.startTime})`,
         referenceNumber: payRef.trim() || undefined,
+        description: `Booking payment for ${payingBooking.serviceName} (${payingBooking.date})`,
       });
+
       setPayingBooking(null);
       await fetchBookings();
     } catch (err: any) {
-      setPaymentError(err.message || 'Failed to record payment transaction.');
+      setPaymentError(err.message || 'Failed to record booking payment.');
     } finally {
       setRecordingPayment(false);
     }
@@ -196,18 +197,18 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
   return (
     <div className="space-y-6">
       {/* Top Header & Filters */}
-      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs space-y-4">
+      <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-base font-bold text-stone-900">Bookings & Slot Management</h2>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-stone-500 mt-0.5">
               Track live reservations, slot availability, and platform handling fees.
             </p>
           </div>
 
           <button
             onClick={() => setIsNewBookingModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>+ Manual Booking</span>
@@ -215,14 +216,14 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
         </div>
 
         {/* Filter controls */}
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-stone-100 text-xs">
-          <div className="flex items-center gap-1.5">
-            <Filter className="w-3.5 h-3.5 text-stone-400" />
+        <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-stone-100 text-xs">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Filter className="w-3.5 h-3.5 text-stone-400 shrink-0" />
             <span className="font-semibold text-stone-600">Status:</span>
             <select
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-1 focus:ring-teal-700"
+              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-2 focus:ring-teal-700 focus:outline-none"
             >
               <option value="ALL">All Statuses</option>
               <option value="CONFIRMED">Confirmed</option>
@@ -232,14 +233,14 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-stone-400" />
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Calendar className="w-3.5 h-3.5 text-stone-400 shrink-0" />
             <span className="font-semibold text-stone-600">Date:</span>
             <input
               type="date"
               value={selectedDate}
               onChange={e => setSelectedDate(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-1 focus:ring-teal-700"
+              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-2 focus:ring-teal-700 focus:outline-none"
             />
             {selectedDate && (
               <button
@@ -268,7 +269,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
           </p>
           <button
             onClick={() => setIsNewBookingModalOpen(true)}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 hover:bg-teal-100 transition-colors"
           >
             Create Front-Desk Booking
           </button>
@@ -284,42 +285,42 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             return (
               <div
                 key={bk.id}
-                className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4"
+                className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col lg:flex-row lg:items-center justify-between gap-4"
               >
-                <div>
-                  <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-stone-900 text-sm">{bk.customerName}</span>
                     <span className="font-mono text-2xs text-stone-400">#{bk.id}</span>
                     <BookingStatusBadge status={bk.status} />
                     {isFullyPaid ? (
-                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded-md font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                         <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                         <span>Paid ₹{paidTotal} ({bkTxs[0]?.paymentMethod || 'Ledger'})</span>
                       </span>
                     ) : paidTotal > 0 ? (
-                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded-md font-semibold bg-amber-50 text-amber-800 border border-amber-200">
                         <span>Partially Paid ₹{paidTotal} (Due: ₹{remaining})</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded font-medium bg-stone-100 text-stone-600 border border-stone-200">
+                      <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded-md font-medium bg-stone-100 text-stone-600 border border-stone-200">
                         <span>Payment Pending</span>
                       </span>
                     )}
                   </div>
 
-                  <div className="text-xs text-stone-600 flex flex-wrap items-center gap-3">
+                  <div className="text-xs text-stone-600 flex flex-wrap items-center gap-2 sm:gap-3">
                     <span className="font-semibold text-teal-800">{bk.serviceName}</span>
-                    <span>•</span>
+                    <span className="text-stone-300">•</span>
                     <span className="flex items-center gap-1 font-medium">
                       <Calendar className="w-3.5 h-3.5 text-stone-400" />
                       {bk.date}
                     </span>
-                    <span>•</span>
+                    <span className="text-stone-300">•</span>
                     <span className="flex items-center gap-1 font-medium">
                       <Clock className="w-3.5 h-3.5 text-stone-400" />
                       {bk.startTime} - {bk.endTime}
                     </span>
-                    <span>•</span>
+                    <span className="text-stone-300">•</span>
                     <span className="flex items-center gap-1">
                       <Phone className="w-3.5 h-3.5 text-stone-400" />
                       {bk.customerPhone}
@@ -327,18 +328,18 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                   </div>
 
                   {bk.notes && (
-                    <p className="text-2xs text-stone-500 mt-2 bg-stone-50 p-1.5 rounded max-w-lg">
-                      <span className="font-semibold">Note:</span> {bk.notes}
+                    <p className="text-2xs text-stone-500 bg-stone-50 p-2 rounded-lg max-w-lg border border-stone-100">
+                      <span className="font-semibold text-stone-700">Note:</span> {bk.notes}
                     </p>
                   )}
                 </div>
 
                 {/* Fee & Action Bar */}
-                <div className="flex items-center justify-between md:justify-end gap-6 pt-3 md:pt-0 border-t md:border-t-0 border-stone-100 flex-wrap">
-                  <div className="text-right">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end gap-3 sm:gap-4 pt-3 lg:pt-0 border-t lg:border-t-0 border-stone-100">
+                  <div className="text-left sm:text-right">
                     <div className="text-base font-extrabold text-stone-900">₹{bk.grossAmount}</div>
                     <div className="text-2xs text-stone-500">
-                      Net: ₹{bk.netAmount} <span className="text-teal-700">(Fee: ₹{bk.platformFee})</span>
+                      Net: ₹{bk.netAmount} <span className="text-teal-700 font-medium">(Fee: ₹{bk.platformFee})</span>
                     </div>
                   </div>
 
@@ -348,7 +349,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                       <button
                         onClick={() => openRecordPaymentModal(bk, remaining)}
                         className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors"
-                        title="Record actual money movement into financial ledger (ADR-006)"
+                        title="Record payment into financial ledger (ADR-006)"
                       >
                         <CreditCard className="w-3.5 h-3.5 text-teal-700" />
                         <span>{paidTotal > 0 ? 'Collect Balance' : 'Collect Payment'}</span>
@@ -368,7 +369,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                     {bk.status !== 'CANCELLED' && bk.status !== 'COMPLETED' && (
                       <button
                         onClick={() => handleStatusChange(bk.id, 'CANCELLED')}
-                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors"
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors"
                         title="Cancel Booking"
                       >
                         Cancel
@@ -382,7 +383,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                         setRescheduleStartTime(bk.startTime);
                         setRescheduleEndTime(bk.endTime);
                       }}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition-colors"
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 border border-stone-200 transition-colors"
                     >
                       Reschedule
                     </button>
@@ -416,7 +417,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Customer Name *</label>
               <input
@@ -452,7 +453,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Start Time</label>
               <input
@@ -513,7 +514,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={creatingBooking}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
             >
               {creatingBooking ? 'Saving...' : 'Confirm Walk-In Booking'}
             </button>
@@ -539,7 +540,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Start Time</label>
               <input
@@ -573,7 +574,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={savingReschedule}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
             >
               {savingReschedule ? 'Saving...' : 'Update Schedule'}
             </button>
@@ -581,7 +582,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
         </form>
       </Modal>
 
-      {/* Record Payment Modal (ADR-006: Operational vs Financial Event Separation) */}
+      {/* Record Payment Modal (ADR-006) */}
       <Modal
         isOpen={Boolean(payingBooking)}
         onClose={() => setPayingBooking(null)}
@@ -589,8 +590,8 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
       >
         <form onSubmit={handleRecordPaymentSubmit} className="space-y-4 text-sm">
           {paymentError && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-800 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <span>{paymentError}</span>
             </div>
           )}
@@ -612,7 +613,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Amount Paid (₹) *</label>
               <input
@@ -642,7 +643,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Payment Date *</label>
               <input

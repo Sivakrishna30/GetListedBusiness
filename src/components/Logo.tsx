@@ -29,16 +29,16 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <div id="glb-brand-logo" className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      {/* Square-based visual form GLB monogram */}
+      {/* Square-based visual form GLB monogram with approved turquoise */}
       <div
-        className={`${iconSizeClasses} bg-teal-700 text-white flex items-center justify-center font-extrabold tracking-wider shadow-sm border border-teal-800/20 shrink-0`}
+        className={`${iconSizeClasses} bg-[#0F766E] text-white flex items-center justify-center font-extrabold tracking-wider shadow-2xs border border-[#115E59]/20 shrink-0`}
       >
         GLB
       </div>
 
       {showText && (
         <span className={`${textSizeClasses} ${textColor}`}>
-          Get<span className="text-teal-700 font-extrabold">Listed</span>
+          Get<span className="text-[#0F766E] font-extrabold">Listed</span>
         </span>
       )}
     </div>

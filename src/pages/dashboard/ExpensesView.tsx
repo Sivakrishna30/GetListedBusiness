@@ -137,23 +137,23 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-stone-900">Expense Management</h2>
-            <span className="text-2xs font-semibold uppercase px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
-              Phase 1 Core OS
+          <div className="flex items-center gap-2 flex-wrap">
+            <h2 className="text-base sm:text-lg font-bold text-stone-900">Expense Management</h2>
+            <span className="text-2xs font-semibold uppercase px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
+              Operations Tracking
             </span>
           </div>
-          <p className="text-xs text-stone-500 mt-1">
+          <p className="text-xs text-stone-500 mt-1 leading-relaxed">
             Track business operating expenses (rent, salaries, utilities, maintenance) to compute your true net business profit.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto shrink-0">
           <button
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 bg-stone-50 hover:bg-stone-100 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 bg-stone-50 hover:bg-stone-100 transition-colors"
           >
             <Download className="w-3.5 h-3.5 text-stone-500" />
             <span>Export CSV</span>
@@ -164,7 +164,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               setErrorMsg(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
             <span>Record Expense</span>
@@ -172,28 +172,28 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI & Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
-            <span>Total Recorded Expenses</span>
-            <TrendingDown className="w-4 h-4 text-red-500" />
+            <span className="font-medium">Total Operating Costs</span>
+            <TrendingDown className="w-4 h-4 text-red-600" />
           </div>
           <div className="text-2xl font-black text-stone-900">
             ₹{totalExpenseAmount.toLocaleString('en-IN')}
           </div>
-          <p className="text-2xs text-stone-400 mt-1">{expenses.length} entries recorded</p>
+          <p className="text-2xs text-stone-400 mt-1">{expenses.length} expense vouchers recorded</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
-            <span>Filter by Category</span>
+            <span className="font-medium">Filter by Category</span>
             <Filter className="w-4 h-4 text-stone-400" />
           </div>
           <select
             value={selectedCategory}
             onChange={e => setSelectedCategory(e.target.value)}
-            className="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+            className="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
           >
             <option value="ALL">All Categories</option>
             <option value="RENT">Rent & Lease</option>
@@ -207,16 +207,16 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs flex flex-col justify-center">
-          <span className="text-xs text-stone-500">Accountant Ready</span>
-          <p className="text-2xs text-stone-600 mt-1">
+          <span className="text-xs font-medium text-stone-500">Accountant Ready</span>
+          <p className="text-2xs text-stone-600 mt-1 leading-relaxed">
             Data is strictly persisted locally and ready for one-click CA review without 3rd-party connectors.
           </p>
         </div>
       </div>
 
-      {/* Expenses Table */}
+      {/* Expenses List */}
       <div className="bg-white rounded-xl border border-stone-200 shadow-2xs overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-stone-200 flex items-center justify-between">
+        <div className="px-4 sm:px-5 py-3.5 border-b border-stone-200 flex items-center justify-between">
           <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
             Expense Records
           </h3>
@@ -249,61 +249,112 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-stone-50 border-b border-stone-200 text-2xs font-bold text-stone-500 uppercase tracking-wider">
-                  <th className="py-2.5 px-4">Date</th>
-                  <th className="py-2.5 px-4">Category</th>
-                  <th className="py-2.5 px-4">Description</th>
-                  <th className="py-2.5 px-4">Paid To</th>
-                  <th className="py-2.5 px-4">Method</th>
-                  <th className="py-2.5 px-4 text-right">Amount</th>
-                  <th className="py-2.5 px-4 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-100 text-xs">
-                {expenses.map(exp => (
-                  <tr key={exp.id} className="hover:bg-stone-50/80 transition-colors">
-                    <td className="py-3 px-4 font-mono text-stone-600 whitespace-nowrap">
+          <>
+            {/* Mobile Cards (< sm) */}
+            <div className="block sm:hidden divide-y divide-stone-100">
+              {expenses.map(exp => (
+                <div key={exp.id} className="p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-2xs text-stone-500 flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-stone-400" />
                       {exp.date}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded text-2xs font-semibold bg-stone-100 text-stone-800 border border-stone-200">
-                        {exp.category}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="font-semibold text-stone-900">{exp.description}</div>
-                      {exp.receiptRef && (
-                        <div className="text-2xs text-stone-400 font-mono">Ref: {exp.receiptRef}</div>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 text-stone-600">
-                      {exp.paidTo || '—'}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="px-1.5 py-0.5 rounded text-2xs font-mono bg-teal-50 text-teal-800 border border-teal-200">
-                        {exp.paymentMethod}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-right font-bold text-stone-900 whitespace-nowrap">
+                    </span>
+                    <span className="text-base font-extrabold text-stone-900">
                       ₹{exp.amount.toLocaleString('en-IN')}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <button
-                        onClick={() => handleDeleteExpense(exp.id)}
-                        className="text-stone-400 hover:text-red-600 p-1 rounded transition-colors"
-                        title="Delete expense entry"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="font-semibold text-stone-900 text-xs truncate">
+                      {exp.description}
+                    </div>
+                    <button
+                      onClick={() => handleDeleteExpense(exp.id)}
+                      className="text-stone-400 hover:text-red-600 p-1 rounded transition-colors shrink-0"
+                      title="Delete expense"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 text-2xs">
+                    <span className="px-2 py-0.5 rounded-md font-medium bg-stone-100 text-stone-700">
+                      {exp.category}
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded-md font-mono bg-teal-50 text-teal-800 border border-teal-200">
+                      {exp.paymentMethod}
+                    </span>
+                  </div>
+
+                  {exp.paidTo && (
+                    <div className="text-2xs text-stone-500">
+                      Paid To: <span className="font-medium text-stone-700">{exp.paidTo}</span>
+                    </div>
+                  )}
+                  {exp.receiptRef && (
+                    <div className="text-3xs text-stone-400 font-mono">Ref: {exp.receiptRef}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop / Tablet Table (>= sm) */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[620px]">
+                <thead>
+                  <tr className="bg-stone-50 border-b border-stone-200 text-2xs font-bold text-stone-500 uppercase tracking-wider">
+                    <th className="py-2.5 px-4">Date</th>
+                    <th className="py-2.5 px-4">Category</th>
+                    <th className="py-2.5 px-4">Description</th>
+                    <th className="py-2.5 px-4">Paid To</th>
+                    <th className="py-2.5 px-4">Method</th>
+                    <th className="py-2.5 px-4 text-right">Amount</th>
+                    <th className="py-2.5 px-4 text-center">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-stone-100 text-xs">
+                  {expenses.map(exp => (
+                    <tr key={exp.id} className="hover:bg-stone-50/80 transition-colors">
+                      <td className="py-3 px-4 font-mono text-stone-600 whitespace-nowrap">
+                        {exp.date}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-0.5 rounded-md text-2xs font-semibold bg-stone-100 text-stone-800 border border-stone-200">
+                          {exp.category}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="font-semibold text-stone-900">{exp.description}</div>
+                        {exp.receiptRef && (
+                          <div className="text-2xs text-stone-400 font-mono">Ref: {exp.receiptRef}</div>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 text-stone-600">
+                        {exp.paidTo || '—'}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="px-1.5 py-0.5 rounded-md text-2xs font-mono bg-teal-50 text-teal-800 border border-teal-200">
+                          {exp.paymentMethod}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-right font-bold text-stone-900 whitespace-nowrap">
+                        ₹{exp.amount.toLocaleString('en-IN')}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <button
+                          onClick={() => handleDeleteExpense(exp.id)}
+                          className="text-stone-400 hover:text-red-600 p-1 rounded transition-colors"
+                          title="Delete expense entry"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -317,7 +368,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Category *
@@ -325,7 +376,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value as ExpenseCategory)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
               >
                 <option value="RENT">Rent & Lease</option>
                 <option value="SALARY">Salaries & Stipends</option>
@@ -349,12 +400,12 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 placeholder="e.g. 15000"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">
                 Date *
@@ -364,7 +415,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 required
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
               />
             </div>
 
@@ -375,14 +426,42 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               <select
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
               >
                 <option value="UPI">UPI</option>
                 <option value="CASH">Cash</option>
-                <option value="NET_BANKING">Net Banking (NEFT/IMPS)</option>
-                <option value="CARD">Debit / Credit Card</option>
+                <option value="CARD">Card</option>
+                <option value="NET_BANKING">Net Banking</option>
                 <option value="OTHER">Other</option>
               </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Paid To (Optional)
+              </label>
+              <input
+                type="text"
+                value={paidTo}
+                onChange={e => setPaidTo(e.target.value)}
+                placeholder="e.g. Landlord / Vendor / Staff"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Receipt / Invoice Ref (Optional)
+              </label>
+              <input
+                type="text"
+                value={receiptRef}
+                onChange={e => setReceiptRef(e.target.value)}
+                placeholder="e.g. INV-2026-004"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+              />
             </div>
           </div>
 
@@ -395,37 +474,9 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               required
               value={description}
               onChange={e => setDescription(e.target.value)}
-              placeholder="e.g. Ground lease for March or High-mast LED floodlight bill"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+              placeholder="e.g. Facility monthly maintenance & lighting"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
-                Paid To (Optional)
-              </label>
-              <input
-                type="text"
-                value={paidTo}
-                onChange={e => setPaidTo(e.target.value)}
-                placeholder="e.g. BESCOM / Landlord Name"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
-                Bill / Receipt Reference (Optional)
-              </label>
-              <input
-                type="text"
-                value={receiptRef}
-                onChange={e => setReceiptRef(e.target.value)}
-                placeholder="e.g. INV-2026-092"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
-              />
-            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-3 border-t border-stone-200">
@@ -439,9 +490,9 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 shadow-2xs"
             >
-              {submitting ? 'Saving...' : 'Save Expense'}
+              {submitting ? 'Recording...' : 'Record Expense'}
             </button>
           </div>
         </form>

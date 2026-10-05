@@ -20,6 +20,7 @@ import {
   Zap,
   Sliders,
   Layers,
+  Save,
 } from 'lucide-react';
 
 interface SettingsViewProps {
@@ -33,7 +34,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
   const [updating, setUpdating] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  // ADR-008: Operations Configuration State
+  // Operations Configuration State
   const [bizType, setBizType] = useState<BusinessType>('GENERAL');
   const [enabledOps, setEnabledOps] = useState<Operation[]>([]);
   const [savingOps, setSavingOps] = useState(false);
@@ -75,8 +76,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
         enabledOperations: enabledOps,
       });
       setBusiness(updated);
-      setFeedback('Operational modules and business type updated successfully!');
-      setTimeout(() => setFeedback(null), 3000);
+      setFeedback('Operational modules and business archetype updated successfully!');
+      setTimeout(() => setFeedback(null), 3500);
     } catch (err: any) {
       alert(err.message || 'Failed to update operational configuration');
     } finally {
@@ -146,28 +147,120 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
 
   if (!business) return null;
 
+  const allAvailableOperations: { id: Operation; label: string; description: string }[] = [
+    { id: 'BOOKINGS', label: 'Bookings & Slots', description: 'Real-time appointment slot booking with collision checks' },
+    { id: 'SERVICES', label: 'Services Catalogue', description: 'Offerings with durations, pricing, and availability' },
+    { id: 'PRODUCTS', label: 'Products & Merchandise', description: 'Physical equipment or merchandise inventory' },
+    { id: 'PACKAGES', label: 'Combo Packages', description: 'Bundled session packs and cross-service deals' },
+    { id: 'TRANSACTIONS', label: 'Financial Ledger', description: 'Real money movement records (cash, UPI, cards)' },
+    { id: 'EXPENSES', label: 'Expense Management', description: 'Track rent, salaries, and operational costs' },
+    { id: 'MEMBERSHIPS', label: 'Memberships & Passes', description: 'Recurring client subscription plans' },
+    { id: 'EVENTS', label: 'Events & Tournaments', description: 'Competitions, workshops, and cohort programs' },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex items-center justify-between">
+      <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-stone-900">Settings & Monetization Controls</h2>
-          <p className="text-xs text-stone-500">
-            Configure subscription tiers, verification credentials, and sponsored listing visibility.
+          <h2 className="text-base sm:text-lg font-bold text-stone-900">Settings & Operating Configuration</h2>
+          <p className="text-xs text-stone-500 mt-0.5">
+            Configure business archetype, active operational modules, and subscription tiers.
           </p>
         </div>
 
         {feedback && (
-          <div className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 animate-fadeIn">
+          <div className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 self-start sm:self-auto">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
             <span>{feedback}</span>
           </div>
         )}
       </div>
 
+      {/* Modular Operations & Business Archetype */}
+      <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200 shadow-2xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200">
+          <div>
+            <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
+              <Sliders className="w-4 h-4 text-teal-700" />
+              <span>Operational Modules & Architecture</span>
+            </h3>
+            <p className="text-xs text-stone-500 mt-0.5">
+              Enable or disable specific modules to customize the management sidebar for your business type.
+            </p>
+          </div>
+
+          <button
+            onClick={handleSaveOperations}
+            disabled={savingOps}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
+          >
+            <Save className="w-3.5 h-3.5" />
+            <span>{savingOps ? 'Saving...' : 'Save Configuration'}</span>
+          </button>
+        </div>
+
+        {/* Business Archetype Selector */}
+        <div>
+          <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+            Business Archetype / Profile Type:
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            {(['SPORTS_TURF', 'GYM_FITNESS', 'CLINIC_HEALTHCARE', 'SALON_SPA', 'GENERAL'] as BusinessType[]).map(t => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setBizType(t)}
+                className={`p-2.5 rounded-lg border text-left font-semibold transition-all ${
+                  bizType === t
+                    ? 'border-teal-700 bg-teal-50 text-teal-900 ring-1 ring-teal-700'
+                    : 'border-stone-200 bg-stone-50/50 text-stone-700 hover:bg-stone-100'
+                }`}
+              >
+                <div>{t.replace('_', ' ')}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Modular Operations Checklist */}
+        <div>
+          <label className="block text-xs font-semibold text-stone-700 mb-2">
+            Enabled Operational Capabilities:
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {allAvailableOperations.map(op => {
+              const isChecked = enabledOps.includes(op.id);
+              return (
+                <div
+                  key={op.id}
+                  onClick={() => handleToggleOperation(op.id)}
+                  className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                    isChecked
+                      ? 'border-teal-700 bg-teal-50/40 text-stone-900'
+                      : 'border-stone-200 bg-white text-stone-500 opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-xs">{op.label}</span>
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => {}}
+                      className="rounded text-teal-700 focus:ring-teal-700"
+                    />
+                  </div>
+                  <p className="text-2xs text-stone-500 leading-snug">{op.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
       {/* Subscription Plan Card */}
-      <div className="bg-white p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider">
               Subscription Plan Tier
@@ -192,7 +285,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
               <span className="font-bold text-sm text-stone-900">GetListed Starter</span>
               <span className="text-xs font-bold text-stone-500">Free Forever</span>
             </div>
-            <p className="text-xs text-stone-600 mb-4">
+            <p className="text-xs text-stone-600 mb-4 leading-relaxed">
               Basic discovery profile, services catalogue, booking slots, and 5% fee transaction handling.
             </p>
             <button
@@ -201,7 +294,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
               onClick={() => handlePlanToggle('FREE')}
               className="w-full py-2 rounded-lg text-xs font-semibold border border-stone-300 bg-white hover:bg-stone-50 disabled:opacity-50 text-stone-700 transition-colors"
             >
-              {business.plan === 'FREE' ? 'Current Plan' : 'Downgrade to Starter'}
+              {business.plan === 'FREE' ? 'Current Plan (Active)' : 'Downgrade to Starter'}
             </button>
           </div>
 
@@ -222,7 +315,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
               </div>
               <span className="text-xs font-bold text-teal-800">₹999 / month</span>
             </div>
-            <p className="text-xs text-stone-600 mb-4">
+            <p className="text-xs text-stone-600 mb-4 leading-relaxed">
               Everything in Starter plus Customer CRM directory, Team roles, and Financial Insights.
             </p>
             <button
@@ -247,11 +340,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
             </h3>
             <VerificationBadge status={business.verificationStatus} />
           </div>
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-stone-500 leading-relaxed">
             Verified businesses receive a trust badge in search and priority customer trust.
           </p>
 
-          <div className="flex items-center gap-2 pt-2">
+          <div className="flex items-center gap-2 pt-2 flex-wrap">
             {(['UNVERIFIED', 'PENDING', 'VERIFIED'] as VerificationStatus[]).map(status => (
               <button
                 key={status}
@@ -286,7 +379,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
               {business.sponsoredListingEnabled ? 'Active' : 'Disabled'}
             </span>
           </div>
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-stone-500 leading-relaxed">
             Showcase this business with a "Sponsored" highlight badge at the top of local search.
           </p>
 
@@ -296,7 +389,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
             onClick={handleSponsoredToggle}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
               business.sponsoredListingEnabled
-                ? 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
+                ? 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100'
                 : 'bg-amber-600 text-white hover:bg-amber-700 shadow-2xs'
             }`}
           >

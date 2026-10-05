@@ -18,7 +18,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               and connect with customers.
             </p>
             <div className="p-3 bg-stone-800/80 rounded-lg text-xs text-stone-300 border border-stone-700 max-w-md">
-              <span className="font-semibold text-teal-400">Platform Handling Fee:</span> A 5% platform handling fee applies to eligible bookings and orders made through GetListed.
+              <span className="font-semibold text-[#5eead4]">Platform Handling Fee:</span> A 5% platform handling fee applies to eligible bookings and orders made through GetListed.
             </div>
           </div>
 
@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('/businesses')}
-                  className="hover:text-teal-400 transition-colors"
+                  className="hover:text-[#5eead4] transition-colors"
                 >
                   Discover Businesses
                 </button>
@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('/#pricing')}
-                  className="hover:text-teal-400 transition-colors"
+                  className="hover:text-[#5eead4] transition-colors"
                 >
                   Pricing Plans
                 </button>
@@ -44,7 +44,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('/#faq')}
-                  className="hover:text-teal-400 transition-colors"
+                  className="hover:text-[#5eead4] transition-colors"
                 >
                   Frequently Asked Questions
                 </button>
@@ -58,7 +58,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('/dashboard')}
-                  className="hover:text-teal-400 transition-colors"
+                  className="hover:text-[#5eead4] transition-colors"
                 >
                   Business Management Portal
                 </button>
@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('/dashboard/services')}
-                  className="hover:text-teal-400 transition-colors"
+                  className="hover:text-[#5eead4] transition-colors"
                 >
                   Configure Services & Products
                 </button>
@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('/dashboard/reports')}
-                  className="hover:text-teal-400 transition-colors"
+                  className="hover:text-[#5eead4] transition-colors"
                 >
                   Revenue & Reports
                 </button>
@@ -88,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="flex gap-4">
             <span>Built for Indian Local Businesses</span>
             <span>•</span>
-            <span>Full-stack Monolith Architecture</span>
+            <span>Business Operating System</span>
           </div>
         </div>
       </div>

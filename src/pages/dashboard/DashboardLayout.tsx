@@ -20,8 +20,6 @@ import {
   Compass,
   Sparkles,
   ExternalLink,
-  Bell,
-  RefreshCw,
   CreditCard,
   Receipt,
   UserCheck,
@@ -95,6 +93,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         workingHours: '06:00 AM - 10:00 PM',
         verificationStatus: 'UNVERIFIED',
         plan: 'FREE',
+        ownerId: user?.id,
       });
       setIsNewBizModalOpen(false);
       setNewName('');
@@ -103,7 +102,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       await fetchBusinesses();
       onSelectBusinessId(created.id);
     } catch (err: any) {
-      alert(err.message || 'Failed to create business profile');
+      console.error('Failed to create business profile:', err);
     } finally {
       setCreatingBiz(false);
     }
@@ -146,83 +145,114 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-stone-100 flex flex-col">
+    <div className="min-h-screen bg-stone-50 flex flex-col">
       {/* Top Business Context Bar */}
-      <div className="bg-white border-b border-stone-200 px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-4">
-        {/* Business Selector & User Context */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <button
-            onClick={openAuthModal}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 border border-stone-200 text-xs text-stone-700 transition-colors cursor-pointer"
-            title="Click to Switch Account / Sign Out / Manage Identity"
-          >
-            <UserCheck className="w-3.5 h-3.5 text-teal-700" />
-            <span className="font-semibold">{user?.name || 'Guest'}</span>
-            <span className="text-2xs text-stone-500 font-mono">
-              ({roleForBusiness(selectedBusinessId)})
-            </span>
-          </button>
-
-          <span className="text-xs font-semibold text-stone-400">|</span>
-
-          <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Business:</span>
-          <div className="relative">
-            <select
-              id="business-switcher"
-              value={selectedBusinessId}
-              onChange={e => onSelectBusinessId(e.target.value)}
-              className="pl-3 pr-8 py-1.5 rounded-lg border border-stone-300 bg-stone-50 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-teal-700"
-            >
-              {businesses.map(b => (
-                <option key={b.id} value={b.id}>
-                  {b.name} ({b.businessType || b.category})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            id="onboard-new-biz-btn"
-            onClick={() => setIsNewBizModalOpen(true)}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>New Business</span>
-          </button>
-        </div>
-
-        {/* Current Business Status Badges */}
-        {currentBusiness && (
-          <div className="flex items-center gap-2 flex-wrap">
-            {currentBusiness.businessType && (
-              <span className="px-2 py-0.5 rounded text-2xs font-bold uppercase bg-stone-100 text-stone-700 border border-stone-200">
-                {currentBusiness.businessType}
-              </span>
-            )}
-            <VerificationBadge status={currentBusiness.verificationStatus} />
-            <PlanBadge plan={currentBusiness.plan} />
-            {currentBusiness.sponsoredListingEnabled && (
-              <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-600" />
-                <span>Sponsored</span>
-              </span>
-            )}
-
+      <div className="bg-white border-b border-stone-200 px-4 sm:px-6 lg:px-8 py-2.5">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+          {/* Business Selector & User Context */}
+          <div className="flex items-center gap-2.5 flex-wrap">
             <button
-              onClick={() => onNavigate(`/businesses/${currentBusiness.id}`)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 transition-colors ml-2"
+              onClick={openAuthModal}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 border border-stone-200 text-xs text-stone-700 transition-colors cursor-pointer shrink-0"
+              title={user ? `Signed in as ${user.name} - Click to manage or Sign Out` : 'Click to Sign In'}
             >
-              <span>Public View</span>
-              <ExternalLink className="w-3 h-3" />
+              <UserCheck className="w-3.5 h-3.5 text-[#0F766E]" />
+              <span className="font-semibold">{user ? user.name : 'Sign In'}</span>
+              <span className="text-2xs text-stone-500 font-mono">
+                ({user ? roleForBusiness(selectedBusinessId) : 'Guest'})
+              </span>
             </button>
+
+            <span className="text-xs font-semibold text-stone-300 hidden sm:inline">|</span>
+
+            <div className="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
+              <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider shrink-0 hidden xs:inline">
+                Business:
+              </span>
+              <div className="relative min-w-0 flex-1 sm:w-56">
+                <select
+                  id="business-switcher"
+                  value={selectedBusinessId}
+                  onChange={e => onSelectBusinessId(e.target.value)}
+                  className="w-full pl-3 pr-8 py-1.5 rounded-lg border border-stone-300 bg-stone-50 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E] truncate"
+                >
+                  {businesses.map(b => (
+                    <option key={b.id} value={b.id}>
+                      {b.name} ({b.businessType || b.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                id="onboard-new-biz-btn"
+                onClick={() => setIsNewBizModalOpen(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] hover:bg-[#CCFBF1]/50 border border-[#0F766E]/30 transition-colors shrink-0 cursor-pointer"
+                title="Add and onboard another business entity"
+              >
+                <Plus className="w-3.5 h-3.5 text-[#0F766E]" />
+                <span className="hidden sm:inline">New Business</span>
+              </button>
+            </div>
           </div>
-        )}
+
+          {/* Current Business Status Badges */}
+          {currentBusiness && (
+            <div className="flex items-center gap-2 flex-wrap text-xs pt-1 md:pt-0 border-t md:border-t-0 border-stone-100">
+              {currentBusiness.businessType && (
+                <span className="px-2 py-0.5 rounded-md text-2xs font-bold uppercase bg-stone-100 text-stone-700 border border-stone-200 shrink-0">
+                  {currentBusiness.businessType}
+                </span>
+              )}
+              <VerificationBadge status={currentBusiness.verificationStatus} />
+              <PlanBadge plan={currentBusiness.plan} />
+              {currentBusiness.sponsoredListingEnabled && (
+                <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-[#FFFBEB] text-[#D97706] border border-[#D97706]/30 flex items-center gap-1 shrink-0">
+                  <Sparkles className="w-3 h-3 text-[#D97706]" />
+                  <span>Sponsored</span>
+                </span>
+              )}
+
+              <button
+                onClick={() => onNavigate(`/businesses/${currentBusiness.id}`)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 transition-colors shrink-0 ml-auto md:ml-2 cursor-pointer"
+              >
+                <span>Public View</span>
+                <ExternalLink className="w-3 h-3" />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Main Dashboard Layout: Sidebar + Workspace */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
-        {/* Sidebar Nav */}
-        <aside className="w-full md:w-60 shrink-0">
+      {/* Mobile/Tablet Horizontal Module Bar (Does NOT push content down) */}
+      <div className="md:hidden bg-white border-b border-stone-200 px-4 py-2 sticky top-16 z-30 shadow-2xs">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+          {navItems.map(item => {
+            const Icon = item.icon;
+            const isActive = currentTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => onSelectTab(item.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#CCFBF1] text-[#0F766E] font-semibold'
+                    : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#0F766E]' : 'text-stone-400'}`} />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Main Dashboard Layout: Desktop Sidebar + Content Workspace */}
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex flex-col md:flex-row gap-6 items-start">
+        {/* Desktop Sidebar Nav */}
+        <aside className="hidden md:block w-60 shrink-0 sticky top-20">
           <div className="bg-white rounded-xl border border-stone-200 p-2 shadow-2xs space-y-1">
             <div className="px-3 py-2 text-2xs font-bold text-stone-400 uppercase tracking-wider">
               Management Modules
@@ -236,21 +266,21 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   key={item.id}
                   id={`dashboard-tab-${item.id}`}
                   onClick={() => onSelectTab(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
                     isActive
-                      ? 'bg-teal-700 text-white font-semibold shadow-xs'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                      ? 'bg-[#CCFBF1] text-[#0F766E] font-semibold'
+                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50 font-medium'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-stone-400'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#0F766E]' : 'text-stone-400'}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
                     <span
                       className={`text-2xs px-1.5 py-0.2 rounded font-bold uppercase tracking-wider ${
                         isActive
-                          ? 'bg-white/20 text-white'
+                          ? 'bg-[#CCFBF1] text-[#0F766E]'
                           : 'bg-stone-100 text-stone-600 border border-stone-200'
                       }`}
                     >
@@ -263,20 +293,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </div>
 
           {/* Quick Platform Fee Reminder */}
-          <div className="mt-4 p-3 bg-stone-50 rounded-xl border border-stone-200 text-2xs text-stone-600 leading-relaxed">
-            <span className="font-semibold text-teal-800">Platform Handling Fee:</span> 5% fee is calculated and deducted on confirmed customer transactions.
+          <div className="mt-3 p-3 bg-stone-50 rounded-xl border border-stone-200 text-2xs text-stone-600 leading-relaxed">
+            <span className="font-semibold text-[#0F766E]">Platform Handling Fee:</span> 5% fee is calculated and deducted on confirmed customer transactions.
           </div>
         </aside>
 
         {/* Dynamic Content Workspace */}
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="flex-1 min-w-0 w-full">{children}</main>
       </div>
 
       {/* Onboard New Business Modal */}
       <Modal
         isOpen={isNewBizModalOpen}
         onClose={() => setIsNewBizModalOpen(false)}
-        title="Onboard New Business"
+        title="Onboard New Business Entity"
       >
         <form onSubmit={handleCreateBusiness} className="space-y-4 text-sm">
           <div>
@@ -287,68 +317,70 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               placeholder="e.g. Velocity Badminton Arena"
               value={newName}
               onChange={e => setNewName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Category</label>
               <select
                 value={newCategory}
                 onChange={e => setNewCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none bg-white"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
               >
                 <option value="Sports">Sports</option>
                 <option value="Fitness">Fitness</option>
                 <option value="Healthcare">Healthcare</option>
                 <option value="Wellness">Wellness</option>
-                <option value="Leisure">Leisure</option>
+                <option value="Salon">Salon</option>
               </select>
             </div>
+
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Sub-Category</label>
               <input
                 type="text"
-                placeholder="e.g. Badminton / Clinic"
+                placeholder="e.g. Badminton / Turf / Gym"
                 value={newSubCategory}
                 onChange={e => setNewSubCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">City / Location</label>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">City Location</label>
               <input
                 type="text"
                 placeholder="e.g. Bengaluru"
                 value={newLocation}
                 onChange={e => setNewLocation(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">Phone Number</label>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Contact Phone</label>
               <input
                 type="tel"
                 placeholder="e.g. +91 98860 11223"
                 value={newContact}
                 onChange={e => setNewContact(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-700 mb-1">Brief Description</label>
+            <label className="block text-xs font-semibold text-stone-700 mb-1">Short Description</label>
             <textarea
-              rows={3}
-              placeholder="What does your business offer to customers?"
+              rows={2}
+              placeholder="Brief description of facilities, courts, services..."
               value={newDescription}
               onChange={e => setNewDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -356,14 +388,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <button
               type="button"
               onClick={() => setIsNewBizModalOpen(false)}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={creatingBiz}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs cursor-pointer"
             >
               {creatingBiz ? 'Creating...' : 'Create Business'}
             </button>

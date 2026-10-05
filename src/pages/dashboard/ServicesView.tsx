@@ -11,6 +11,7 @@ interface ServicesViewProps {
 export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,8 +28,9 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
       setLoading(true);
       const list = await api.listServices(businessId);
       setServices(list);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load services:', err);
+      setErrorMessage(err.message || 'Failed to load services');
     } finally {
       setLoading(false);
     }
@@ -84,26 +86,25 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
       setIsModalOpen(false);
       await fetchServices();
     } catch (err: any) {
-      alert(err.message || 'Failed to save service');
+      setErrorMessage(err.message || 'Failed to save service');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleArchive = async (id: string, srvName: string) => {
-    if (!window.confirm(`Are you sure you want to archive service "${srvName}"?`)) return;
+  const handleArchive = async (id: string) => {
     try {
       await api.archiveService(id);
       await fetchServices();
     } catch (err: any) {
-      alert(err.message || 'Failed to archive service');
+      setErrorMessage(err.message || 'Failed to archive service');
     }
   };
 
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading services...</p>
       </div>
     );
@@ -111,17 +112,27 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex items-center justify-between">
+      {errorMessage && (
+        <div className="p-3 bg-[#FEF2F2] border border-[#DC2626]/30 text-[#DC2626] rounded-xl text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+          <button onClick={() => setErrorMessage(null)} className="text-stone-500 hover:text-stone-700">✕</button>
+        </div>
+      )}
+
+      <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-stone-900">Services Configuration</h2>
-          <p className="text-xs text-stone-500">
+          <h2 className="text-base sm:text-lg font-bold text-stone-900">Services Configuration</h2>
+          <p className="text-xs text-stone-500 mt-0.5">
             Define the services customers can discover, reserve, and book.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add Service</span>
@@ -137,36 +148,36 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
           </p>
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 hover:bg-teal-100"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30 hover:bg-[#CCFBF1]/50 transition-colors"
           >
             Create Your First Service
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {services.map(srv => (
             <div
               key={srv.id}
-              className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col justify-between"
+              className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-bold text-stone-900 text-base">{srv.name}</h3>
+                  <h3 className="font-bold text-stone-900 text-base truncate">{srv.name}</h3>
                   <div className="text-right shrink-0">
                     <span className="text-base font-extrabold text-stone-900">₹{srv.price}</span>
                     <span className="text-2xs text-stone-500 block">/{srv.durationMinutes} min</span>
                   </div>
                 </div>
 
-                <p className="text-xs text-stone-600 mb-3 leading-relaxed">{srv.description}</p>
-                <div className="text-2xs text-stone-500 bg-stone-50 p-2 rounded-md border border-stone-100 mb-4">
+                <p className="text-xs text-stone-600 mb-3 leading-relaxed line-clamp-2">{srv.description}</p>
+                <div className="text-2xs text-stone-500 bg-stone-50 p-2 rounded-md border border-stone-100 mb-4 truncate">
                   {srv.availability}
                 </div>
               </div>
 
               <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
-                <span className="text-2xs text-stone-400 font-mono">ID: {srv.id}</span>
-                <div className="flex items-center gap-2">
+                <span className="text-2xs text-stone-400 font-mono">ID: {srv.id.slice(-6)}</span>
+                <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => handleOpenEdit(srv)}
                     className="p-1.5 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md transition-colors"
@@ -175,8 +186,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button
-                    onClick={() => handleArchive(srv.id, srv.name)}
-                    className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-md transition-colors"
+                    onClick={() => handleArchive(srv.id)}
+                    className="p-1.5 text-stone-400 hover:text-[#DC2626] hover:bg-[#FEF2F2] rounded-md transition-colors"
                     title="Archive Service"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -203,11 +214,11 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
               placeholder="e.g. 5-a-Side Football Turf Slot"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Price (₹) *</label>
               <input
@@ -216,7 +227,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
                 min={0}
                 value={price}
                 onChange={e => setPrice(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
               />
             </div>
             <div>
@@ -228,7 +239,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
                 step={15}
                 value={durationMinutes}
                 onChange={e => setDurationMinutes(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
               />
             </div>
           </div>
@@ -240,7 +251,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
               value={availability}
               onChange={e => setAvailability(e.target.value)}
               placeholder="e.g. Daily 06:00 AM - 10:00 PM"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -251,7 +262,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
               placeholder="Provide key details, specifications, requirements, or inclusions..."
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -266,7 +277,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
             >
               {submitting ? 'Saving...' : editingService ? 'Update Service' : 'Create Service'}
             </button>

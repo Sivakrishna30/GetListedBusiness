@@ -42,7 +42,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <div
       id="app-modal-overlay"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-900/60 backdrop-blur-xs"
       onClick={onClose}
     >
       <div
@@ -50,18 +50,19 @@ export const Modal: React.FC<ModalProps> = ({
         className={`w-full ${maxWidthClass} bg-white rounded-xl shadow-xl border border-stone-200 overflow-hidden transform transition-all max-h-[90vh] flex flex-col`}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 bg-stone-50">
-          <h3 className="text-lg font-bold text-stone-900">{title}</h3>
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-stone-200 bg-stone-50/80">
+          <h3 className="text-base sm:text-lg font-bold text-stone-900 truncate pr-2">{title}</h3>
           <button
             id="modal-close-btn"
             onClick={onClose}
-            className="p-1 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-200 transition-colors"
+            className="p-1 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-200/80 transition-colors shrink-0"
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto">{children}</div>
+        <div className="p-4 sm:p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

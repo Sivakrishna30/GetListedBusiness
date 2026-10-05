@@ -11,15 +11,16 @@ interface ProductsViewProps {
 export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState<number>(200);
+  const [price, setPrice] = useState<number>(350);
   const [stockStatus, setStockStatus] = useState<StockStatus>('IN_STOCK');
-  const [availability, setAvailability] = useState('Available at reception counter');
+  const [availability, setAvailability] = useState('Available at reception / retail counter');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchProducts = async () => {
@@ -27,8 +28,9 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
       setLoading(true);
       const list = await api.listProducts(businessId);
       setProducts(list);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load products:', err);
+      setErrorMessage(err.message || 'Failed to load products');
     } finally {
       setLoading(false);
     }
@@ -42,9 +44,9 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
     setEditingProduct(null);
     setName('');
     setDescription('');
-    setPrice(250);
+    setPrice(350);
     setStockStatus('IN_STOCK');
-    setAvailability('Available on-site at front desk');
+    setAvailability('Available at reception / retail counter');
     setIsModalOpen(true);
   };
 
@@ -84,26 +86,25 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
       setIsModalOpen(false);
       await fetchProducts();
     } catch (err: any) {
-      alert(err.message || 'Failed to save product');
+      setErrorMessage(err.message || 'Failed to save product');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleArchive = async (id: string, prdName: string) => {
-    if (!window.confirm(`Are you sure you want to archive product "${prdName}"?`)) return;
+  const handleArchive = async (id: string) => {
     try {
       await api.archiveProduct(id);
       await fetchProducts();
     } catch (err: any) {
-      alert(err.message || 'Failed to archive product');
+      setErrorMessage(err.message || 'Failed to archive product');
     }
   };
 
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading products...</p>
       </div>
     );
@@ -111,17 +112,27 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex items-center justify-between">
+      {errorMessage && (
+        <div className="p-3 bg-[#FEF2F2] border border-[#DC2626]/30 text-[#DC2626] rounded-xl text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+          <button onClick={() => setErrorMessage(null)} className="text-stone-500 hover:text-stone-700">✕</button>
+        </div>
+      )}
+
+      <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-stone-900">Products & Inventory</h2>
-          <p className="text-xs text-stone-500">
-            Manage merchandise, equipment, or medicines available for purchase or rental.
+          <h2 className="text-base sm:text-lg font-bold text-stone-900">Products & Inventory</h2>
+          <p className="text-xs text-stone-500 mt-0.5">
+            Manage merchandise, equipment, or items available for purchase or rental.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add Product</span>
@@ -137,25 +148,27 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
           </p>
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 hover:bg-teal-100"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30 hover:bg-[#CCFBF1]/50 transition-colors"
           >
             Add Product Item
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map(prd => (
             <div
               key={prd.id}
-              className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col justify-between"
+              className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <span
-                    className={`text-2xs font-semibold px-2 py-0.5 rounded ${
+                    className={`text-2xs font-semibold px-2 py-0.5 rounded-md ${
                       prd.stockStatus === 'IN_STOCK'
-                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                        : 'bg-amber-50 text-amber-800 border border-amber-200'
+                        ? 'bg-[#F0FDF4] text-[#16A34A] border border-[#16A34A]/30'
+                        : prd.stockStatus === 'LOW_STOCK'
+                        ? 'bg-[#FFFBEB] text-[#D97706] border border-[#D97706]/30'
+                        : 'bg-[#FEF2F2] text-[#DC2626] border border-[#DC2626]/30'
                     }`}
                   >
                     {prd.stockStatus.replace('_', ' ')}
@@ -163,25 +176,27 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
                   <span className="text-base font-extrabold text-stone-900">₹{prd.price}</span>
                 </div>
 
-                <h3 className="font-bold text-stone-900 text-sm mb-1">{prd.name}</h3>
-                <p className="text-xs text-stone-600 mb-3">{prd.description}</p>
-                <div className="text-2xs text-stone-500 bg-stone-50 p-2 rounded border border-stone-100 mb-3">
+                <h3 className="font-bold text-stone-900 text-sm mb-1 truncate">{prd.name}</h3>
+                <p className="text-xs text-stone-600 mb-3 line-clamp-2 leading-relaxed">{prd.description}</p>
+                <div className="text-2xs text-stone-500 bg-stone-50 p-2 rounded-md border border-stone-100 mb-3 truncate">
                   {prd.availability}
                 </div>
               </div>
 
               <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
-                <span className="text-2xs text-stone-400 font-mono">#{prd.id}</span>
-                <div className="flex items-center gap-2">
+                <span className="text-2xs text-stone-400 font-mono">#{prd.id.slice(-6)}</span>
+                <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => handleOpenEdit(prd)}
                     className="p-1.5 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md transition-colors"
+                    title="Edit Product"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button
-                    onClick={() => handleArchive(prd.id, prd.name)}
-                    className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-md transition-colors"
+                    onClick={() => handleArchive(prd.id)}
+                    className="p-1.5 text-stone-400 hover:text-[#DC2626] hover:bg-[#FEF2F2] rounded-md transition-colors"
+                    title="Archive Product"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -207,11 +222,11 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               placeholder="e.g. Professional Match Football / Whey Protein"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Price (₹) *</label>
               <input
@@ -220,7 +235,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
                 min={0}
                 value={price}
                 onChange={e => setPrice(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
               />
             </div>
             <div>
@@ -228,7 +243,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               <select
                 value={stockStatus}
                 onChange={e => setStockStatus(e.target.value as StockStatus)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none bg-white"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
               >
                 <option value="IN_STOCK">In Stock</option>
                 <option value="LOW_STOCK">Low Stock</option>
@@ -244,7 +259,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               value={availability}
               onChange={e => setAvailability(e.target.value)}
               placeholder="e.g. Available at reception / On-counter purchase"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -255,7 +270,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               placeholder="Item specifications, sizing, brands, or rental terms..."
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
             />
           </div>
 
@@ -270,7 +285,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
             >
               {submitting ? 'Saving...' : editingProduct ? 'Update Product' : 'Create Product'}
             </button>

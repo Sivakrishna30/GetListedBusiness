@@ -32,7 +32,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const stored = localStorage.getItem(AUTH_STORAGE_KEY);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.user && parsed.user.id) {
+          return parsed;
+        }
       }
     } catch (e) {
       console.error('Failed to parse stored auth session:', e);
@@ -40,50 +43,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return null;
   });
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const syncMe = async (userId?: string) => {
+  const syncMe = async (userId: string) => {
+    if (!userId) return;
     try {
       setLoading(true);
-      const res = await api.getMe(userId || session?.user.id || 'user_siva_owner');
+      const res = await api.getMe(userId);
       if (res && res.user) {
         setSession(res);
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(res));
       }
     } catch (err) {
-      console.warn('Could not sync user session, falling back to default seed owner:', err);
-      // Fallback default seed owner
-      const fallback: AuthSession = {
-        user: {
-          id: 'user_siva_owner',
-          name: 'Sivakrishna',
-          email: 'sivakrishna.era@gmail.com',
-          status: 'ACTIVE',
-          createdAt: '2026-01-01T00:00:00.000Z',
-          updatedAt: '2026-01-01T00:00:00.000Z',
-        },
-        memberships: [
-          {
-            id: 'bm_01',
-            userId: 'user_siva_owner',
-            businessId: 'biz_greenpark_turf',
-            role: 'OWNER',
-            createdAt: '2026-01-01T00:00:00.000Z',
-          },
-        ],
-        businesses: [],
-      };
-      setSession(fallback);
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(fallback));
+      console.warn('User session invalid or expired:', err);
+      setSession(null);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!session) {
-      syncMe('user_siva_owner');
+    // Only synchronize if the user has an active session in local storage
+    if (session?.user?.id) {
+      syncMe(session.user.id);
     } else {
       setLoading(false);
     }
@@ -106,8 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setSession(null);
     localStorage.removeItem(AUTH_STORAGE_KEY);
-    // Automatically revert to guest/default
-    syncMe('user_siva_owner');
+    setLoading(false);
   };
 
   const roleForBusiness = (businessId: string): 'OWNER' | 'MANAGER' | 'STAFF' | 'NONE' => {

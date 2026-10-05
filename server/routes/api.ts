@@ -34,7 +34,10 @@ apiRouter.post('/auth/register', (req: Request, res: Response) => {
 });
 
 apiRouter.get('/auth/me', (req: Request, res: Response) => {
-  const userId = (req.query.userId as string) || 'user_siva_owner';
+  const userId = req.query.userId as string;
+  if (!userId) {
+    return res.status(400).json({ success: false, error: 'User ID is required' });
+  }
   const session = AuthService.getMe(userId);
   if (!session) return res.status(404).json({ success: false, error: 'User not found' });
   res.json({ success: true, data: session });
