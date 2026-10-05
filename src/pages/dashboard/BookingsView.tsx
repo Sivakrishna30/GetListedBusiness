@@ -208,7 +208,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
 
           <button
             onClick={() => setIsNewBookingModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>+ Manual Booking</span>
@@ -223,7 +223,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <select
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
             >
               <option value="ALL">All Statuses</option>
               <option value="CONFIRMED">Confirmed</option>
@@ -240,7 +240,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               type="date"
               value={selectedDate}
               onChange={e => setSelectedDate(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white font-medium text-stone-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
             {selectedDate && (
               <button
@@ -257,7 +257,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
       {/* Bookings List */}
       {loading ? (
         <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-          <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+          <RefreshCw className="w-6 h-6 text-blue-600 animate-spin mx-auto mb-2" />
           <p className="text-xs text-stone-500 font-medium">Loading bookings...</p>
         </div>
       ) : bookings.length === 0 ? (
@@ -269,7 +269,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
           </p>
           <button
             onClick={() => setIsNewBookingModalOpen(true)}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 hover:bg-teal-100 transition-colors"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors"
           >
             Create Front-Desk Booking
           </button>
@@ -309,7 +309,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                   </div>
 
                   <div className="text-xs text-stone-600 flex flex-wrap items-center gap-2 sm:gap-3">
-                    <span className="font-semibold text-teal-800">{bk.serviceName}</span>
+                    <span className="font-semibold text-blue-700">{bk.serviceName}</span>
                     <span className="text-stone-300">•</span>
                     <span className="flex items-center gap-1 font-medium">
                       <Calendar className="w-3.5 h-3.5 text-stone-400" />
@@ -339,7 +339,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                   <div className="text-left sm:text-right">
                     <div className="text-base font-extrabold text-stone-900">₹{bk.grossAmount}</div>
                     <div className="text-2xs text-stone-500">
-                      Net: ₹{bk.netAmount} <span className="text-teal-700 font-medium">(Fee: ₹{bk.platformFee})</span>
+                      Net: ₹{bk.netAmount} <span className="text-blue-600 font-medium">(Fee: ₹{bk.platformFee})</span>
                     </div>
                   </div>
 
@@ -348,10 +348,10 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                     {!isFullyPaid && bk.status !== 'CANCELLED' && (
                       <button
                         onClick={() => openRecordPaymentModal(bk, remaining)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors"
                         title="Record payment into financial ledger (ADR-006)"
                       >
-                        <CreditCard className="w-3.5 h-3.5 text-teal-700" />
+                        <CreditCard className="w-3.5 h-3.5 text-blue-600" />
                         <span>{paidTotal > 0 ? 'Collect Balance' : 'Collect Payment'}</span>
                       </button>
                     )}
@@ -407,7 +407,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <select
               value={manualServiceId}
               onChange={e => setManualServiceId(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white"
             >
               {services.map(s => (
                 <option key={s.id} value={s.id}>
@@ -426,7 +426,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 placeholder="Customer name"
                 value={manualCustomerName}
                 onChange={e => setManualCustomerName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
             <div>
@@ -437,7 +437,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 placeholder="+91..."
                 value={manualCustomerPhone}
                 onChange={e => setManualCustomerPhone(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
           </div>
@@ -449,7 +449,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               required
               value={manualDate}
               onChange={e => setManualDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
           </div>
 
@@ -461,7 +461,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 required
                 value={manualStartTime}
                 onChange={e => setManualStartTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
             <div>
@@ -471,20 +471,20 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 required
                 value={manualEndTime}
                 onChange={e => setManualEndTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
           </div>
 
-          {/* 5% Fee Breakdown Preview */}
+          {/* 2% Fee Breakdown Preview */}
           <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs space-y-1">
             <div className="flex justify-between text-stone-600">
               <span>Gross Service Price:</span>
               <span className="font-semibold text-stone-900">₹{manualFee.grossAmount}</span>
             </div>
             <div className="flex justify-between text-stone-600">
-              <span>5% Platform Handling Fee:</span>
-              <span className="font-semibold text-teal-800">₹{manualFee.platformFee}</span>
+              <span>2% Platform Handling Fee:</span>
+              <span className="font-semibold text-blue-700">₹{manualFee.platformFee}</span>
             </div>
             <div className="flex justify-between pt-1 border-t border-stone-200 font-bold text-stone-900">
               <span>Net Business Amount:</span>
@@ -499,7 +499,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               placeholder="e.g. Paid in cash at reception"
               value={manualNotes}
               onChange={e => setManualNotes(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
           </div>
 
@@ -514,7 +514,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={creatingBooking}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-2xs"
             >
               {creatingBooking ? 'Saving...' : 'Confirm Walk-In Booking'}
             </button>
@@ -536,7 +536,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               required
               value={rescheduleDate}
               onChange={e => setRescheduleDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
           </div>
 
@@ -548,7 +548,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 required
                 value={rescheduleStartTime}
                 onChange={e => setRescheduleStartTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
             <div>
@@ -558,7 +558,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 required
                 value={rescheduleEndTime}
                 onChange={e => setRescheduleEndTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
           </div>
@@ -574,7 +574,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={savingReschedule}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-2xs"
             >
               {savingReschedule ? 'Saving...' : 'Update Schedule'}
             </button>
@@ -608,7 +608,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               </div>
               <div className="flex justify-between border-t border-stone-200 pt-1 font-bold">
                 <span className="text-stone-700">Gross Booking Value:</span>
-                <span className="text-teal-800">₹{payingBooking.grossAmount}</span>
+                <span className="text-blue-700">₹{payingBooking.grossAmount}</span>
               </div>
             </div>
           )}
@@ -623,7 +623,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 required
                 value={payAmount}
                 onChange={e => setPayAmount(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-bold text-stone-900 focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-bold text-stone-900 focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
 
@@ -632,7 +632,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
               <select
                 value={payMethod}
                 onChange={e => setPayMethod(e.target.value as PaymentMethod)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-semibold focus:ring-2 focus:ring-teal-700 focus:outline-none bg-white"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-semibold focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white"
               >
                 <option value="UPI">UPI (GPay / PhonePe / Paytm)</option>
                 <option value="CASH">Cash at Desk</option>
@@ -651,7 +651,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 required
                 value={payDate}
                 onChange={e => setPayDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
 
@@ -662,7 +662,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
                 placeholder="e.g. UPI/260324/99120"
                 value={payRef}
                 onChange={e => setPayRef(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-teal-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
           </div>
@@ -682,7 +682,7 @@ export const BookingsView: React.FC<BookingsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={recordingPayment}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-2xs"
             >
               {recordingPayment ? 'Recording...' : 'Record Payment to Ledger'}
             </button>

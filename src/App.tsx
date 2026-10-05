@@ -7,7 +7,9 @@ import { BusinessDetailPage } from './pages/BusinessDetailPage.tsx';
 import { BookingFlowPage } from './pages/BookingFlowPage.tsx';
 import { DashboardPage } from './pages/dashboard/DashboardPage.tsx';
 import { CustomerBookingsPage } from './pages/CustomerBookingsPage.tsx';
+import { BrandPreviewPage } from './pages/BrandPreviewPage.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
+import { BrandThemeProvider } from './context/BrandThemeContext.tsx';
 import { AuthModal } from './components/AuthModal.tsx';
 
 export default function App() {
@@ -36,6 +38,11 @@ export default function App() {
     const url = new URL(currentPath, 'http://localhost');
     const pathname = url.pathname;
     const searchParams = url.searchParams;
+
+    // 0. Brand Preview & Theme Exploration: /brand-preview, /brand
+    if (pathname === '/brand-preview' || pathname.startsWith('/brand')) {
+      return <BrandPreviewPage onNavigate={navigate} />;
+    }
 
     // 1. Booking Flow:
     // Support: /book/:businessId/:serviceId, /book/:businessId, /businesses/:businessId/book
@@ -103,13 +110,15 @@ export default function App() {
   };
 
   return (
-    <AuthProvider>
-      <div className="min-h-screen flex flex-col bg-stone-50 font-sans text-stone-900">
-        <Navbar currentPath={currentPath} onNavigate={navigate} />
-        <main className="flex-1">{renderRoute()}</main>
-        <Footer onNavigate={navigate} />
-        <AuthModal />
-      </div>
-    </AuthProvider>
+    <BrandThemeProvider>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col bg-[#FAFAF9] font-sans text-[#18181B]">
+          <Navbar currentPath={currentPath} onNavigate={navigate} />
+          <main className="flex-1">{renderRoute()}</main>
+          <Footer onNavigate={navigate} />
+          <AuthModal />
+        </div>
+      </AuthProvider>
+    </BrandThemeProvider>
   );
 }

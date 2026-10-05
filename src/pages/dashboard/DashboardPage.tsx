@@ -9,7 +9,6 @@ import { BookingsView } from './BookingsView.tsx';
 import { MembershipsView } from './MembershipsView.tsx';
 import { EventsView } from './EventsView.tsx';
 import { CustomersView } from './CustomersView.tsx';
-import { TeamView } from './TeamView.tsx';
 import { ReportsView } from './ReportsView.tsx';
 import { SettingsView } from './SettingsView.tsx';
 import { TransactionsView } from './TransactionsView.tsx';
@@ -50,7 +49,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {currentTab === 'memberships' && <MembershipsView businessId={selectedBusinessId} />}
       {currentTab === 'events' && <EventsView businessId={selectedBusinessId} />}
       {currentTab === 'customers' && <CustomersView businessId={selectedBusinessId} />}
-      {currentTab === 'team' && <TeamView businessId={selectedBusinessId} />}
       {currentTab === 'reports' && <ReportsView businessId={selectedBusinessId} />}
       {currentTab === 'settings' && <SettingsView businessId={selectedBusinessId} />}
     </DashboardLayout>

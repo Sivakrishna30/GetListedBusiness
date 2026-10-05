@@ -6,8 +6,6 @@ import {
   Search,
   MapPin,
   Clock,
-  Phone,
-  MessageSquare,
   ArrowRight,
   Filter,
   Sparkles,
@@ -69,15 +67,18 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
   const locationsList = ['All', 'Bengaluru', 'Hyderabad', 'Pune', 'Chennai', 'Mumbai', 'Delhi'];
 
   return (
-    <div className="min-h-screen bg-stone-50 py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FAFAF9] py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-stone-200">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-              Discover Local Businesses
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EFF6FF] text-[#2563EB] mb-2">
+              <span>Customer Discovery Portal</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#18181B] tracking-tight">
+              Discover Local <span className="text-[#2563EB]">Businesses</span> & <span className="text-[#F97371]">Services</span>
             </h1>
-            <p className="text-xs sm:text-sm text-stone-600 mt-1">
+            <p className="text-xs sm:text-sm text-[#52525B] mt-1">
               Find verified local services, check live availability, and book directly.
             </p>
           </div>
@@ -85,10 +86,10 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-2 self-start md:self-auto shrink-0">
             <button
               onClick={() => onNavigate('/dashboard')}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-white border border-stone-300 hover:bg-stone-50 shadow-2xs transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-white border border-stone-300 hover:bg-stone-50 shadow-2xs transition-colors cursor-pointer"
             >
-              <Building2 className="w-4 h-4 text-[#0F766E]" />
-              <span>Are you a business? Get Listed</span>
+              <Building2 className="w-4 h-4 text-[#2563EB]" />
+              <span>Are you a business? Business Portal</span>
             </button>
           </div>
         </div>
@@ -105,7 +106,7 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
                 placeholder="Search businesses, services, sports turf, gym, clinic, doctor..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border border-stone-300 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E] focus:border-transparent placeholder:text-stone-400"
+                className="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border border-stone-300 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent placeholder:text-stone-400"
               />
             </div>
 
@@ -116,7 +117,7 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
                 id="location-filter"
                 value={selectedLocation}
                 onChange={e => setSelectedLocation(e.target.value)}
-                className="w-full pl-10 pr-8 py-2 sm:py-2.5 rounded-lg border border-stone-300 text-sm text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#0F766E] focus:border-transparent"
+                className="w-full pl-10 pr-8 py-2 sm:py-2.5 rounded-lg border border-stone-300 text-sm text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent"
               >
                 {locationsList.map(loc => (
                   <option key={loc} value={loc}>
@@ -134,9 +135,9 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
             </span>
             <button
               onClick={() => setSelectedCategory('All')}
-              className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 ${
+              className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer ${
                 selectedCategory === 'All'
-                  ? 'bg-[#0F766E] text-white'
+                  ? 'bg-[#2563EB] text-white shadow-2xs'
                   : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
               }`}
             >
@@ -146,9 +147,9 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 ${
+                className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer ${
                   selectedCategory === cat.name
-                    ? 'bg-[#0F766E] text-white'
+                    ? 'bg-[#2563EB] text-white shadow-2xs'
                     : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
                 }`}
               >
@@ -161,7 +162,7 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
         {/* Loading / Error States */}
         {loading && (
           <div className="py-20 text-center">
-            <RefreshCw className="w-8 h-8 text-[#0F766E] animate-spin mx-auto mb-3" />
+            <RefreshCw className="w-8 h-8 text-[#2563EB] animate-spin mx-auto mb-3" />
             <p className="text-sm font-medium text-stone-600">Discovering businesses...</p>
           </div>
         )}
@@ -192,7 +193,7 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
                 setSelectedCategory('All');
                 setSelectedLocation('All');
               }}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] hover:bg-[#CCFBF1]/50 border border-[#0F766E]/30 transition-colors"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] hover:bg-[#DBEAFE] border border-[#2563EB]/30 transition-colors cursor-pointer"
             >
               Reset Filters
             </button>
@@ -206,7 +207,7 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
               <div
                 key={biz.id}
                 id={`biz-card-${biz.id}`}
-                className="bg-white rounded-xl border border-stone-200 shadow-2xs hover:shadow-sm transition-all overflow-hidden flex flex-col justify-between group"
+                className="bg-white rounded-xl border border-stone-200 shadow-2xs hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group"
               >
                 <div>
                   {/* Cover Image & Badges */}
@@ -255,12 +256,12 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
                   {/* Card Content */}
                   <div className="pt-7 px-5 pb-5">
                     <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#0F766E] transition-colors line-clamp-1">
+                      <h3 className="text-lg font-bold text-stone-900 group-hover:text-[#2563EB] transition-colors line-clamp-1">
                         {biz.name}
                       </h3>
                     </div>
 
-                    <div className="text-xs font-medium text-[#0F766E] mb-2">
+                    <div className="text-xs font-medium text-[#2563EB] mb-2">
                       {biz.subCategory}
                     </div>
 
@@ -285,14 +286,14 @@ export const DiscoveryPage: React.FC<DiscoveryPageProps> = ({ onNavigate }) => {
                 <div className="px-5 py-3.5 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-2">
                   <button
                     onClick={() => onNavigate(`/businesses/${biz.id}`)}
-                    className="text-xs font-semibold text-[#0F766E] hover:text-[#115E59] transition-colors"
+                    className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8] transition-colors cursor-pointer"
                   >
                     View Packages & Info
                   </button>
 
                   <button
                     onClick={() => onNavigate(`/businesses/${biz.id}/book`)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#F97371] hover:bg-[#E05654] transition-colors shadow-2xs cursor-pointer"
                   >
                     <span>Book Slot</span>
                     <ArrowRight className="w-3.5 h-3.5" />

@@ -78,7 +78,7 @@ export class BookingService {
       throw new Error(`The selected time slot (${input.startTime} - ${input.endTime}) on ${input.date} is already booked.`);
     }
 
-    // 5% Platform Handling Fee calculation from transaction/domain layer
+    // 2% Platform Handling Fee calculation from transaction/domain layer
     const fee = calculatePlatformFee(input.grossAmount);
 
     const now = new Date().toISOString();

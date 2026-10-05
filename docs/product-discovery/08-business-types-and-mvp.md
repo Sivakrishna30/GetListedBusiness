@@ -1,40 +1,75 @@
-# 08 — Business Types & MVP Strategy
+# 08 — Business Types, Launch Templates & MVP Strategy
 
 [← Back to Discovery Index](./index.md) | [← Prev: Architecture & Evolution](./07-architecture-and-evolution.md) | [Next: Scope Control & Definition →](./09-scope-control-and-definition.md)
 
 ---
 
-## 16. Business-Type Configuration
+## 16. Generic Business Platform & Launch Templates
 
-GetListed avoids becoming one giant, bloated, generic application where every user is forced to see fields they never use.
+### 16.1 Core Principle: Generic Business Platform
 
-Instead, the platform features a **Common Core** with **Business-Specific Modules** configured by business category.
+> **"GetListed is a general business platform that can be used by different types of businesses."**
+
+GetListed must **NOT** be defined or architected as a category-specific marketplace or restrictive niche tool. The platform architecture is fundamentally generic so that any business can configure its own:
+* Business profile & public identity
+* Services catalog & durations
+* Products catalog & inventory/rentals
+* Combo packages & bundled offerings
+* Time slot availability & operational schedules
+* Booking/appointment behavior & rules
+* Customers directory & operational notes
+* Transactions & income logging
+* Expenses tracking
+* Team members & role delegation
+* Modular operational capabilities
+
+The platform architecture is never restricted to initial launch categories.
 
 ---
 
-### The Common Core
-Every business onboarded to GetListed receives:
+### 16.2 Business Categories vs. Business Templates
+
+A critical architectural distinction is maintained between **Business Categories** and **Business Templates**:
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CATEGORIES vs. LAUNCH TEMPLATES                       │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│          BUSINESS CATEGORIES         │           LAUNCH TEMPLATES           │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ • Classification for search/filters  │ • Pre-configured starting setups     │
+│ • Open and extensible                │ • Acceleration & product demo tool   │
+│ • Generic search across all services │ • Examples, NOT platform limits      │
+│ • Any business type can be created   │ • Generic setup always available     │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+#### Launch Templates as Accelerated Starting Points
+GetListed provides ready-to-use business templates for selected business types (e.g. Sports Turf, Photography Studio, Healthcare Clinic, Retail Boutique, Event Space) to accelerate onboarding and demonstrate the product.
+
+* **Templates are examples and starter configurations**, not hard platform boundaries.
+* A business is always able to:
+  1. Create a business using a **generic setup** without any template.
+  2. Configure its own custom business name, category, and sub-category.
+  3. Configure its own services, products, packages, memberships, and events.
+  4. Configure its own pricing, slot rules, and availability.
+  5. Enable or disable whichever operational modules fit its business model.
+
+---
+
+### 16.3 The Common Operational Core
+
+Every business onboarded to GetListed receives the unified common core:
 * Business Profile & Public Presence
 * Customer Directory & History
-* Team Members & Permissions
+* Team Members & Contextual Permissions (Owner, Manager, Staff)
 * Services & Products Catalog
-* Bookings & Orders Workflow
+* Bookings, Memberships, Events & Orders Workflow
 * Payments & Transaction Logging
+* Expense Management
 * Operational Dashboard
-* Weekly & Monthly Reports
-
----
-
-### Business-Specific Modules Matrix
-
-| Industry / Vertical | Specific Operational Modules Activated |
-|---|---|
-| **Turf / Sports Arenas** | Turf management, Slot management, Memberships, Hourly court scheduling |
-| **Creative Studios & Agencies** | Packages, Projects, Events, Client management, Lead pipeline |
-| **Retail & Boutiques** | Inventory tracking, Order management, Over-the-counter sales |
-| **Clinics & Healthcare** | Patient appointments, Practitioner schedules, Service notes |
-
-> **Rollout Principle:** Verticals are enabled gradually. The underlying architecture treats these modules as composable building blocks on top of the common core.
+* Weekly, Monthly & Accountant-Ready Reports
+* Native Excel, CSV & PDF Exports
 
 ---
 
@@ -49,7 +84,7 @@ The MVP must answer one fundamental, real-world question:
 * ❌ *"Can GetListed replace complete double-entry accounting software?"*
 * ❌ *"Can GetListed replace every existing SaaS tool on day one?"*
 
-The primary objective of the MVP is **immediate operational usefulness**.
+The primary objective of the MVP is **immediate operational usefulness** and **friction-free customer discovery**.
 
 ---
 
@@ -57,7 +92,7 @@ The primary objective of the MVP is **immediate operational usefulness**.
 
 Phase 1 is deemed successful when a business and its customers can reliably complete all 11 foundational steps:
 
-1. **Create Business Profile:** Create and customize a complete business profile with photos, hours, and contact information.
+1. **Create Business Profile:** Create and customize a complete business profile (via generic setup or launch template) with photos, hours, and contact information.
 2. **Catalog Services & Products:** Add, price, and describe services, products, and package bundles.
 3. **Manage Customers:** Add customer profiles, view interaction history, and keep private operational notes.
 4. **Accept & Manage Bookings:** Seamlessly book appointments from both the business dashboard and customer flow, with status changes, rescheduling, and cancellation.
@@ -67,11 +102,13 @@ Phase 1 is deemed successful when a business and its customers can reliably comp
 8. **Compare Performance Periods:** View week-over-week and month-over-month growth comparisons.
 9. **Generate Business Reports:** Access automated, easy-to-read weekly and monthly business summaries.
 10. **Export Structured Business Data:** Download clean Excel (.xlsx), CSV, and PDF exports for internal analysis or sharing with an accountant/CA.
-11. **Customer Discovery & Booking:** Enable customers to find the business, view real availability, and make confirmed bookings.
+11. **Customer Discovery & Booking Experience:** Enable customers to enter from *"What are you looking for?"*, discover businesses near them (with location detection or manual city selection), check live availability, and make confirmed bookings without mandatory login.
 
 ---
 
 ### Related Sections
+- [01 — Vision & Philosophy](./01-vision-and-philosophy.md)
+- [02 — Product Structure & Sides](./02-product-structure-and-sides.md)
 - [03 — Core Product Layers](./03-core-product-layers.md)
 - [05 — Phase 1 Core Scope](./05-phase-1-core-scope.md)
 - [09 — Scope Control & Definition](./09-scope-control-and-definition.md)

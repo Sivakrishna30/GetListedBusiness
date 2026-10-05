@@ -52,7 +52,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-blue-600 animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading business metrics...</p>
       </div>
     );
@@ -68,26 +68,26 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
     <div className="space-y-6">
       {/* Narrative Summary Highlight */}
       {reports?.narrativeSummary && (
-        <div className="bg-teal-800 text-white p-4 sm:p-5 rounded-xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-blue-700 text-white p-4 sm:p-5 rounded-xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-teal-900/60 rounded-lg shrink-0 mt-0.5">
-              <FileText className="w-4 h-4 text-teal-200" />
+            <div className="p-2 bg-blue-900/60 rounded-lg shrink-0 mt-0.5">
+              <FileText className="w-4 h-4 text-blue-200" />
             </div>
             <div>
-              <div className="text-2xs font-bold uppercase tracking-wider text-teal-200">
+              <div className="text-2xs font-bold uppercase tracking-wider text-blue-200">
                 Weekly Operational Overview
               </div>
-              <p className="text-xs sm:text-sm text-teal-50 font-medium mt-0.5 leading-relaxed">
+              <p className="text-xs sm:text-sm text-blue-50 font-medium mt-0.5 leading-relaxed">
                 {reports.narrativeSummary.weeklySummaryText}
               </p>
             </div>
           </div>
           <button
             onClick={() => onSelectTab('reports')}
-            className="self-start sm:self-auto shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-white text-teal-900 hover:bg-teal-50 transition-colors shadow-2xs"
+            className="self-start sm:self-auto shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-white text-blue-900 hover:bg-blue-50 transition-colors shadow-2xs"
           >
             <span>Full Reports</span>
-            <ArrowRight className="w-3.5 h-3.5 text-teal-700" />
+            <ArrowRight className="w-3.5 h-3.5 text-blue-600" />
           </button>
         </div>
       )}
@@ -98,7 +98,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
         <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-stone-500 text-xs mb-2">
             <span className="font-medium">Today's Bookings</span>
-            <Calendar className="w-4 h-4 text-teal-700" />
+            <Calendar className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-2xl font-extrabold text-stone-900">
             {overview?.todaysBookingsCount || 0}
@@ -140,9 +140,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
         <div className="bg-white p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-stone-500 text-xs mb-2">
             <span className="font-medium">Net Business Profit</span>
-            <DollarSign className={`w-4 h-4 ${netProfit >= 0 ? 'text-teal-700' : 'text-red-600'}`} />
+            <DollarSign className={`w-4 h-4 ${netProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`} />
           </div>
-          <div className={`text-2xl font-extrabold ${netProfit >= 0 ? 'text-teal-700' : 'text-red-600'}`}>
+          <div className={`text-2xl font-extrabold ${netProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
             ₹{netProfit.toLocaleString('en-IN')}
           </div>
           <div className="text-2xs text-stone-500 mt-1">
@@ -159,31 +159,31 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <button
             onClick={() => onSelectTab('bookings')}
-            className="p-3.5 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
+            className="p-3.5 rounded-lg border border-stone-200 hover:border-blue-600 hover:bg-blue-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
           >
             <span>Manage Bookings & Slots</span>
-            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-teal-700 group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
           </button>
           <button
             onClick={() => onSelectTab('transactions')}
-            className="p-3.5 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
+            className="p-3.5 rounded-lg border border-stone-200 hover:border-blue-600 hover:bg-blue-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
           >
             <span>+ Record Income (Ledger)</span>
-            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-teal-700 group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
           </button>
           <button
             onClick={() => onSelectTab('expenses')}
-            className="p-3.5 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
+            className="p-3.5 rounded-lg border border-stone-200 hover:border-blue-600 hover:bg-blue-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
           >
             <span>+ Record Expense</span>
-            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-teal-700 group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
           </button>
           <button
             onClick={() => onSelectTab('customers')}
-            className="p-3.5 rounded-lg border border-stone-200 hover:border-teal-700 hover:bg-teal-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
+            className="p-3.5 rounded-lg border border-stone-200 hover:border-blue-600 hover:bg-blue-50/50 text-left transition-all font-semibold text-stone-800 flex items-center justify-between group"
           >
             <span>+ Add Walk-in Client</span>
-            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-teal-700 group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
           </button>
         </div>
       </div>
@@ -196,7 +196,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ businessId, onSelect
           </h3>
           <button
             onClick={() => onSelectTab('bookings')}
-            className="text-xs font-semibold text-teal-700 hover:text-teal-800 transition-colors"
+            className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
           >
             View all bookings &rarr;
           </button>

@@ -52,6 +52,18 @@ apiRouter.get('/categories', (_req: Request, res: Response) => {
   res.json({ success: true, data: db.getState().categories });
 });
 
+// --- Platform Stats ---
+apiRouter.get('/platform/stats', (_req: Request, res: Response) => {
+  const state = db.getState();
+  res.json({
+    success: true,
+    data: {
+      businessesListed: state.businesses.filter(b => b.status === 'ACTIVE').length,
+      bookingsMade: state.bookings.length,
+    },
+  });
+});
+
 // --- Businesses Discovery & Management ---
 apiRouter.get('/businesses', (req: Request, res: Response) => {
   try {

@@ -47,6 +47,9 @@ export const api = {
   // Categories
   getCategories: () => request<CategoryInfo[]>('/api/categories'),
 
+  // Platform Stats
+  getPlatformStats: () => request<{ businessesListed: number; bookingsMade: number }>('/api/platform/stats'),
+
   // Businesses
   listBusinesses: (params?: { search?: string; category?: string; subCategory?: string; location?: string }) => {
     const query = new URLSearchParams();

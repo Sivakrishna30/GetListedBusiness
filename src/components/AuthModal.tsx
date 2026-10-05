@@ -71,14 +71,14 @@ export const AuthModal: React.FC = () => {
     >
       {user ? (
         <div className="space-y-4 text-sm">
-          <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#0F766E]/30 flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#0F766E] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-2xs">
+          <div className="p-4 rounded-xl bg-[#EFF6FF] border border-[#2563EB]/30 flex items-start gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-2xs">
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h4 className="font-bold text-stone-900 truncate">{user.name}</h4>
-                <span className="text-2xs font-bold uppercase px-2 py-0.5 rounded bg-[#CCFBF1] text-[#0F766E] border border-[#0F766E]/20">
+                <span className="text-2xs font-bold uppercase px-2 py-0.5 rounded bg-[#DBEAFE] text-[#2563EB] border border-[#2563EB]/20">
                   {user.status}
                 </span>
               </div>
@@ -107,7 +107,7 @@ export const AuthModal: React.FC = () => {
             <button
               type="button"
               onClick={closeAuthModal}
-              className="w-full sm:w-auto px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors shadow-2xs cursor-pointer"
             >
               Done
             </button>
@@ -132,7 +132,7 @@ export const AuthModal: React.FC = () => {
           {/* Quick Demo Credentials */}
           <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs space-y-2">
             <div className="flex items-center gap-1.5 font-bold text-stone-700">
-              <KeyRound className="w-3.5 h-3.5 text-[#0F766E] shrink-0" />
+              <KeyRound className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />
               <span>Quick Demo Accounts:</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -142,7 +142,7 @@ export const AuthModal: React.FC = () => {
                 className="w-full text-left px-2.5 py-1.5 rounded-lg bg-white hover:bg-stone-100 border border-stone-300 text-2xs font-semibold text-stone-800 transition-colors shadow-2xs cursor-pointer"
               >
                 <div>Owner (All Access):</div>
-                <div className="text-[#0F766E] font-mono truncate">sivakrishna.era@gmail.com</div>
+                <div className="text-[#2563EB] font-mono truncate">sivakrishna.era@gmail.com</div>
               </button>
               <button
                 type="button"
@@ -150,7 +150,7 @@ export const AuthModal: React.FC = () => {
                 className="w-full text-left px-2.5 py-1.5 rounded-lg bg-white hover:bg-stone-100 border border-stone-300 text-2xs font-semibold text-stone-800 transition-colors shadow-2xs cursor-pointer"
               >
                 <div>Staff (Operations):</div>
-                <div className="text-[#0F766E] font-mono truncate">staff@greenparksports...</div>
+                <div className="text-[#2563EB] font-mono truncate">staff@greenparksports...</div>
               </button>
             </div>
           </div>
@@ -166,7 +166,7 @@ export const AuthModal: React.FC = () => {
                   placeholder="e.g. Ramesh Kumar"
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
                 />
               </div>
             </div>
@@ -182,7 +182,7 @@ export const AuthModal: React.FC = () => {
                 placeholder="name@business.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full pl-9 pr-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
@@ -197,7 +197,7 @@ export const AuthModal: React.FC = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full pl-9 pr-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ export const AuthModal: React.FC = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-2.5 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs cursor-pointer"
+              className="w-full py-2.5 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs cursor-pointer"
             >
               {submitting ? 'Authenticating...' : isRegisterMode ? 'Register Account' : 'Sign In'}
             </button>
@@ -218,7 +218,7 @@ export const AuthModal: React.FC = () => {
                 setErrorMsg(null);
                 setSuccessMsg(null);
               }}
-              className="text-xs text-center text-[#0F766E] hover:text-[#115E59] font-semibold cursor-pointer"
+              className="text-xs text-center text-[#2563EB] hover:text-[#1D4ED8] font-semibold cursor-pointer"
             >
               {isRegisterMode ? 'Already have an account? Sign In' : "Don't have an account? Register here"}
             </button>

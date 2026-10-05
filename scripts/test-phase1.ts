@@ -220,8 +220,8 @@ runTest('Bookings', '5.1 Create reservation and verify slot calculation', () => 
 
   assert(booking.id.startsWith('bk_'), 'Booking ID created');
   assert(booking.grossAmount === 1100, 'Gross amount recorded');
-  assert(booking.platformFee === 55, '5% platform fee calculated (₹55)');
-  assert(booking.netAmount === 1045, 'Net amount calculated (₹1045)');
+  assert(booking.platformFee === 22, '2% platform fee calculated (₹22)');
+  assert(booking.netAmount === 1078, 'Net amount calculated (₹1078)');
   assert(booking.status === 'CONFIRMED', 'Booking confirmed');
   testBookingId = booking.id;
 });

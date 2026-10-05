@@ -104,7 +104,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#2563EB] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading products...</p>
       </div>
     );
@@ -132,7 +132,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add Product</span>
@@ -148,7 +148,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
           </p>
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30 hover:bg-[#CCFBF1]/50 transition-colors"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#2563EB]/30 hover:bg-[#DBEAFE]/50 transition-colors"
           >
             Add Product Item
           </button>
@@ -222,7 +222,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               placeholder="e.g. Professional Match Football / Whey Protein"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -235,7 +235,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
                 min={0}
                 value={price}
                 onChange={e => setPrice(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
             <div>
@@ -243,7 +243,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               <select
                 value={stockStatus}
                 onChange={e => setStockStatus(e.target.value as StockStatus)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none bg-white"
               >
                 <option value="IN_STOCK">In Stock</option>
                 <option value="LOW_STOCK">Low Stock</option>
@@ -259,7 +259,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               value={availability}
               onChange={e => setAvailability(e.target.value)}
               placeholder="e.g. Available at reception / On-counter purchase"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -270,7 +270,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
               placeholder="Item specifications, sizing, brands, or rental terms..."
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -285,7 +285,7 @@ export const ProductsView: React.FC<ProductsViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs"
             >
               {submitting ? 'Saving...' : editingProduct ? 'Update Product' : 'Create Product'}
             </button>

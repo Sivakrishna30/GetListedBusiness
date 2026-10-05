@@ -44,7 +44,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-blue-600 animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading reports & analytics...</p>
       </div>
     );
@@ -109,7 +109,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
         <div>
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-base sm:text-lg font-bold text-stone-900">Business Reports & Performance Intelligence</h2>
-            <span className="text-2xs font-semibold uppercase px-2 py-0.5 rounded-md bg-teal-50 text-teal-800 border border-teal-200">
+            <span className="text-2xs font-semibold uppercase px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
               Operational Intelligence
             </span>
           </div>
@@ -139,15 +139,15 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
 
       {/* Narrative Reports */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-teal-800 text-white p-4 sm:p-5 rounded-xl shadow-xs">
-          <div className="flex items-center gap-2 text-teal-200 text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-blue-700 text-white p-4 sm:p-5 rounded-xl shadow-xs">
+          <div className="flex items-center gap-2 text-blue-200 text-xs font-bold uppercase tracking-wider mb-2">
             <FileText className="w-4 h-4" />
             <span>Weekly Business Narrative</span>
           </div>
-          <p className="text-xs sm:text-sm font-medium leading-relaxed text-teal-50">
+          <p className="text-xs sm:text-sm font-medium leading-relaxed text-blue-50">
             {narrativeSummary?.weeklySummaryText || 'Generating weekly operational performance...'}
           </p>
-          <div className="mt-4 pt-3 border-t border-teal-700/60 flex items-center justify-between text-2xs text-teal-200">
+          <div className="mt-4 pt-3 border-t border-blue-600/60 flex items-center justify-between text-2xs text-blue-200">
             <span>Peak Activity: {narrativeSummary?.topDay || 'Saturday'}</span>
             <span>Focus: Activity & Money Flow</span>
           </div>
@@ -155,7 +155,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
 
         <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center gap-2 text-stone-700 text-xs font-bold uppercase tracking-wider mb-2">
-            <Calendar className="w-4 h-4 text-teal-700" />
+            <Calendar className="w-4 h-4 text-blue-600" />
             <span>Monthly Business Report Summary</span>
           </div>
           <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-medium">
@@ -195,9 +195,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
         <div className="bg-white p-4 sm:p-5 rounded-xl border border-stone-200 shadow-2xs">
           <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
             <span className="font-medium">Net Business Profit</span>
-            <DollarSign className={`w-4 h-4 ${netProfit >= 0 ? 'text-teal-700' : 'text-red-600'}`} />
+            <DollarSign className={`w-4 h-4 ${netProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`} />
           </div>
-          <div className={`text-2xl font-black ${netProfit >= 0 ? 'text-teal-700' : 'text-red-600'}`}>
+          <div className={`text-2xl font-black ${netProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
             ₹{netProfit.toLocaleString('en-IN')}
           </div>
           <p className="text-2xs text-stone-400 mt-1">True net operational profit</p>
@@ -209,7 +209,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
         {/* Popular Services */}
         <div className="bg-white rounded-xl border border-stone-200 p-4 sm:p-5 shadow-2xs">
           <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Award className="w-4 h-4 text-teal-700" />
+            <Award className="w-4 h-4 text-blue-600" />
             Top Performing Offerings
           </h3>
           {popularServices.length === 0 ? (
@@ -237,7 +237,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
         {/* Peak Periods & Customer Retention */}
         <div className="bg-white rounded-xl border border-stone-200 p-4 sm:p-5 shadow-2xs">
           <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-teal-700" />
+            <Clock className="w-4 h-4 text-blue-600" />
             Peak Operational Slots & Retention
           </h3>
 
@@ -256,7 +256,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ businessId }) => {
             {peakSlots.slice(0, 4).map((slot, index) => (
               <div key={index} className="flex items-center justify-between text-xs py-1 border-b border-stone-100 last:border-0">
                 <span className="text-stone-700 font-mono text-2xs">{slot.timeSlot}</span>
-                <span className="font-semibold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md text-2xs border border-teal-200">
+                <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md text-2xs border border-blue-200">
                   {slot.count} bookings
                 </span>
               </div>

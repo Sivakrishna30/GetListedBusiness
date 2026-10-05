@@ -115,7 +115,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#2563EB] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading profile...</p>
       </div>
     );
@@ -138,7 +138,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs"
           >
             {saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>{saving ? 'Saving...' : 'Save Profile'}</span>
@@ -177,7 +177,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               required
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -186,7 +186,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
             <select
               value={category}
               onChange={e => setCategory(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none bg-white"
             >
               <option value="Sports">Sports</option>
               <option value="Fitness">Fitness</option>
@@ -206,7 +206,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={subCategory}
               onChange={e => setSubCategory(e.target.value)}
               placeholder="e.g. Football Turf / Crossfit / Dental Clinic"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -217,7 +217,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={workingHours}
               onChange={e => setWorkingHours(e.target.value)}
               placeholder="e.g. 06:00 AM - 11:00 PM (All Days)"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
         </div>
@@ -228,7 +228,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
             rows={3}
             value={description}
             onChange={e => setDescription(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+            className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
           />
         </div>
       </div>
@@ -246,7 +246,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="tel"
               value={contactNumber}
               onChange={e => setContactNumber(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -257,7 +257,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={whatsappNumber}
               onChange={e => setWhatsappNumber(e.target.value)}
               placeholder="+91..."
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -267,7 +267,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -278,7 +278,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               value={website}
               onChange={e => setWebsite(e.target.value)}
               placeholder="https://..."
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
         </div>
@@ -290,7 +290,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="text"
               value={location}
               onChange={e => setLocation(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -300,7 +300,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="text"
               value={address}
               onChange={e => setAddress(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
         </div>
@@ -319,7 +319,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="url"
               value={logo}
               onChange={e => setLogo(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
             {logo && (
               <div className="mt-2 flex items-center gap-3">
@@ -335,7 +335,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
               type="url"
               value={coverImage}
               onChange={e => setCoverImage(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
             {coverImage && (
               <div className="mt-2">
@@ -362,7 +362,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
                 onClick={() => handleToggleAmenity(am)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
                   isSelected
-                    ? 'bg-[#0F766E] text-white border-[#0F766E]'
+                    ? 'bg-[#2563EB] text-white border-[#2563EB]'
                     : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                 }`}
               >
@@ -379,7 +379,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ businessId }) => {
             placeholder="Add custom facility / amenity..."
             value={customAmenity}
             onChange={e => setCustomAmenity(e.target.value)}
-            className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs flex-1 focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+            className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs flex-1 focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
           />
           <button
             type="button"

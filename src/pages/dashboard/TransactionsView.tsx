@@ -153,7 +153,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
               setErrorMsg(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
             <span>Record Income</span>
@@ -182,7 +182,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
           <select
             value={selectedType}
             onChange={e => setSelectedType(e.target.value)}
-            className="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-teal-700"
+            className="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
           >
             <option value="ALL">All Types</option>
             <option value="INCOME">Income / Revenue</option>
@@ -212,7 +212,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
 
         {loading ? (
           <div className="p-12 text-center">
-            <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+            <RefreshCw className="w-6 h-6 text-blue-600 animate-spin mx-auto mb-2" />
             <p className="text-xs text-stone-500 font-medium">Loading ledger...</p>
           </div>
         ) : transactions.length === 0 ? (
@@ -227,7 +227,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                 setErrorMsg(null);
                 setIsModalOpen(true);
               }}
-              className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800"
+              className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Record First Income</span>
@@ -253,7 +253,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                     <span className="font-bold text-stone-800 text-xs truncate">
                       {tx.customerName || 'Walk-in Customer'}
                     </span>
-                    <span className="px-1.5 py-0.5 rounded text-2xs font-mono bg-teal-50 text-teal-800 border border-teal-200 shrink-0">
+                    <span className="px-1.5 py-0.5 rounded text-2xs font-mono bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
                       {tx.paymentMethod}
                     </span>
                   </div>
@@ -314,7 +314,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                         )}
                       </td>
                       <td className="py-3 px-4">
-                        <span className="px-2 py-0.5 rounded-md text-2xs font-mono bg-teal-50 text-teal-800 border border-teal-200">
+                        <span className="px-2 py-0.5 rounded-md text-2xs font-mono bg-blue-50 text-blue-700 border border-blue-200">
                           {tx.paymentMethod}
                         </span>
                       </td>
@@ -354,7 +354,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="DIRECT_SALE">Counter / Direct Sale</option>
                 <option value="BOOKING_PAYMENT">Booking Payment (Cash/UPI)</option>
@@ -376,7 +376,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 placeholder="e.g. 1200"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
           </div>
@@ -389,7 +389,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
               <select
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="CASH">Cash</option>
                 <option value="UPI">UPI (GooglePay / PhonePe / Paytm)</option>
@@ -408,7 +408,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                 required
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
           </div>
@@ -423,7 +423,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                 value={customerName}
                 onChange={e => setCustomerName(e.target.value)}
                 placeholder="e.g. Ramesh Kumar"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
@@ -436,7 +436,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
                 value={referenceNumber}
                 onChange={e => setReferenceNumber(e.target.value)}
                 placeholder="e.g. UPI/2026/89912"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
           </div>
@@ -450,7 +450,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
               value={description}
               onChange={e => setDescription(e.target.value)}
               placeholder="e.g. Badminton court 1-hour slot + drink"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -465,7 +465,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({ businessId }
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 shadow-2xs"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 shadow-2xs"
             >
               {submitting ? 'Recording...' : 'Record Payment'}
             </button>

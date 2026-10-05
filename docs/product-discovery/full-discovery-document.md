@@ -1,10 +1,11 @@
 # GetListed — Product Discovery Document
 
 - **Product:** GetListed
-- **Positioning:** Business Operating System
+- **Positioning:** Generic Business Operating System & Customer Discovery Platform
 - **Primary Users:** Business Owners / Business Teams / Customers
 - **Product Sides:** GetListed Business + GetListed Customer
 - **Development Strategy:** Phase 1 → Phase 2
+- **Source of Truth:** `/docs/product-discovery/full-discovery-document.md`
 
 ---
 
@@ -12,181 +13,196 @@
 
 ### GetListed — Your Business Operating System
 
-GetListed is a simple business operating system that helps businesses create their business presence, manage customers, manage day-to-day operations, accept appointments/bookings, track business performance, and understand how their business is growing.
+GetListed is a general, simple business operating system that can be used by different types of businesses. It helps businesses:
+- Create their digital business presence and get discovered
+- Configure and manage offerings (services, products, packages)
+- Manage customer relationships and notes
+- Manage day-to-day operations and schedules
+- Accept and manage appointments/bookings
+- Track business performance, income, and operating expenses
+- Understand how their business is growing from one simple system
 
-The product should not try to replace every software a business already uses.
+The product is **NOT** a category-specific marketplace or restrictive niche directory. The platform architecture is fundamentally generic, enabling any service, product, appointment, or membership-based business to configure its own profile, offerings, availability, customers, transactions, and operations.
 
-The initial product should first provide a simple core system for running a business.
+The initial product first provides a simple, standalone core system for running and discovering a business. External integrations will be added in Phase 2 so that GetListed can connect with the external tools and services already used by the business.
 
-External integrations will be added later so that GetListed can connect with the tools and services already used by the business.
+### Core Principles
 
-### Core Principle
-
-> **Build the business operating system first. Connect the outside world later.**
+> **1. GetListed is a general business platform that can be used by different types of businesses.**  
+> **2. Build the business operating system first. Connect the outside world later.**
 
 ---
 
-## 2. Product Philosophy
+## 2. Product Philosophy & Alignment
 
-GetListed should solve a simple problem:
+GetListed solves a simple, dual-sided problem:
 
-> *"I run a business. I need one simple place to manage my business and understand how it is performing."*
+> *"I run a business. I need one simple place to set up, manage, operate, and understand how my business is performing."*  
+> *"I am a customer. I want a simple, unhindered way to discover local businesses, find services near me, check availability, and book."*
+
+### Dual North Star Alignment
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            GETLISTED PLATFORM                               │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│            BUSINESS SIDE             │            CUSTOMER SIDE             │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│  Create → Configure → Manage         │  Discover → Find → Check Availability│
+│  → Operate → Get Discovered          │  → Book                              │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
+
+### What the Product Must Avoid Becoming
 
 The product should avoid becoming:
+- A category-restricted vertical silo (it is a generic business platform)
+- An accounting-only application
+- An integration platform
+- A booking-only widget
+- An analytics-only application
+- An aggressive consumer aggregator marketplace
+- A tax filing application
+- An ERP with hundreds of bloated, mandatory features
 
-* an accounting-only application
-* an integration platform
-* a booking-only application
-* an analytics-only application
-* a marketplace
-* a tax filing application
-* an ERP with hundreds of features
+These can become supporting or modular capabilities later.
 
-These can become supporting capabilities later.
+### The Unchanging Core
 
-The core remains:
-
-**Business Management + Customer Management + Operations + Business Performance**
+$$\text{Business Management} + \text{Customer Management} + \text{Operations} + \text{Business Performance} + \text{Discovery}$$
 
 ---
 
 ## 3. Product Structure
 
-GetListed has two primary experiences.
+GetListed has two primary experiences designed as two complementary sides of the same platform:
 
-### 3.1 GetListed Business
-
-The business owner/team uses GetListed Business to:
-
-* create and manage the business
-* create services/products
-* manage customers
-* manage appointments/bookings
-* manage payments/transactions
-* manage team members
-* track business activity
-* view business performance
-* generate reports
-* export business data
+```text
+                              GETLISTED PLATFORM
+                             ┌────────┴────────┐
+                             ▼                 ▼
+                    GetListed Business   GetListed Customer
+```
 
 ---
 
-### 3.2 GetListed Customer
+### 3.1 GetListed Customer (Customer-First Discovery Experience)
 
-Customers use GetListed Customer to:
+The home page and public entry points primarily communicate the **Customer Discovery Experience**.
 
-* discover businesses
-* view business information
-* view services/products
-* view availability
-* make appointments/bookings
-* view booking information
-* receive booking confirmation
-* manage their customer relationship with the business
+#### Primary Customer Journey
+$$\text{Home Page} \longrightarrow \text{"What are you looking for?"} \longrightarrow \text{Customer Discovery Page} \longrightarrow \text{Search \& Location} \longrightarrow \text{Results \& Filters} \longrightarrow \text{Business Detail} \longrightarrow \text{Check Availability} \longrightarrow \text{Book}$$
 
-The customer experience should remain simple.
+#### Customer Journey Breakdown
+1. **Home Page Entry:** Features a prominent, customer-centric search entry / CTA: **"What are you looking for?"**
+2. **Dedicated Customer Discovery Page:** Clicking the entry navigates the customer to a rich, web-application-style discovery interface.
+3. **Generic Search:** Not restricted to fixed categories (e.g., searches for *"gym near me"*, *"badminton near me"*, *"clinic near me"*, *"car service near me"*, *"photography studio near me"*, or any other local service).
+4. **Location Discovery & Permissions:**
+   - Provides on-demand **"Find businesses near me"** location detection.
+   - Location permission is requested **only** when the user explicitly triggers near-me discovery.
+   - If permission is denied or unavailable, the user can always manually select or type any city/location (e.g., Bengaluru, Hyderabad, Mumbai, Delhi).
+5. **Interactive Exploration:** Live search results, category/amenity filters, verified badges, and sponsored preference indicators.
+6. **Business Public Page:** Operating hours, location address, contact info, photo gallery, verified status, services, products, packages, memberships, and events.
+7. **Availability & Booking:** Live time slot checking, booking selection, and booking confirmation without friction.
 
-The customer should not need to understand the internal business-management system.
+#### Customer Login Policy (No Forced Login)
+> **Customer authentication is NOT required for the initial customer discovery experience or exploring business availability.**  
+> Discovery is completely open and accessible to all visitors.
+
+---
+
+### 3.2 Business Owner Entry (From Home Page)
+
+The Home Page also provides a clear, secondary entry point for business owners to get their business listed and operating.
+
+* **Messaging:** Communicates the direct commercial value of getting discovered: **"Want your business to be discovered?"**
+* **Call to Action:** Directs business owners to the business onboarding and setup workflow.
+* **Business Journey:**
+  $$\text{Create Profile} \longrightarrow \text{Configure Offerings} \longrightarrow \text{Manage Operations} \longrightarrow \text{Operate Day-to-Day} \longrightarrow \text{Get Discovered}$$
+
+---
+
+### 3.3 GetListed Business (Operational Capabilities)
+
+The business owner and their team use **GetListed Business** to:
+
+* **Create & manage the business:** Profile, branding, hours, location, contact, settings
+* **Catalog offerings:** Create and organize services, products, and combo packages
+* **Configure operations:** Define time slot availability, capacities, booking rules, memberships, and events
+* **Manage customers:** Directory, contact history, customer notes, activity, segmentation
+* **Manage appointments & bookings:** Calendar, scheduling, confirmations, status updates, rescheduling, cancellations
+* **Manage payments & transactions:** Record payments, log income, payment statuses, refunds/adjustments
+* **Manage team members:** Staff directory, roles (Owner, Manager, Staff), and operational permissions
+* **Track business activity:** Live operational stream and daily logs
+* **View business performance:** Real-time metrics, growth indicators, period comparisons
+* **Generate reports:** Weekly, monthly, and accountant-ready summaries
+* **Export business data:** Native Excel (.xlsx), CSV, and PDF exports
 
 ---
 
 ## 4. Core Product Layers
 
-GetListed is conceptually divided into the following layers.
+GetListed is conceptually divided into five foundational layers that form a generic, adaptable platform for diverse business types.
 
-### Layer 1 — Business Foundation
+---
 
-The business creates its presence and defines what it offers.
+### Layer 1 — Business Foundation & Configuration
 
-Includes:
+The business creates its digital presence and defines what it offers. The platform architecture is modular and generic, allowing any business to configure its unique operations.
 
-* Business Profile
-* Business Name
-* Logo
-* Cover Image
-* Description
-* Location
-* Contact information
-* Business hours
-* Categories
-* Services
-* Products
-* Packages
-* Pricing
-* Basic business settings
+**Includes:**
+* Business Profile & Identity (Name, Logo, Cover Image, Description, Contact info)
+* Physical Location & Coordinates
+* Business Operating Hours & Holiday Schedules
+* Category & Custom Business Type definition
+* Services Catalog (Durations, pricing, staff assignment)
+* Products Catalog (Direct sales, rentals, inventory tracking)
+* Combo Packages (Bundled offerings across services and products)
+* Memberships & Subscriptions (Recurring passes, credit allotments)
+* Events & Program Schedules (Workshops, tournaments, bootcamps)
+* Basic business operational settings
 
-This is where the original Get Listed concept remains important.
+> *This is where the original "Get Listed" concept provides immediate public presence and discovery.*
 
 ---
 
 ### Layer 2 — Customer Management
 
-Businesses need a simple way to understand and manage their customers.
+Businesses need a simple way to understand and manage their customers without requiring bloated enterprise CRM software.
 
-Includes:
-
-* Customer profiles
+**Includes:**
+* Customer profiles (Name, Phone, Email, Address)
 * Customer contact information
 * Customer history
 * Booking history
-* Purchase/transaction history
-* Notes
-* Customer status
-* New vs returning customers
-* Customer activity
+* Purchase / transaction history
+* Internal operational notes
+* Customer status (Active, Inactive, VIP)
+* New vs. returning customer indicators
+* Customer activity tracking
 
-Customer data should become the foundation for future CRM capabilities.
+> *Customer data forms the bedrock for future CRM capabilities.*
 
 ---
 
-### Layer 3 — Business Operations
+### Layer 3 — Business Operations & Scheduling
 
-This is the actual operating layer.
+This is the actual day-to-day operating layer.
 
-Initial capabilities:
+**Core capabilities:**
+* Appointments & Slot Scheduling
+* Real-time slot availability calculation
+* Multi-staff & multi-court/room resource assignment
+* Booking status pipeline (Pending, Confirmed, Completed, Cancelled)
+* Rescheduling & cancellation handling with automated fee handling
+* Over-the-counter and online payments / transaction logging
+* Team members & contextual role permissions (Owner, Manager, Staff)
 
-* Appointments
-* Bookings
-* Services
-* Products
-* Packages
-* Payments/transactions
-* Business calendar
-* Team members
-* Availability
-* Booking status
-* Cancellation
-* Rescheduling
+#### Generic Architecture vs. Launch Templates
 
-The exact operational modules can vary depending on the business type.
-
-For example:
-
-**Turf**
-* Turf
-* Slots
-* Bookings
-* Customers
-* Memberships
-* Payments
-
-**Studio**
-* Services
-* Packages
-* Leads
-* Customers
-* Bookings
-* Projects
-* Payments
-
-**Retail**
-* Products
-* Inventory
-* Customers
-* Orders
-* Payments
-
-GetListed should therefore use a business-type configuration model instead of forcing every business to use every module.
+GetListed distinguishes clearly between **business categories** and **business templates**:
+* **Generic Architecture:** The core platform provides generic primitives (Services, Products, Packages, Bookings, Memberships, Events, Transactions, Expenses, Team) that any business can enable or disable.
+* **Launch Templates:** Pre-configured starting points (e.g. Sports Turf, Photography Studio, Healthcare Clinic, Retail Boutique) provided to accelerate initial onboarding. Templates are examples, not architectural boundaries.
 
 ---
 
@@ -194,37 +210,27 @@ GetListed should therefore use a business-type configuration model instead of fo
 
 This is the reporting and understanding layer.
 
-The purpose is not to create a complicated analytics platform.
+**Core purpose:**  
+The purpose is **not** to create an overwhelming enterprise analytics dashboard with confusing charts.  
+The purpose is: **Tell the business owner what happened in simple language.**
 
-The purpose is:
-
-**Tell the business owner what happened in simple language.**
-
-Examples:
-
-* Revenue this week
-* Revenue this month
-* Number of bookings
-* Number of customers
-* New customers
-* Returning customers
-* Cancelled bookings
-* Average booking value
-* Best-performing service
-* Best-performing day
-* Best-performing month
-* Business growth
-* Month-over-month growth
-* Week-over-week growth
+**Examples of metrics:**
+* Revenue this week / month
+* Number of bookings and capacity utilization
+* Number of customers & new vs. returning breakdown
+* Cancelled bookings & cancellation rate
+* Average booking / transaction value
+* Top-performing service, product, or package
+* Peak days of the week and busiest hours
+* Business growth trajectory (Month-over-Month & Week-over-Week)
 
 ---
 
 ### Layer 5 — Business Reports
 
-GetListed should provide simple reports that a business owner can understand without needing accounting or analytics knowledge.
+GetListed provides simple reports that a business owner can understand without needing accounting or analytics knowledge.
 
-#### Weekly report example:
-
+#### Weekly Report Example
 ```text
 This Week
 
@@ -238,8 +244,7 @@ Average Booking: ₹1,118
 Revenue increased 14% compared with last week.
 ```
 
-#### Monthly report example:
-
+#### Monthly Report Example
 ```text
 September Business Report
 
@@ -252,549 +257,367 @@ Average Transaction: ₹1,110
 Revenue increased 18% compared with August.
 ```
 
-The report should focus on what happened and what changed, not just display charts.
+> **Guiding Principle:** The report should focus on *what happened and what changed*, not just display raw charts.
 
 ---
 
 ## 6. Business Growth Intelligence
 
-This is intentionally a lightweight intelligence layer.
-
-GetListed should answer simple questions such as:
+GetListed helps the business understand growth without complex enterprise business intelligence (BI) tools.
 
 ### Growth
-* Is the business growing?
+* Are we getting more customers?
 * Is revenue increasing?
-* Are bookings increasing?
-* Are customers increasing?
+* Which services are expanding?
 
-### Customer behaviour
-* Are customers returning?
-* Which services bring repeat customers?
-* How many new customers came this month?
+### Customer Behaviour
+* How many customers return?
+* Which customers visit regularly?
+* Which customers have stopped coming?
 
-### Business performance
-* Which service performs best?
-* Which day is busiest?
-* Which month performs best?
-* Which periods are weak?
+### Business Performance
+* Which days are busiest?
+* Which services generate the highest revenue?
+* Where is time or capacity under-utilized?
 
 ### Improvement
-Later, GetListed can say:
-* *"Your bookings increased 22%, but cancellations also increased 11%."*
-* *"Saturday generates the highest number of bookings."*
-* *"Your revenue is growing, but average transaction value has decreased."*
-
-This becomes the foundation for the future optimization layer.
+* Are cancellations increasing?
+* What are the primary reasons?
+* Which offerings should be expanded or discontinued?
 
 ---
 
 ## 7. Basic Financial Tracking
 
-GetListed should NOT initially become a complete accounting system.
-
-Instead, Phase 1 can support basic business financial tracking.
+Businesses need a simple way to record financial activity without full accounting software.
 
 ### Income
-Business can record:
-* Sales
-* Booking revenue
-* Service revenue
-* Product revenue
-* Other income
+* Income from bookings and services
+* Income from direct product sales
+* Income from memberships and packages
+* Other miscellaneous business revenue
 
 ### Expenses
-Business can manually record:
-* Rent
-* Salary
-* Electricity
-* Internet
-* Marketing
-* Maintenance
-* Other expenses
-
-This allows GetListed to provide:
-* Total income
-* Total expenses
-* Net business amount
-* Monthly comparison
-* Basic income/expense summary
+* Rent & facility leases
+* Staff salaries and contractor wages
+* Utilities (Electricity, Water, Internet)
+* Maintenance and supplies
+* Marketing and advertising
+* Miscellaneous operational costs
 
 ### Important Limitation
-Because Phase 1 does not connect to external accounting/payment systems:
-GetListed cannot automatically know every real-world expense or transaction.
-Therefore Phase 1 financial reporting should be based on data entered into GetListed.
-Phase 2 integrations can automate this later.
+> **GetListed is NOT a complete double-entry accounting software.**  
+> It tracks cash flows and operational profit/loss. Full ledger balancing and tax compliance are supported via clean data export to accountants.
 
 ---
 
 ## 8. Basic Audit / Accountant-Ready Reports
 
-GetListed should not initially become an auditing or tax application.
+Small businesses frequently need to share clean financial summaries with their accountant or Chartered Accountant (CA).
 
-Instead, it should provide structured business records that can be useful for the business owner or accountant.
+### Accountant Summaries Include:
+* Monthly revenue statement
+* Categorized expense register
+* Customer transaction ledger
+* Net operational margin summary
 
-Examples:
-* Sales report
-* Expense report
-* Income report
-* Booking report
-* Customer report
-* Payment report
-* Monthly transaction report
-* Service-wise revenue report
-* Product-wise revenue report
-
-### Export formats:
-* Excel
-* CSV
-* PDF
-
-**The objective is:** Make business data easy to share with an accountant/CA or use for internal review.
+### Export Formats:
+* **Excel (.xlsx)**
+* **CSV (.csv)**
+* **Printable PDF summaries**
 
 ---
 
-## 9. Excel / Data Export
+## 9. Native Excel & Data Export
 
-Excel should be treated as a native business utility, not an external integration.
+Spreadsheets are the universal business tool. GetListed treats Excel export as a **first-class native utility**, not an external integration.
 
-Businesses should be able to export:
-* Customers
-* Bookings
-* Transactions
-* Services
-* Products
-* Expenses
-* Revenue
-* Reports
-
-### Standard export
-GetListed provides predefined Excel formats.
-
-Example:
-```text
-Customer Export
-Customer Name | Phone | Email | Total Bookings | Total Spent | Last Visit
-```
-
-### Custom export
-Later, businesses can select:
-* columns
-* date range
-* filters
-* sorting
-and generate a custom Excel file.
-
-This is much more useful than forcing every business to use a complicated reporting system.
+### Standard Exports:
+* Customer Directory (.xlsx / .csv)
+* Bookings and Appointments Register (.xlsx / .csv)
+* Transaction and Payment Ledger (.xlsx / .csv)
+* Expense Log (.xlsx / .csv)
+* Monthly Financial Statement (.xlsx / .pdf)
 
 ---
 
-## 10. Phase 1 — GetListed Core
+## 10. Phase 1 — GetListed Core Scope
 
-### Objective
-Build a standalone Business Operating System without depending on external integrations.
+### Primary Objective
+Build a standalone, generic Business Operating System and customer discovery web experience that delivers immediate operational utility without depending on any external third-party integrations.
 
-### Phase 1 principle
-A business should be able to start using GetListed without connecting another platform.
+### Phase 1 Principles
+> **1. A business should be able to start using GetListed without connecting another platform.**  
+> **2. Customers should be able to discover businesses and book without mandatory login or friction.**
 
-### Phase 1 Modules
+### Phase 1 Core Modules
 
-1. **Business Setup**
-   * Create Business
-   * Business Profile
-   * Business Category
-   * Location
-   * Contact
-   * Business Hours
-   * Logo
-   * Cover
-   * Services
-   * Products
-   * Packages
+1. **Business Setup & Generic Configuration**
+   * Create business profile (generic setup or launch template)
+   * Business name, logo, cover image, description, and contact info
+   * Category and custom sub-category definition
+   * Location address & city selection
+   * Operating hours and schedule configuration
+   * Catalog creation: Services, Products, Packages, Memberships, Events
 
 2. **Business Management**
-   * Business settings
-   * Services management
-   * Products management
-   * Pricing
-   * Availability
-   * Team members
-   * Basic permissions
+   * Business profile settings & preferences
+   * Services catalog management (pricing, duration, descriptions)
+   * Products catalog management (pricing, stock/rental details)
+   * Packages configuration (bundled offerings)
+   * Memberships & pass management
+   * Events & program management
+   * Availability schedules & working hours
+   * Team members directory & role permissions (Owner, Manager, Staff)
 
 3. **Customer Management**
-   * Add customer
-   * Customer profile
-   * Customer history
-   * Booking history
-   * Transaction history
-   * Notes
-   * Customer search
-   * Customer segmentation/basic status
+   * Add & edit customers manually or via booking
+   * Detailed customer profile (Contact, metadata, notes)
+   * Full customer history (Bookings, purchases, transactions)
+   * Fast customer search & filtering
+   * Basic segmentation (New vs. Returning, Inactive, VIP)
 
-4. **Appointment / Booking Management**
-   * Create appointment
-   * Customer booking
-   * Availability
-   * Booking calendar
-   * Booking confirmation
-   * Reschedule
-   * Cancellation
-   * Booking status
-   * Business-side booking management
-   * Customer-side booking
-   *(Primary Phase 1 capability)*
+4. **Appointment / Booking Management *(Primary Phase 1 Capability)***
+   * Create appointment (business-side)
+   * Online customer booking flow (customer-side)
+   * Availability slot validation & calendar view
+   * Booking confirmation workflow with transparent 5% platform handling fee
+   * Rescheduling & cancellation handling with automated fee handling
+   * Booking status pipeline (Pending, Confirmed, Completed, Cancelled)
 
-5. **Basic Transactions**
-   * Record payment
-   * Record income
-   * Payment status
-   * Transaction history
-   * Refund/adjustment records where applicable
+5. **Customer Discovery Portal *(Customer-First Web App)***
+   * Home page entry CTA: **"What are you looking for?"**
+   * Dedicated Customer Discovery page behaving like a responsive web application
+   * Generic keyword & service search (*"gym near me"*, *"badminton near me"*, *"clinic near me"*, *"car service near me"*, etc.)
+   * Location discovery: On-demand *"Find businesses near me"* detection (with permission requested only when triggered) + manual city/location entry fallback
+   * Live results filtering, business public profiles, live availability inspection, and seamless booking
+   * **No mandatory customer login required for discovery or booking initiation.**
 
-6. **Expense Management**
-   Manual expense entry:
-   * Expense category
-   * Amount
-   * Date
-   * Description
-   * Payment method
-   * Optional attachment/reference
+6. **Basic Transactions & Ledger**
+   * Record payments against bookings or standalone sales
+   * Record other miscellaneous business income
+   * Payment status tracking (Paid, Unpaid, Partial, Refunded)
+   * Detailed transaction audit logs
+   * Refund & adjustment records
 
-7. **Business Dashboard**
-   Simple dashboard containing:
-   * Today’s bookings
-   * Today’s revenue
-   * Monthly revenue
-   * Customers
-   * New customers
-   * Pending bookings
-   * Cancelled bookings
-   * Expenses
-   * Basic business health indicators
+7. **Expense Management**
+   * Manual expense logging by category (Rent, Salary, Utilities, Marketing, Maintenance, Other)
+   * Amount, date, description, and payment method
+   * Optional bill/receipt reference
 
-8. **Reports**
-   * Weekly: Revenue, Bookings, Customers, Transactions, Expenses, Growth
-   * Monthly: Revenue, Expenses, Net amount, Customers, Bookings, Best services/products, Growth comparison
+8. **Business Dashboard**
+   * Today’s bookings & today’s revenue
+   * Monthly revenue & month-to-date tracking
+   * Active and new customer counts
+   * Pending vs. confirmed vs. cancelled bookings
+   * Total expenses logged & net operational profit calculation
 
-9. **Business Performance**
-   Comparison:
-   * Week-over-week
-   * Month-over-month
-   * Previous month
-   * Previous period
-   * Best month
-   * Best service/product
-   * Customer growth
+9. **Business Reports & Performance Analytics**
+   * Weekly Report (Revenue, bookings, customers, cancellations, % growth)
+   * Monthly Report (Revenue, expenses, net amount, top services/products, MoM growth)
+   * Performance Trends (WoW / MoM comparisons, peak hours, customer acquisition)
 
-10. **Data Export**
-    * Excel
-    * CSV
-    * PDF reports
-    *(No external integration is required)*
+10. **Data Export (Native Business Utility)**
+    * Native Excel (.xlsx) export
+    * CSV (.csv) export
+    * PDF printable summaries
+    * Zero third-party cloud integration required
 
 ---
 
 ## 11. Phase 1 — Explicitly NOT Included
 
-To prevent scope explosion, the following are outside Phase 1:
+To prevent scope creep and maintain development focus, the following capabilities are **strictly deferred to Phase 2 or beyond**:
 
-* Google Business Profile API
-* Google Ads
-* Google Analytics
-* Google Calendar integration
-* Google Sheets integration
-* WhatsApp API
-* Razorpay integration
-* Shopify
-* WooCommerce
-* Amazon
-* Flipkart
-* Zoho
-* Tally
-* Meta
-* automated accounting
-* automated tax calculations
-* GST filing
-* automated bank reconciliation
-* AI business recommendations
-* advanced automation
-* marketplace management
-* advanced CRM
-* advanced inventory
-* advanced accounting
-
-These are not rejected forever. They are deliberately moved to Phase 2.
+| Excluded in Phase 1 | Reason & Destination |
+|---|---|
+| Mandatory Customer Login for Discovery | Anti-pattern; discovery remains open and friction-free |
+| Google Business Profile API integration | Deferred to Phase 2 (Layer A) |
+| Google Maps scraping / unverified aggregations | Out of scope; listings are verified & owner-managed |
+| Google Ads & Search Console | Deferred to Phase 2 (Layer A) |
+| Google Analytics / Tag Manager sync | Deferred to Phase 2 (Layer A) |
+| Google Calendar / Sheets 2-way sync | Deferred to Phase 2 (Layer A) |
+| WhatsApp Business API & SMS Gateways | Deferred to Phase 2 (Layer C) |
+| Razorpay / Cashfree / Stripe live gateway sync | Deferred to Phase 2 (Layer B) |
+| Shopify / WooCommerce / Amazon / Flipkart | Deferred to Phase 2 (Layer E) |
+| Zoho Suite (Books, CRM, Bookings, Inventory) | Deferred to Phase 2 (Layer D) |
+| Tally ERP integration | Deferred to Phase 2 (Layer D) |
+| Automated bank feeds & reconciliation | Deferred to Phase 2 |
+| Automated tax calculations & GST e-filing | Deferred to Phase 2 |
+| AI chatbots / automated business advice | Deferred to Future Intelligence Layer |
+| Advanced aggregator marketplace mechanics | Out of scope; GetListed is a merchant-empowering Business OS |
 
 ---
 
 ## 12. Phase 2 — Connected Business OS
 
-Phase 2 starts only after the core GetListed Business OS is stable.
+In Phase 2, GetListed connects to external tools already used by the business:
 
-**The objective:** Connect GetListed with the external systems already used by the business.
-
-### Phase 2 Layer A — Google / Business Presence
-* Google Business Profile
-* Google Calendar
-* Google Analytics
-* Google Ads
-* Google Search Console
-* Google Drive
-* Google Sheets
-*(Priority decided individually; do not build all Google integrations simultaneously)*
-
-### Phase 2 Layer B — Payments
-* Razorpay
-* Cashfree
-* Stripe
-* other officially supported payment providers
-* **Purpose:** automatically receive transaction data, payment reconciliation, payment status, revenue reporting
-
-### Phase 2 Layer C — Communication
-* WhatsApp Business Platform
-* Email
-* SMS providers
-* **Purpose:** booking confirmations, reminders, customer communication, follow-ups
-
-### Phase 2 Layer D — Business Software
-* Zoho Books
-* Zoho CRM
-* Zoho Bookings
-* Zoho Inventory
-* Tally
-* other officially supported systems
-*(Connect specific products required; do NOT integrate an entire ecosystem speculatively)*
-
-### Phase 2 Layer E — Commerce
-* Shopify
-* WooCommerce
-* Amazon Seller
-* Flipkart
-* other officially supported commerce platforms
-* **Purpose:** order data, revenue, product performance, inventory, channel performance
-
-### Phase 2 Layer F — Business Intelligence
-Once external data becomes available, combine GetListed data + external platform data:
-
-```text
-Website visitors → Leads → Bookings → Payments → Revenue
-
-Revenue → Platform fees → Payment fees → Marketing spend → Operating expenses → Business performance
-```
+* **Layer A (Google / Presence):** Google Business Profile, Google Calendar, Google Analytics, Google Ads, Google Drive/Sheets.
+* **Layer B (Payments):** Razorpay, Cashfree, Stripe, POS machines.
+* **Layer C (Communication):** WhatsApp Business API, SMS Gateways, Transactional Email.
+* **Layer D (Business Software):** Zoho Suite (Books, CRM, Inventory), Tally ERP.
+* **Layer E (Commerce):** Shopify, WooCommerce, Amazon, Flipkart.
+* **Layer F (Business Intelligence):** Aggregates connected data for multi-channel revenue, marketing ROI, and cost optimization.
 
 ---
 
 ## 13. Phase 2 — Optimization Layer
 
-GetListed can eventually identify:
-
-* **Cost optimization:** *"Your business is spending ₹18,000/month across software subscriptions."*
-* **Platform optimization:** *"Platform A generates 40% of bookings but charges significantly higher fees than Platform B."*
-* **Marketing optimization:** *"Ad spend increased 30%, while revenue increased only 8%."*
-* **Software optimization:** *"Some connected services have low activity."*
-* **Business optimization:** *"Weekend bookings are consistently full. Increasing weekend pricing may improve revenue."*
-
-These are recommendations, not the primary product.
+When connected to multiple platforms in Phase 2, GetListed can calculate unified business performance:
+$$\text{Revenue} - \text{Expenses} - \text{Platform Fees} - \text{Payment Fees} - \text{Marketing Spend} = \text{True Net Profit}$$
 
 ---
 
 ## 14. Final Product Architecture
 
 ```text
-                         GETLISTED
-                 BUSINESS OPERATING SYSTEM
-                            │
-             ┌──────────────┴──────────────┐
-             │                             │
-     GETLISTED BUSINESS             GETLISTED CUSTOMER
-             │                             │
-             │                        Discover Business
-             │                        View Services
-             │                        View Availability
-             │                        Book
-             │                        Manage Booking
-             │
-    ┌────────┼────────┬──────────┐
-    │        │        │          │
- Business  Customer Operations Financial
- Management Management Management Tracking
-    │        │        │          │
- Profile    CRM      Booking    Income
- Services   History  Calendar   Expenses
- Products   Activity Payments   Transactions
- Team                Services
-    │
-    └─────────────────────┐
-                          ↓
-                    PERFORMANCE
-                          │
-              Weekly / Monthly Reports
-              Growth Comparison
-              Business Metrics
-                          │
-                          ↓
-                    PHASE 2
-                  INTEGRATIONS
-                          │
-       ┌──────────┬───────┼────────┬─────────┐
-       ↓          ↓       ↓        ↓         ↓
-     Google     Payments WhatsApp Zoho     Commerce
-       │
-       ↓
-                  UNIFIED BUSINESS DATA
-                          │
-                          ↓
-                     INTELLIGENCE
-                          │
-              Cost Optimization
-              Performance Analysis
-              Business Recommendations
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          GETLISTED PLATFORM                                 │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│          GETLISTED BUSINESS          │          GETLISTED CUSTOMER          │
+│       (Business Operating System)    │      (Discovery & Booking Portal)    │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│ • Generic Setup & Launch Templates   │ • "What are you looking for?" Entry  │
+│ • Business Profile & Settings        │ • Customer Discovery Web App         │
+│ • Catalog (Services, Products, Combos│ • Location & "Near Me" Detection     │
+│ • Operations & Availability Calendar │ • Business Detail & Reviews          │
+│ • Customer Directory & Notes         │ • Live Availability & Slot Picker    │
+│ • Team & Role Permissions            │ • Friction-free Booking Flow         │
+│ • Transactions & Expense Logging     │ • No Mandatory Login Required        │
+│ • Operational Dashboard              │ • Customer Booking History Lookup    │
+│ • Weekly, Monthly & Audit Reports    │                                      │
+│ • Native Excel, CSV & PDF Export     │                                      │
+├──────────────────────────────────────┴──────────────────────────────────────┤
+│                         COMMON OPERATIONAL CORE                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│               PHASE 2 CONNECTED OS (Post-Core Integrations)                 │
+│   [Google APIs] [Payment Gateways] [WhatsApp API] [Zoho / Tally] [Commerce] │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## 15. Product Evolution
 
-### Phase 1 — Manage the business
 ```text
-Business → Customers → Bookings → Transactions → Expenses → Reports
+Phase 1: BUILD THE GENERIC BUSINESS OS  (Manage the business & enable customer discovery)
+                   ↓
+Phase 2: CONNECT THE BUSINESS           (Connect existing business tools & gateways)
+                   ↓
+Future:  UNDERSTAND & OPTIMIZE          (Empower better business decisions)
 ```
-
-### Phase 2 — Connect the business
-```text
-GetListed → [Google, Payments, WhatsApp, Zoho, Commerce, Other Platforms] → Unified Business Data
-```
-
-### Future Intelligence — Understand and optimize the business
-```text
-Business Data → Performance → Costs → Trends → Recommendations → Business Optimization
-```
-
-The intelligence layer should be developed only after sufficient real business data exists.
 
 ---
 
-## 16. Business-Type Configuration
+## 16. Business-Type Configuration & Launch Templates
 
-GetListed has a common core and business-specific modules.
+### 16.1 Generic Business Platform
+> **"GetListed is a general business platform that can be used by different types of businesses."**
 
-### Common Core (Every business gets this)
-* Business Profile
-* Customers
-* Team
-* Services/Products
-* Bookings/Orders
-* Payments
-* Dashboard
-* Reports
+The platform architecture is fundamentally generic so that any business can configure its own profile, services, products, packages, availability, booking behavior, customers, transactions, expenses, team, and operations. It is never restricted to initial launch categories.
 
-### Business-specific modules
-* **Turf:** Turf management, Slot management, Memberships
-* **Studio:** Packages, Projects, Events, Client management
-* **Retail:** Inventory, Orders, Product management
-* **Clinic:** Appointments, Patients, Medical/service records
-
-Verticals should be added gradually.
+### 16.2 Launch Templates vs. Categories
+* **Business Categories:** Flexible taxonomies used for discovery and search (Sports, Fitness, Healthcare, Beauty, Coworking, Events, Retail, Automotive, etc.).
+* **Launch Templates:** Ready-to-use starting configurations (e.g. Turf, Photography Studio, Clinic, Retail Boutique) provided to accelerate onboarding and demonstrate the platform. They are starting examples, **not** platform boundaries. Generic setup is always supported.
 
 ---
 
 ## 17. MVP Philosophy
 
-The MVP should answer one question:
+The MVP must answer one fundamental question:
 
-> **Can a real business run its basic day-to-day business through GetListed?**
+> ### **"Can a real business run its basic day-to-day operations through GetListed?"**
 
-Not:
-* *"Can GetListed connect to every platform?"*
-* *"Can GetListed perform accounting?"*
-* *"Can GetListed replace every SaaS product?"*
-
-The first objective is operational usefulness.
+The primary objective is **immediate operational usefulness** and **friction-free customer discovery**.
 
 ---
 
 ## 18. Phase 1 Success Criteria
 
-Phase 1 can be considered successful when a business can:
+Phase 1 is deemed successful when a business and its customers can reliably complete all 11 foundational steps:
 
-1. Create its business profile.
-2. Add its services/products.
-3. Add customers.
-4. Accept/manage appointments or bookings.
-5. Record transactions.
-6. Record expenses.
-7. View its business dashboard.
-8. Compare performance across periods.
-9. Generate weekly/monthly reports.
-10. Export useful business data to Excel/CSV/PDF.
-11. Customers can discover the business and make/manage bookings.
-
-If these work well, the foundation is ready for Phase 2.
+1. **Create Business Profile:** Create and customize a complete business profile (via generic setup or launch template) with photos, hours, and contact information.
+2. **Catalog Services & Products:** Add, price, and describe services, products, and package bundles.
+3. **Manage Customers:** Add customer profiles, view interaction history, and keep private operational notes.
+4. **Accept & Manage Bookings:** Seamlessly book appointments from both the business dashboard and customer flow, with status changes, rescheduling, and cancellation.
+5. **Record Transactions:** Log payments received, link them to bookings or direct sales, and track payment status.
+6. **Record Operating Expenses:** Manually record daily/monthly business expenditures with categories.
+7. **View Business Dashboard:** Monitor today's bookings, month-to-date revenue, active customers, and pending actions at a glance.
+8. **Compare Performance Periods:** View week-over-week and month-over-month growth comparisons.
+9. **Generate Business Reports:** Access automated, easy-to-read weekly and monthly business summaries.
+10. **Export Structured Business Data:** Download clean Excel (.xlsx), CSV, and PDF exports for internal analysis or sharing with an accountant/CA.
+11. **Customer Discovery & Booking Experience:** Enable customers to enter from *"What are you looking for?"*, discover businesses near them (with location detection or manual city selection), check live availability, and make confirmed bookings without mandatory login.
 
 ---
 
 ## 19. Scope Control Rules
 
-These rules remain fixed during development:
+These eight rules remain **strictly fixed** during all architectural decisions and engineering implementations:
 
 * **Rule 1: Integration is not the product.** Integrations support GetListed.
 * **Rule 2: Accounting is not the product.** Basic income/expense tracking is sufficient initially.
 * **Rule 3: Reports are not the product.** Reports explain the business’s activity and performance.
 * **Rule 4: Booking is not the product.** Booking is one operational capability.
 * **Rule 5: GetListed is the Business OS.** Everything else supports that purpose.
-* **Rule 6: One business type at a time.** Do not build every industry simultaneously.
+* **Rule 6: Generic architecture with focused launch templates.** Build a generic business OS while using launch templates as starting configurations, never restricting the platform architecture to a fixed list of categories.
 * **Rule 7: One module at a time.** Finalize the UX and workflow before moving to the next module.
 * **Rule 8: No integration without a real use case.** An integration should be added because a real business needs it, not because an API exists.
 
 ---
 
-## 20. Final Product Definition
+## 20. Final Product Definition & North Star
 
-> **GetListed is a simple Business Operating System that helps businesses create their business presence, manage customers, run day-to-day operations, handle appointments and transactions, track expenses, and understand business performance through simple reports.**
+> **GetListed is a general Business Operating System that helps businesses set up, manage, operate, and understand their business from one simple system, while enabling customers to easily discover businesses, find local services, check live availability, and book.**
 
-* Phase 1 focuses on building this core system independently.
-* Phase 2 connects GetListed with the external tools businesses already use, bringing their data into one place and enabling deeper business insights and optimization.
+### The Dual-Sided North Star
 
-**In one sentence:**
-
-> **GetListed helps businesses get listed, get organized, run their business, and understand how they are growing.**
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            GETLISTED NORTH STAR                             │
+├──────────────────────────────────────┬──────────────────────────────────────┤
+│            BUSINESS SIDE             │            CUSTOMER SIDE             │
+├──────────────────────────────────────┼──────────────────────────────────────┤
+│  Create → Configure → Manage         │  Discover → Find → Check Availability│
+│  → Operate → Get Discovered          │  → Book                              │
+└──────────────────────────────────────┴──────────────────────────────────────┘
+```
 
 ---
 
 ## 21. Product Scope — Final Freeze
 
-### PHASE 1 — CORE BUSINESS OS
+### PHASE 1 — CORE BUSINESS OS & DISCOVERY (Locked)
 
 **GetListed Business**
-* Business Profile
-* Services
-* Products
-* Packages
-* Customers
-* Team
-* Appointments
-* Bookings
-* Transactions
-* Income
-* Expenses
-* Dashboard
-* Weekly Reports
-* Monthly Reports
-* Business Performance
+* Generic Business Setup & Launch Templates
+* Business Profile & Public Presence
+* Services, Products & Combo Packages
+* Memberships & Events Management
+* Customer Directory & Operational Notes
+* Team Directory & Role Delegation (Owner, Manager, Staff)
+* Appointments & Booking Calendar
+* Transactions & Income Logging
+* Manual Expense Management
+* Business Dashboard
+* Weekly & Monthly Business Reports
+* Business Performance Analytics
 * Basic Audit/Accountant Reports
-* Excel/CSV/PDF Export
+* Native Excel/CSV/PDF Export
 
 **GetListed Customer**
-* Discover Business
-* Business Profile
-* Services/Products
-* Availability
-* Booking
-* Booking Management
-* Customer History
+* "What are you looking for?" Search Entry
+* Customer Discovery Web App
+* Generic Keyword & Service Search
+* Location Discovery ("Find Near Me" + Manual Fallback)
+* Business Detail & Public Information
+* Live Availability & Slot Picker
+* Friction-free Online Booking Flow
+* No Mandatory Customer Login Required
+* Customer Booking History Lookup
 
-**External Integrations:** None  
-**Native Export:** Excel / CSV / PDF
+**External Integrations:** None in Phase 1  
+**Native Export:** Excel (.xlsx) / CSV / PDF
 
 ---
 
@@ -802,10 +625,10 @@ These rules remain fixed during development:
 
 **Integrations:**
 * Google Business Profile, Google Calendar, Google Analytics, Google Ads, Google Search Console, Google Drive / Sheets
-* WhatsApp Business
-* Payment Gateways
-* Zoho products
-* E-commerce platforms
+* WhatsApp Business API & SMS Gateways
+* Payment Gateways (Razorpay, Cashfree, Stripe)
+* Zoho Products & Tally ERP
+* E-commerce Platforms (Shopify, Amazon, Flipkart)
 * Other officially supported platforms
 
 **Connected Data:**
@@ -816,30 +639,31 @@ These rules remain fixed during development:
 
 ---
 
-## 22. What GetListed Is NOT
+## 22. What GetListed Is NOT (Anti-Scope)
 
-GetListed is not initially:
-* Tally replacement
-* Zoho replacement
-* Shopify replacement
-* WhatsApp replacement
-* Google replacement
-* Tax filing software
-* CA/audit software
-* Booking marketplace
-* Payment gateway
-* Integration automation platform
+GetListed is **NOT**:
+* ❌ **Not a category-restricted vertical silo:** It is a generic business platform adaptable to any service, retail, appointment, or membership business.
+* ❌ **Not a closed-wall marketplace with forced login:** Customer discovery and availability checking do not require user account registration.
+* ❌ **Not a Tally / QuickBooks replacement:** Does not do double-entry ledgers, depreciation schedules, or trial balances.
+* ❌ **Not a Zoho / Salesforce replacement:** Does not do complex multi-tier sales pipelines or automated drip campaigns.
+* ❌ **Not a Shopify replacement:** Does not attempt to be a multi-channel headless e-commerce storefront builder.
+* ❌ **Not a WhatsApp replacement:** Does not replace customer chat; connects to WhatsApp for transactional messaging in Phase 2.
+* ❌ **Not a Google Maps / Web Scraper:** Does not harvest unverified public directory data; all profiles are owner-created and verified.
+* ❌ **Not a Tax filing / GST software:** Provides structured export data for CAs, not automated government filing.
+* ❌ **Not an aggressive booking aggregator:** B2B-first platform empowering the business, not an aggregator prioritizing consumer choice over merchant loyalty.
+* ❌ **Not a Payment Gateway:** Will connect to gateways in Phase 2, but does not custody merchant funds.
+* ❌ **Not an integration automation platform (Zapier/Make):** Does not offer arbitrary visual workflow triggers.
 
-GetListed sits above these systems in the future, while remaining useful even without them in Phase 1.
+> *GetListed sits above these systems in the future, while remaining immediately useful even without them in Phase 1.*
 
 ---
 
 ## 23. Final Strategic Direction
 
-The product journey is intentionally simple:
-
-* **Phase 1: BUILD THE BUSINESS OS** — Manage the business.
-* **Phase 2: CONNECT THE BUSINESS** — Connect the tools the business already uses.
-* **Future: UNDERSTAND & OPTIMIZE THE BUSINESS** — Help the owner make better business decisions.
-
-This keeps GetListed focused while preserving the larger long-term vision.
+```text
+Phase 1: BUILD THE GENERIC BUSINESS OS  (Manage the business & enable customer discovery)
+                   ↓
+Phase 2: CONNECT THE BUSINESS           (Connect existing business tools & gateways)
+                   ↓
+Future:  UNDERSTAND & OPTIMIZE          (Empower better business decisions)
+```

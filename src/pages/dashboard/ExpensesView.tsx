@@ -164,7 +164,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               setErrorMsg(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-2xs"
           >
             <Plus className="w-4 h-4" />
             <span>Record Expense</span>
@@ -193,7 +193,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
           <select
             value={selectedCategory}
             onChange={e => setSelectedCategory(e.target.value)}
-            className="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+            className="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
           >
             <option value="ALL">All Categories</option>
             <option value="RENT">Rent & Lease</option>
@@ -227,7 +227,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
 
         {loading ? (
           <div className="p-12 text-center">
-            <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+            <RefreshCw className="w-6 h-6 text-blue-600 animate-spin mx-auto mb-2" />
             <p className="text-xs text-stone-500 font-medium">Loading expenses...</p>
           </div>
         ) : expenses.length === 0 ? (
@@ -242,7 +242,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 setErrorMsg(null);
                 setIsModalOpen(true);
               }}
-              className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800"
+              className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Record First Expense</span>
@@ -281,7 +281,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                     <span className="px-2 py-0.5 rounded-md font-medium bg-stone-100 text-stone-700">
                       {exp.category}
                     </span>
-                    <span className="px-1.5 py-0.5 rounded-md font-mono bg-teal-50 text-teal-800 border border-teal-200">
+                    <span className="px-1.5 py-0.5 rounded-md font-mono bg-blue-50 text-blue-700 border border-blue-200">
                       {exp.paymentMethod}
                     </span>
                   </div>
@@ -333,7 +333,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                         {exp.paidTo || '—'}
                       </td>
                       <td className="py-3 px-4">
-                        <span className="px-1.5 py-0.5 rounded-md text-2xs font-mono bg-teal-50 text-teal-800 border border-teal-200">
+                        <span className="px-1.5 py-0.5 rounded-md text-2xs font-mono bg-blue-50 text-blue-700 border border-blue-200">
                           {exp.paymentMethod}
                         </span>
                       </td>
@@ -376,7 +376,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value as ExpenseCategory)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="RENT">Rent & Lease</option>
                 <option value="SALARY">Salaries & Stipends</option>
@@ -400,7 +400,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 placeholder="e.g. 15000"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
           </div>
@@ -415,7 +415,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 required
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
@@ -426,7 +426,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               <select
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="UPI">UPI</option>
                 <option value="CASH">Cash</option>
@@ -447,7 +447,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 value={paidTo}
                 onChange={e => setPaidTo(e.target.value)}
                 placeholder="e.g. Landlord / Vendor / Staff"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
@@ -460,7 +460,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
                 value={receiptRef}
                 onChange={e => setReceiptRef(e.target.value)}
                 placeholder="e.g. INV-2026-004"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
           </div>
@@ -475,7 +475,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
               value={description}
               onChange={e => setDescription(e.target.value)}
               placeholder="e.g. Facility monthly maintenance & lighting"
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-xs font-medium text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -490,7 +490,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 disabled:opacity-50 shadow-2xs"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 shadow-2xs"
             >
               {submitting ? 'Recording...' : 'Record Expense'}
             </button>

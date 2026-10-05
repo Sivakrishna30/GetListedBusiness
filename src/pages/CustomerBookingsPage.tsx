@@ -128,13 +128,13 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
               placeholder="Enter your phone number (e.g. +91 98860 12345)"
               value={phoneNumber}
               onChange={e => setPhoneNumber(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs shrink-0 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs shrink-0 flex items-center justify-center gap-2"
           >
             {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
             <span>Find My Bookings</span>
@@ -144,7 +144,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
         {/* Results */}
         {loading ? (
           <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-            <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
+            <RefreshCw className="w-6 h-6 text-[#2563EB] animate-spin mx-auto mb-2" />
             <p className="text-xs text-stone-500 font-medium">Looking up your reservations...</p>
           </div>
         ) : bookings.length === 0 ? (
@@ -158,7 +158,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
             </p>
             <button
               onClick={() => onNavigate('/businesses')}
-              className="px-5 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors"
+              className="px-5 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors"
             >
               Explore Businesses to Book
             </button>
@@ -190,7 +190,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
                       <Building2 className="w-3.5 h-3.5 text-stone-400" />
                       <button
                         onClick={() => onNavigate(`/businesses/${bk.businessId}`)}
-                        className="text-[#0F766E] hover:underline font-semibold"
+                        className="text-[#2563EB] hover:underline font-semibold"
                       >
                         View Business Profile
                       </button>
@@ -267,7 +267,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
               required
               value={newDate}
               onChange={e => setNewDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -279,7 +279,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
                 required
                 value={newStartTime}
                 onChange={e => setNewStartTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
             <div>
@@ -289,7 +289,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
                 required
                 value={newEndTime}
                 onChange={e => setNewEndTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
@@ -305,7 +305,7 @@ export const CustomerBookingsPage: React.FC<CustomerBookingsPageProps> = ({ onNa
             <button
               type="submit"
               disabled={savingReschedule}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50"
             >
               {savingReschedule ? 'Rescheduling...' : 'Confirm Reschedule'}
             </button>

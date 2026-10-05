@@ -132,7 +132,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50 py-24 text-center">
-        <RefreshCw className="w-8 h-8 text-[#0F766E] animate-spin mx-auto mb-3" />
+        <RefreshCw className="w-8 h-8 text-[#2563EB] animate-spin mx-auto mb-3" />
         <p className="text-sm font-medium text-stone-600">Loading business information...</p>
       </div>
     );
@@ -145,7 +145,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
           <p className="text-[#DC2626] font-semibold mb-4">{error || 'Business not found'}</p>
           <button
             onClick={() => onNavigate('/businesses')}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#2563EB]/30"
           >
             Back to Directory
           </button>
@@ -204,7 +204,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                 <div className="flex items-center gap-2 flex-wrap mb-1">
                   <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-stone-900">{data.name}</h1>
                 </div>
-                <div className="text-xs sm:text-sm font-semibold text-[#0F766E] mb-2">
+                <div className="text-xs sm:text-sm font-semibold text-[#2563EB] mb-2">
                   {data.category} • {data.subCategory}
                 </div>
                 <div className="flex items-center gap-3 sm:gap-4 text-xs text-stone-600 flex-wrap">
@@ -252,7 +252,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
 
               <button
                 onClick={() => onNavigate(`/businesses/${data.id}/book`)}
-                className="w-full sm:w-auto md:flex-initial inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-lg text-xs font-bold text-white bg-[#0F766E] hover:bg-[#115E59] shadow-2xs transition-colors"
+                className="w-full sm:w-auto md:flex-initial inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-lg text-xs font-bold text-white bg-[#2563EB] hover:bg-[#1D4ED8] shadow-2xs transition-colors"
               >
                 <span>Book Service</span>
                 <ArrowRight className="w-4 h-4" />
@@ -292,7 +292,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                 {data.website && (
                   <div>
                     <span className="font-medium text-stone-900 block">Website</span>
-                    <a href={data.website} target="_blank" rel="noreferrer" className="text-[#0F766E] hover:underline flex items-center gap-1 truncate">
+                    <a href={data.website} target="_blank" rel="noreferrer" className="text-[#2563EB] hover:underline flex items-center gap-1 truncate">
                       <Globe className="w-3 h-3" />
                       {data.website}
                     </a>
@@ -319,7 +319,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
             </div>
             <button
               onClick={() => onNavigate(`/businesses/${data.id}/book`)}
-              className="text-xs font-semibold text-[#0F766E] hover:underline"
+              className="text-xs font-semibold text-[#2563EB] hover:underline"
             >
               Open Booking Flow →
             </button>
@@ -334,7 +334,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
               {data.services.map(srv => (
                 <div
                   key={srv.id}
-                  className="bg-white p-5 rounded-xl border border-stone-200 flex flex-col justify-between hover:border-[#0F766E] transition-colors shadow-2xs"
+                  className="bg-white p-5 rounded-xl border border-stone-200 flex flex-col justify-between hover:border-[#2563EB] transition-colors shadow-2xs"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">
@@ -351,7 +351,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                     <span className="text-stone-500">{srv.availability}</span>
                     <button
                       onClick={() => onNavigate(`/businesses/${data.id}/book?serviceId=${srv.id}`)}
-                      className="px-3.5 py-1.5 rounded-lg font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors"
+                      className="px-3.5 py-1.5 rounded-lg font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors"
                     >
                       Book Slot
                     </button>
@@ -408,7 +408,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                     <div className="space-y-1 mb-4">
                       {pkg.includedServices.map((inc, i) => (
                         <div key={i} className="flex items-center gap-1.5 text-xs text-stone-700">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#0F766E] shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />
                           <span>{inc}</span>
                         </div>
                       ))}
@@ -418,7 +418,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                     <span>Validity: {pkg.validityDays} Days</span>
                     <button
                       onClick={() => onNavigate(`/businesses/${data.id}/book`)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30 hover:bg-[#CCFBF1]/50"
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#2563EB]/30 hover:bg-[#DBEAFE]/50"
                     >
                       Inquire & Reserve
                     </button>
@@ -441,7 +441,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                   <div>
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="font-bold text-stone-900 text-base">{mem.name}</h3>
-                      <span className="text-lg font-extrabold text-[#0F766E]">₹{mem.price}</span>
+                      <span className="text-lg font-extrabold text-[#2563EB]">₹{mem.price}</span>
                     </div>
                     <div className="text-xs font-medium text-stone-500 mb-3">{mem.durationDays} Days Duration</div>
                     <p className="text-xs text-stone-600 mb-4">{mem.description}</p>
@@ -449,7 +449,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                     <div className="space-y-1.5 mb-4">
                       {mem.benefits.map((b, i) => (
                         <div key={i} className="flex items-center gap-1.5 text-xs text-stone-700">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#0F766E] shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />
                           <span>{b}</span>
                         </div>
                       ))}
@@ -462,7 +462,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                         setSelectedMembership(mem);
                         setEnrollModalOpen(true);
                       }}
-                      className="w-full py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] hover:bg-[#CCFBF1]/50 border border-[#0F766E]/30 transition-colors"
+                      className="w-full py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] hover:bg-[#DBEAFE]/50 border border-[#2563EB]/30 transition-colors"
                     >
                       Enroll in Membership
                     </button>
@@ -485,7 +485,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                   <div>
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-[#F0FDFA] text-[#0F766E] border border-[#0F766E]/30">
+                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-[#EFF6FF] text-[#2563EB] border border-[#2563EB]/30">
                           {ev.date}
                         </span>
                         <h3 className="font-bold text-stone-900 text-base mt-2">{ev.name}</h3>
@@ -506,7 +506,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                     <span className="text-xs text-[#16A34A] font-medium">Registration Open</span>
                     <button
                       onClick={() => onNavigate(`/businesses/${data.id}/events`)}
-                      className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59]"
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8]"
                     >
                       View Event Details
                     </button>
@@ -527,7 +527,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
             <button
               id="write-review-btn"
               onClick={() => setIsReviewModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] hover:bg-[#CCFBF1]/50 border border-[#0F766E]/30 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] hover:bg-[#DBEAFE]/50 border border-[#2563EB]/30 transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Write a Review</span>
@@ -590,7 +590,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                 value={reviewerName}
                 onChange={e => setReviewerName(e.target.value)}
                 placeholder="e.g. Ramesh Patel"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
 
@@ -621,7 +621,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                 value={reviewText}
                 onChange={e => setReviewText(e.target.value)}
                 placeholder="Share your experience regarding facility, staff, timings, and quality..."
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
 
@@ -636,7 +636,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
               <button
                 type="submit"
                 disabled={reviewSubmitting}
-                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50"
+                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50"
               >
                 {reviewSubmitting ? 'Submitting...' : 'Post Review'}
               </button>
@@ -676,7 +676,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                 value={enrollName}
                 onChange={e => setEnrollName(e.target.value)}
                 placeholder="e.g. Arun Kumar"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
 
@@ -688,7 +688,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
                 value={enrollPhone}
                 onChange={e => setEnrollPhone(e.target.value)}
                 placeholder="e.g. +91 98860 12345"
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
 
@@ -703,7 +703,7 @@ export const BusinessDetailPage: React.FC<BusinessDetailPageProps> = ({
               <button
                 type="submit"
                 disabled={enrolling}
-                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50"
+                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50"
               >
                 {enrolling ? 'Enrolling...' : 'Confirm Enrollment'}
               </button>

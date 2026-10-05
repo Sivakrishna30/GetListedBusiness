@@ -139,7 +139,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-teal-700 animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-blue-600 animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading settings...</p>
       </div>
     );
@@ -182,7 +182,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200">
           <div>
             <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
-              <Sliders className="w-4 h-4 text-teal-700" />
+              <Sliders className="w-4 h-4 text-blue-600" />
               <span>Operational Modules & Architecture</span>
             </h3>
             <p className="text-xs text-stone-500 mt-0.5">
@@ -193,7 +193,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
           <button
             onClick={handleSaveOperations}
             disabled={savingOps}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
           >
             <Save className="w-3.5 h-3.5" />
             <span>{savingOps ? 'Saving...' : 'Save Configuration'}</span>
@@ -213,7 +213,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
                 onClick={() => setBizType(t)}
                 className={`p-2.5 rounded-lg border text-left font-semibold transition-all ${
                   bizType === t
-                    ? 'border-teal-700 bg-teal-50 text-teal-900 ring-1 ring-teal-700'
+                    ? 'border-blue-600 bg-blue-50 text-blue-900 ring-1 ring-blue-600'
                     : 'border-stone-200 bg-stone-50/50 text-stone-700 hover:bg-stone-100'
                 }`}
               >
@@ -237,7 +237,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
                   onClick={() => handleToggleOperation(op.id)}
                   className={`p-3 rounded-xl border cursor-pointer transition-all ${
                     isChecked
-                      ? 'border-teal-700 bg-teal-50/40 text-stone-900'
+                      ? 'border-blue-600 bg-blue-50/40 text-stone-900'
                       : 'border-stone-200 bg-white text-stone-500 opacity-70 hover:opacity-100'
                   }`}
                 >
@@ -247,7 +247,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => {}}
-                      className="rounded text-teal-700 focus:ring-teal-700"
+                      className="rounded text-blue-600 focus:ring-blue-600"
                     />
                   </div>
                   <p className="text-2xs text-stone-500 leading-snug">{op.description}</p>
@@ -266,7 +266,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
               Subscription Plan Tier
             </h3>
             <p className="text-xs text-stone-500 mt-0.5">
-              Pro plan unlocks CRM, team delegation, customer notes, and deep revenue analytics.
+              Professional plan unlocks Customer Management, Custom & Promotional Events, and Revenue Reports.
             </p>
           </div>
           <PlanBadge plan={business.plan} />
@@ -277,16 +277,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
           <div
             className={`p-5 rounded-xl border transition-all ${
               business.plan === 'FREE'
-                ? 'border-teal-700 bg-teal-50/20 ring-1 ring-teal-700'
+                ? 'border-blue-600 bg-blue-50/20 ring-1 ring-blue-600'
                 : 'border-stone-200 bg-stone-50/50'
             }`}
           >
             <div className="flex items-center justify-between mb-2">
               <span className="font-bold text-sm text-stone-900">GetListed Starter</span>
-              <span className="text-xs font-bold text-stone-500">Free Forever</span>
+              <span className="text-xs font-bold text-stone-500">Free</span>
             </div>
             <p className="text-xs text-stone-600 mb-4 leading-relaxed">
-              Basic discovery profile, services catalogue, booking slots, and 5% fee transaction handling.
+              Business profile, operations configuration, bookings & availability, and booking customer details with 2% platform handling fee.
             </p>
             <button
               type="button"
@@ -302,29 +302,29 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
           <div
             className={`p-5 rounded-xl border transition-all ${
               business.plan === 'PRO'
-                ? 'border-teal-700 bg-teal-50/30 ring-2 ring-teal-700'
-                : 'border-teal-300 bg-white'
+                ? 'border-blue-600 bg-blue-50/30 ring-2 ring-blue-600'
+                : 'border-blue-300 bg-white'
             }`}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm text-stone-900">GetListed Pro</span>
-                <span className="px-1.5 py-0.5 rounded text-2xs font-extrabold bg-teal-700 text-white uppercase tracking-wider">
-                  Pro
+                <span className="font-bold text-sm text-stone-900">GetListed Professional</span>
+                <span className="px-1.5 py-0.5 rounded text-2xs font-extrabold bg-blue-600 text-white uppercase tracking-wider">
+                  Advanced
                 </span>
               </div>
-              <span className="text-xs font-bold text-teal-800">₹999 / month</span>
+              <span className="text-xs font-bold text-blue-700">₹999 / month</span>
             </div>
             <p className="text-xs text-stone-600 mb-4 leading-relaxed">
-              Everything in Starter plus Customer CRM directory, Team roles, and Financial Insights.
+              Everything in Starter, plus Customer Management, Custom & Promotional Events, and Revenue Reports.
             </p>
             <button
               type="button"
               disabled={business.plan === 'PRO' || updating}
               onClick={() => handlePlanToggle('PRO')}
-              className="w-full py-2 rounded-lg text-xs font-semibold bg-teal-700 hover:bg-teal-800 disabled:opacity-50 text-white transition-colors shadow-2xs"
+              className="w-full py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white transition-colors shadow-2xs"
             >
-              {business.plan === 'PRO' ? 'Current Plan (Active)' : 'Upgrade to Pro'}
+              {business.plan === 'PRO' ? 'Current Plan (Active)' : 'Upgrade to Professional'}
             </button>
           </div>
         </div>
@@ -353,7 +353,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
                 onClick={() => handleVerificationChange(status)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
                   business.verificationStatus === status
-                    ? 'bg-teal-700 text-white border-teal-700'
+                    ? 'bg-blue-600 text-white border-blue-600'
                     : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                 }`}
               >
@@ -402,7 +402,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ businessId }) => {
       <div className="bg-white rounded-xl border border-stone-200 shadow-2xs overflow-hidden">
         <div className="px-5 py-4 border-b border-stone-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Bell className="w-4 h-4 text-teal-700" />
+            <Bell className="w-4 h-4 text-blue-600" />
             <h3 className="text-sm font-bold text-stone-900">Operational Notifications & Audit Log</h3>
           </div>
           <span className="text-2xs text-stone-500">{notifications.length} events logged</span>

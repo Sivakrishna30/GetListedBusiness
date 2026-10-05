@@ -6,31 +6,27 @@
 
 ## 4. Core Product Layers
 
-GetListed is conceptually divided into five foundational layers.
+GetListed is conceptually divided into five foundational layers that form a generic, adaptable platform for diverse business types.
 
 ---
 
-### Layer 1 — Business Foundation
+### Layer 1 — Business Foundation & Configuration
 
-The business creates its presence and defines what it offers.
+The business creates its digital presence and defines what it offers. The platform architecture is modular and generic, allowing any business to configure its unique operations.
 
 **Includes:**
-* Business Profile
-* Business Name
-* Logo
-* Cover Image
-* Description
-* Location & Address
-* Contact information (Phone, Email, Website)
-* Business hours
-* Categories
-* Services
-* Products
-* Packages
-* Pricing
-* Basic business settings
+* Business Profile & Identity (Name, Logo, Cover Image, Description, Contact info)
+* Physical Location & Coordinates
+* Business Operating Hours & Holiday Schedules
+* Category & Custom Business Type definition
+* Services Catalog (Durations, pricing, staff assignment)
+* Products Catalog (Direct sales, rentals, inventory tracking)
+* Combo Packages (Bundled offerings across services and products)
+* Memberships & Subscriptions (Recurring passes, credit allotments)
+* Events & Program Schedules (Workshops, tournaments, bootcamps)
+* Basic business operational settings
 
-> *This is where the original "Get Listed" concept remains foundational.*
+> *This is where the original "Get Listed" concept provides immediate public presence and discovery.*
 
 ---
 
@@ -44,8 +40,8 @@ Businesses need a simple way to understand and manage their customers without re
 * Customer history
 * Booking history
 * Purchase / transaction history
-* Internal notes
-* Customer status (Active, Inactive, VIP, etc.)
+* Internal operational notes
+* Customer status (Active, Inactive, VIP)
 * New vs. returning customer indicators
 * Customer activity tracking
 
@@ -53,35 +49,24 @@ Businesses need a simple way to understand and manage their customers without re
 
 ---
 
-### Layer 3 — Business Operations
+### Layer 3 — Business Operations & Scheduling
 
 This is the actual day-to-day operating layer.
 
-**Initial capabilities:**
-* Appointments
-* Bookings
-* Services & Products
-* Packages
-* Payments / transactions
-* Business calendar
-* Team members
-* Availability & slots
-* Booking status tracking (Confirmed, Pending, Completed, Cancelled, Rescheduled)
-* Cancellation management
-* Rescheduling workflows
+**Core capabilities:**
+* Appointments & Slot Scheduling
+* Real-time slot availability calculation
+* Multi-staff & multi-court/room resource assignment
+* Booking status pipeline (Pending, Confirmed, Completed, Cancelled)
+* Rescheduling & cancellation handling with automated fee handling
+* Over-the-counter and online payments / transaction logging
+* Team members & contextual role permissions (Owner, Manager, Staff)
 
-#### Business-Type Configuration Model
+#### Generic Architecture vs. Launch Templates
 
-The exact operational modules can vary depending on the business type:
-
-| Business Type | Modules Used |
-|---|---|
-| **Turf / Sports Arena** | Turf, Slots, Bookings, Customers, Memberships, Payments |
-| **Creative / Photography Studio** | Services, Packages, Leads, Customers, Bookings, Projects, Payments |
-| **Retail Store** | Products, Inventory, Customers, Orders, Payments |
-| **Health & Wellness Clinic** | Appointments, Patients, Medical/Service records, Practitioners |
-
-GetListed uses a **business-type configuration model** instead of forcing every business to use every module.
+GetListed distinguishes clearly between **business categories** and **business templates**:
+* **Generic Architecture:** The core platform provides generic primitives (Services, Products, Packages, Bookings, Memberships, Events, Transactions, Expenses, Team) that any business can enable or disable.
+* **Launch Templates:** Pre-configured starting points (e.g. Sports Turf, Photography Studio, Healthcare Clinic, Retail Boutique) provided to accelerate initial onboarding. Templates are examples, not architectural boundaries.
 
 ---
 
@@ -94,16 +79,13 @@ The purpose is **not** to create an overwhelming enterprise analytics dashboard 
 The purpose is: **Tell the business owner what happened in simple language.**
 
 **Examples of metrics:**
-* Revenue this week
-* Revenue this month
-* Number of bookings
-* Number of customers
-* New customers vs. returning customers
+* Revenue this week / month
+* Number of bookings and capacity utilization
+* Number of customers & new vs. returning breakdown
 * Cancelled bookings & cancellation rate
 * Average booking / transaction value
-* Best-performing service
-* Best-performing day of week
-* Best-performing month
+* Top-performing service, product, or package
+* Peak days of the week and busiest hours
 * Business growth trajectory (Month-over-Month & Week-over-Week)
 
 ---
@@ -146,4 +128,4 @@ Revenue increased 18% compared with August.
 ### Related Sections
 - [04 — Growth Intelligence & Financials](./04-growth-intelligence-and-financials.md)
 - [05 — Phase 1 Core Scope](./05-phase-1-core-scope.md)
-- [08 — Business Types & MVP](./08-business-types-and-mvp.md)
+- [08 — Business Types & Templates](./08-business-types-and-mvp.md)

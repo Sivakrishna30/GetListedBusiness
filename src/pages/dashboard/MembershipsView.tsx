@@ -106,7 +106,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#2563EB] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading memberships...</p>
       </div>
     );
@@ -138,7 +138,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
             <button
               onClick={() => setIsEnrollModalOpen(true)}
               disabled={memberships.length === 0}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] hover:bg-[#CCFBF1]/50 border border-[#0F766E]/30 disabled:opacity-50 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] hover:bg-[#DBEAFE]/50 border border-[#2563EB]/30 disabled:opacity-50 transition-colors"
             >
               <Users className="w-3.5 h-3.5" />
               <span>+ Enroll Member</span>
@@ -153,7 +153,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                 setBenefitsText('Unlimited morning access\nLocker facility\nPriority court booking');
                 setIsPlanModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors shadow-2xs"
             >
               <Plus className="w-4 h-4" />
               <span>Create Plan</span>
@@ -170,7 +170,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
             </p>
             <button
               onClick={() => setIsPlanModalOpen(true)}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30 hover:bg-[#CCFBF1]/50"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#2563EB]/30 hover:bg-[#DBEAFE]/50"
             >
               Create First Tier
             </button>
@@ -195,7 +195,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                   <div className="space-y-1.5 mb-4">
                     {mem.benefits.map((b, i) => (
                       <div key={i} className="flex items-center gap-1.5 text-xs text-stone-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#0F766E] shrink-0" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />
                         <span>{b}</span>
                       </div>
                     ))}
@@ -204,7 +204,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
 
                 <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-2xs text-stone-400">
                   <span className="font-mono">ID: {mem.id.slice(-6)}</span>
-                  <span className="font-semibold text-[#0F766E] bg-[#F0FDFA] px-2 py-0.5 rounded border border-[#0F766E]/30">Active Tier</span>
+                  <span className="font-semibold text-[#2563EB] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#2563EB]/30">Active Tier</span>
                 </div>
               </div>
             ))}
@@ -219,7 +219,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
             <h3 className="text-sm font-bold text-stone-900">Active Member Enrollments</h3>
             <p className="text-2xs text-stone-500">Record of customers with active pass privileges</p>
           </div>
-          <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#F0FDFA] text-[#0F766E] border border-[#0F766E]/30">
+          <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#EFF6FF] text-[#2563EB] border border-[#2563EB]/30">
             {enrollments.length} Active Members
           </span>
         </div>
@@ -240,7 +240,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                     </span>
                   </div>
                   <div className="text-stone-600 flex flex-wrap items-center gap-2 sm:gap-3 text-2xs">
-                    <span className="font-medium text-[#0F766E]">{enr.membershipName}</span>
+                    <span className="font-medium text-[#2563EB]">{enr.membershipName}</span>
                     <span className="text-stone-300">•</span>
                     <span className="flex items-center gap-1">
                       <Phone className="w-3 h-3 text-stone-400" />
@@ -278,7 +278,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
               placeholder="e.g. Monthly All-Access Pass"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -291,7 +291,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                 min={0}
                 value={price}
                 onChange={e => setPrice(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
             <div>
@@ -302,7 +302,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                 min={1}
                 value={durationDays}
                 onChange={e => setDurationDays(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
@@ -316,7 +316,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
               placeholder="Unlimited access during peak hours&#10;Locker & towel service&#10;10% off sports gear"
               value={benefitsText}
               onChange={e => setBenefitsText(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none font-mono text-xs"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none font-mono text-xs"
             />
           </div>
 
@@ -327,7 +327,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
               placeholder="Eligibility and terms..."
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -342,7 +342,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
             <button
               type="submit"
               disabled={submittingPlan}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs"
             >
               {submittingPlan ? 'Saving...' : 'Create Plan'}
             </button>
@@ -362,7 +362,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
             <select
               value={selectedPlanId}
               onChange={e => setSelectedPlanId(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none bg-white"
             >
               {memberships.map(m => (
                 <option key={m.id} value={m.id}>
@@ -381,7 +381,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                 placeholder="e.g. Varun Reddy"
                 value={custName}
                 onChange={e => setCustName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
 
@@ -393,7 +393,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
                 placeholder="+91..."
                 value={custPhone}
                 onChange={e => setCustPhone(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
@@ -409,7 +409,7 @@ export const MembershipsView: React.FC<MembershipsViewProps> = ({ businessId }) 
             <button
               type="submit"
               disabled={submittingEnroll}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs"
             >
               {submittingEnroll ? 'Enrolling...' : 'Confirm Enrollment'}
             </button>

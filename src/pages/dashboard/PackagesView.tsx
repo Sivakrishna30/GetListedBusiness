@@ -109,7 +109,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
   if (loading) {
     return (
       <div className="bg-white p-12 rounded-xl border border-stone-200 text-center">
-        <RefreshCw className="w-6 h-6 text-[#0F766E] animate-spin mx-auto mb-2" />
+        <RefreshCw className="w-6 h-6 text-[#2563EB] animate-spin mx-auto mb-2" />
         <p className="text-xs text-stone-500 font-medium">Loading packages...</p>
       </div>
     );
@@ -137,7 +137,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors shadow-2xs self-start sm:self-auto shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add Package</span>
@@ -153,7 +153,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
           </p>
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#0F766E] bg-[#F0FDFA] border border-[#0F766E]/30 hover:bg-[#CCFBF1]/50 transition-colors"
+            className="px-4 py-2 rounded-lg text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#2563EB]/30 hover:bg-[#DBEAFE]/50 transition-colors"
           >
             Create First Package
           </button>
@@ -176,7 +176,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
                 <div className="space-y-1.5 mb-4">
                   {pkg.includedServices.map((inc, i) => (
                     <div key={i} className="flex items-center gap-1.5 text-xs text-stone-700">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#0F766E] shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />
                       <span>{inc}</span>
                     </div>
                   ))}
@@ -224,7 +224,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
               placeholder="e.g. Weekend Warrior 5-Session Pack"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -237,7 +237,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
                 min={0}
                 value={price}
                 onChange={e => setPrice(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
             <div>
@@ -248,7 +248,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
                 min={1}
                 value={validityDays}
                 onChange={e => setValidityDays(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
@@ -262,7 +262,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
               placeholder="5 Turf slot bookings&#10;1 Match Ball&#10;Shower and locker access"
               value={includedText}
               onChange={e => setIncludedText(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none font-mono text-xs"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none font-mono text-xs"
             />
           </div>
 
@@ -273,7 +273,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
               placeholder="Terms, conditions, and highlights..."
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"
             />
           </div>
 
@@ -288,7 +288,7 @@ export const PackagesView: React.FC<PackagesViewProps> = ({ businessId }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#0F766E] hover:bg-[#115E59] disabled:opacity-50 transition-colors shadow-2xs"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors shadow-2xs"
             >
               {submitting ? 'Saving...' : editingPackage ? 'Update Package' : 'Create Package'}
             </button>
